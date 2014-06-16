@@ -4,11 +4,10 @@
 #include <string>
 
 namespace imdb {
-
+using namespace std;
 
 struct Movie
 {
-    using namespace std;
 
     /* ratings.list */
     double rate_;
@@ -24,7 +23,7 @@ struct Movie
     vector<size_t> directors_;
 
     /* composers.list */
-    size_t composer;
+    size_t composer_;
 
     /* countries.list */
     vector<string> countries_;
@@ -43,7 +42,6 @@ struct Movie
 
 struct People
 {
-    using namespace std;
     vector<size_t> movies_;
 };
 
