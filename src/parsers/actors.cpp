@@ -3,6 +3,10 @@
 
 using namespace imdb;
 
+void ActorsParser::Init() {
+    begin_parse_ = false;
+}
+
 std::string ActorsParser::splitActorsName(const std::string& input_line) {
     size_t pos1 = 0, pos2 = 0;
     while (input_line[pos2] != '\t') {
@@ -13,9 +17,8 @@ std::string ActorsParser::splitActorsName(const std::string& input_line) {
     return actor_name;
 }
 
-std::vector<std::string> ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line) {
+void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line) {
     size_t left_pos = begin;
-    std::vector<std::string> res;
     std::string series_name1, series_name2, series_time, actor_rank;
 
     while (input_line[left_pos] == '\t') {
@@ -71,11 +74,7 @@ std::vector<std::string> ActorsParser::splitMoiveName(const size_t begin, const 
             right_pos = input_line.find('>', left_pos + 1);
             actor_rank.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
-
-        //debug(actor_name + " | " + movie_name + "(" + movie_time + ")" + " | " + actor_rank);
-
     }
-    return res;
 }
 
 void ActorsParser::parseLine(const std::string input_line) {

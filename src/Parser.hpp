@@ -33,13 +33,8 @@ public:
 class ActorsParser : public Parser {
 public:
     using Parser::Parser;
-
-    virtual void Init()
-    {
-        begin_parse_ = false;
-    }
-
-    std::vector<std::string> splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
+    virtual void Init();
+    void splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
     std::string splitActorsName(const std::string& input_line);
     virtual void parseLine(const std::string line);
 private:
