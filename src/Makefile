@@ -11,7 +11,7 @@ LIB_PATH=-L./
 
 OBJS=DataSchema.o MovieDB.o Log.o
 SERVEROBJS=server_main.o
-PARSEROBJS=
+PARSEROBJS=Parser.cpp
 
 all: server parser
 
