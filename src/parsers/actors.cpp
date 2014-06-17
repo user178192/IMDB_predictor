@@ -5,6 +5,13 @@ using namespace imdb;
 
 void ActorsParser::Init() {
     begin_parse_ = false;
+    actor_name_ = series_name1_ 
+                = series_name2_
+                = series_time_
+                = actor_rank_
+                = movie_name_
+                = movie_time_
+                = "";
 }
 
 std::string ActorsParser::splitActorsName(const std::string& input_line) {
@@ -19,7 +26,6 @@ std::string ActorsParser::splitActorsName(const std::string& input_line) {
 
 void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line) {
     size_t left_pos = begin;
-    std::string series_name1, series_name2, series_time, actor_rank;
 
     while (input_line[left_pos] == '\t') {
         left_pos++;
@@ -28,24 +34,24 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
     // it is a Television Series 
     if (input_line[left_pos] == '"') {
         size_t right_pos = input_line.find('"', left_pos + 1);
-        series_name1.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+        series_name1_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
 
         left_pos = input_line.find('(', right_pos + 1);
         if (left_pos != std::string::npos) {
             right_pos = input_line.find(')', left_pos + 1);
-            series_time.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+            series_time_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
 
         left_pos = input_line.find('{', right_pos + 1);
         if (left_pos != std::string::npos) {
             right_pos = input_line.find('}', left_pos + 1);
-            series_name2.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+            series_name2_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
 
         left_pos = input_line.find('<', right_pos + 1);
         if (left_pos != std::string::npos) {
             right_pos = input_line.find('>', left_pos + 1);
-            actor_rank.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+            actor_rank_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
 
         //debug(actor_name + series_name1);
@@ -53,26 +59,25 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
         // it is a Movie
     else {
 
-        std::string movie_name, actor_rank;
         size_t right_pos = input_line.find('(', left_pos + 1);
 
         // Take the case like Title (????)
         if (isdigit(input_line[right_pos + 1]) || input_line[right_pos + 1] == '?') {
-            movie_name.assign(input_line, left_pos, right_pos - left_pos - 1);
+            movie_name_.assign(input_line, left_pos, right_pos - left_pos - 1);
         } else { // Take the case like title (title) (year)
             right_pos = input_line.find(')', right_pos + 1);
-            movie_name.assign(input_line, left_pos, right_pos - left_pos - 1);
+            movie_name_.assign(input_line, left_pos, right_pos - left_pos - 1);
 
         }
 
         left_pos = input_line.find('(', right_pos);
         right_pos = input_line.find(')', left_pos + 1);
-        std::string movie_time(input_line, left_pos + 1, right_pos - left_pos - 1);
+        movie_time_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
 
         left_pos = input_line.find('<', right_pos + 1);
         if (left_pos != std::string::npos) {
             right_pos = input_line.find('>', left_pos + 1);
-            actor_rank.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+            actor_rank_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
     }
 }

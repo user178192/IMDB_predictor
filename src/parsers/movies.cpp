@@ -4,11 +4,10 @@
 using namespace imdb;
 
 void MoviesParser::Init() {
-    	title_ = "";
-    	titleyear_ = "";
-    	subtitle_ = "";
-    	movietype_ = "";
-    	year_ = "";
+    	title_ = titleyear_ 
+               = subtitle_ 
+               = movietype_ 
+               = year_ = "";
 }
 
 void MoviesParser::parseLine(const std::string input_line) {

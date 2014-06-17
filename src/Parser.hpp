@@ -37,9 +37,11 @@ public:
     void splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
     std::string splitActorsName(const std::string& input_line);
     virtual void parseLine(const std::string line);
+
 private:
     bool begin_parse_;
-    std::string actor_name_;
+    std::string actor_name_, series_name1_, series_name2_, series_time_, actor_rank_;
+    std::string movie_name_, movie_time_;
 };
 
 class ActressesParser : public Parser {
@@ -85,10 +87,7 @@ public:
 
     virtual void parseLine(const std::string line);
 private:
-	std::string title_;
-	std::string titleyear_;
-	std::string subtitle_;
-	std::string movietype_;
-	std::string year_;
+	std::string title_, titleyear_, subtitle_;
+	std::string movietype_, year_;
 };
 #endif
