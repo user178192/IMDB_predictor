@@ -26,11 +26,12 @@ public:
 
     ActorsParser(const std::string str) : Parser(str), begin_parse_(false) {
     }
-    std::vector<std::string> splitMoiveName(const size_t begin, const std::string& input_line);
+    std::vector<std::string> splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
     std::string splitActorsName(const std::string& input_line);
     virtual void parseLine(const std::string line);
 private:
     bool begin_parse_;
+    std::string actor_name_;
 };
 
 class ActressesParser : public Parser {
@@ -67,6 +68,16 @@ public:
     }
 };
 
+class  MoviesParser : public Parser
+{
+public:
+     MoviesParser(const std::string str) : Parser(str) {
+     };
+
+     virtual void parseLine(const std::string line) {
+
+     }
+};
 class TypeTable {
 private:
     // map of data filename relate to Parser
@@ -74,7 +85,7 @@ private:
 
 public:
     TypeTable() = default;
-    void insert(const std::string file_name);
+    void init();
     void exec(const std::string file_name);
 };
 

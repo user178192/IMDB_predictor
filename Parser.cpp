@@ -26,14 +26,14 @@ std::string ActorsParser::splitActorsName(const std::string& input_line) {
         pos2++;
     }
     std::string actor_name(input_line, pos1, pos2);
-    debug(actor_name);
-    splitMoiveName(pos2, input_line);
+    splitMoiveName(pos2, actor_name, input_line);
     return actor_name;
 }
 
-std::vector<std::string> ActorsParser::splitMoiveName(const size_t begin, const std::string& input_line) {
+std::vector<std::string> ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line) {
     size_t left_pos = begin;
     std::vector<std::string> res;
+    std::string series_name1, series_name2, series_time, actor_rank;
 
     while (input_line[left_pos] == '\t') {
         left_pos++;
@@ -42,43 +42,56 @@ std::vector<std::string> ActorsParser::splitMoiveName(const size_t begin, const 
     // it is a Television Series 
     if (input_line[left_pos] == '"') {
         size_t right_pos = input_line.find('"', left_pos + 1);
-        std::string series_name1(input_line, left_pos + 1, right_pos - left_pos - 1);
+        series_name1.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
 
         left_pos = input_line.find('(', right_pos + 1);
         if (left_pos != std::string::npos) {
             right_pos = input_line.find(')', left_pos + 1);
-            std::string series_time(input_line, left_pos + 1, right_pos - left_pos - 1);
+            series_time.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
 
         left_pos = input_line.find('{', right_pos + 1);
         if (left_pos != std::string::npos) {
             right_pos = input_line.find('}', left_pos + 1);
-            std::string series_name2(input_line, left_pos + 1, right_pos - left_pos - 1);
+            series_name2.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
 
         left_pos = input_line.find('<', right_pos + 1);
         if (left_pos != std::string::npos) {
             right_pos = input_line.find('>', left_pos + 1);
-            std::string actor_rank(input_line, left_pos + 1, right_pos - left_pos - 1);
+            actor_rank.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
+
+        //debug(actor_name + series_name1);
         return res;
     }
         // it is a Movie
     else {
 
+        std::string movie_name, actor_rank;
         size_t right_pos = input_line.find('(', left_pos + 1);
 
         // Take the case like Title (????)
         if (isdigit(input_line[right_pos + 1]) || input_line[right_pos + 1] == '?') {
-            std::string movie_name(input_line, left_pos, right_pos - left_pos - 1);
+            movie_name.assign(input_line, left_pos, right_pos - left_pos - 1);
         } else { // Take the case like title (title) (year)
             right_pos = input_line.find(')', right_pos + 1);
-            std::string movie_name(input_line, left_pos, right_pos - left_pos - 1);
+            movie_name.assign(input_line, left_pos, right_pos - left_pos - 1);
+
         }
 
         left_pos = input_line.find('(', right_pos);
         right_pos = input_line.find(')', left_pos + 1);
         std::string movie_time(input_line, left_pos + 1, right_pos - left_pos - 1);
+
+        left_pos = input_line.find('<', right_pos + 1);
+        if (left_pos != std::string::npos) {
+            right_pos = input_line.find('>', left_pos + 1);
+            actor_rank.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+        }
+
+        //debug(actor_name + " | " + movie_name + "(" + movie_time + ")" + " | " + actor_rank);
+
         return res;
     }
 }
@@ -98,33 +111,26 @@ void ActorsParser::parseLine(const std::string input_line) {
         // This line is empty line
         if (input_line.length() == 0) {
             return;
-        }            // This line is movie name
+        }  
+        // This line is movie name
         else if (*(input_line.begin()) == '\t') {
-            splitMoiveName(0, input_line);
+            splitMoiveName(0, actor_name_, input_line);
         }
-            // This line is actors name + movie name
+        // This line is actors name + movie name
         else {
-            splitActorsName(input_line);
+            actor_name_ = std::move(splitActorsName(input_line));
         }
     }
 }
 
 // should delete the object in the end
 
-void TypeTable::insert(const std::string file_name) {
-
-    if (file_name == "actors.list") {
-        parser_map[file_name] = new ActorsParser(file_name);
-    }
-    else if (file_name == "actresses.list") {
-        parser_map[file_name] = new ActressesParser(file_name);
-    }
-    else if (file_name == "keywords.list") {
-        parser_map[file_name] = new KeywordsParser(file_name);
-    }
-    else if (file_name == "directors.list") {
-        parser_map[file_name] = new DirectorsParser(file_name);
-    }
+void TypeTable::init() {
+        parser_map["actors.list"] = new ActorsParser("actors.list");
+        parser_map["actresses.list"] = new ActressesParser("actresses.list");
+        parser_map["keywords.list"] = new KeywordsParser("keywords.list");
+        parser_map["directors.list"] = new DirectorsParser("directors.list");
+        parser_map["movies.list"] = new MoviesParser("movies.list");
 }
 
 void TypeTable::exec(const std::string file_name) {
@@ -134,7 +140,7 @@ void TypeTable::exec(const std::string file_name) {
 
 int main(int argc, char *argv[]) {
     TypeTable testType;
-    testType.insert("actors.list");
+    testType.init();
     testType.exec("actors.list");
     return 0;
 }
