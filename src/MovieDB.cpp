@@ -6,7 +6,7 @@
 
 namespace imdb {
 
-vector<string> split_string(const string& s, const string& delim, int max_split)
+vector<string> split_string(const string& s, const string& delim, size_t max_split)
 {
     vector<string> ret;
 
@@ -87,7 +87,7 @@ int MovieDB::SaveToFile(const std::string& filename)
 }
 
 
-};
+}
 
 
 #if 0

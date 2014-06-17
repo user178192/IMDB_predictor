@@ -40,8 +40,8 @@ struct Movie
 
 
 // For convenience
-    void AddActor(size_t id, int pos);
-    void AddDirector(size_t id, int pos);
+    void AddActor(size_t id, size_t pos);
+    void AddDirector(size_t id, size_t pos);
 };
 
 
@@ -57,7 +57,7 @@ typedef People Composer;
 typedef People Director;
 
 
-};
+}
 
 
 
