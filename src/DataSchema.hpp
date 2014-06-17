@@ -1,5 +1,5 @@
-#ifndef _MOVIE_HPP_
-#define _MOVIE_HPP_
+#ifndef _DATASCHEMA_HPP_
+#define _DATASCHEMA_HPP_
 #include <vector>
 #include <string>
 
@@ -17,7 +17,7 @@ struct Movie
     vector<size_t> actors_;
 
     /* genres.list */
-    vector<size_t> genres_;
+    vector<string> genres_;
 
     /* directors.list */
     vector<size_t> directors_;
@@ -36,6 +36,12 @@ struct Movie
 
     /* running-times.list */
     int length_;
+
+
+
+// For convenience
+    void AddActor(size_t id, int pos);
+    void AddDirector(size_t id, int pos);
 };
 
 

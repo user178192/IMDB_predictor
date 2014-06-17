@@ -2,6 +2,7 @@
 #define _SERIALIZER_HPP_
 
 #include <DataSchema.hpp>
+#include <Index.hpp>
 #include <Log.hpp>
 
 #include <vector>
@@ -144,6 +145,7 @@ public:
     void Read(vector<TVal> &val)
     {
         size_t size;
+        val.clear();
         Read(size);
         for(size_t i = 0; i < size; i++) {
             TVal newitem;
@@ -167,6 +169,7 @@ public:
     void Read(unordered_map<TKey, TVal> &val)
     {
         size_t size;
+        val.clear();
         Read(size);
         for(size_t i = 0; i < size; i++) {
             TKey nk;
@@ -202,6 +205,43 @@ public:
         Read(val.plots_);
         Read(val.length_);
     }
+
+    void Write(const ReverseIndex& val)
+    {
+        Write(val.rev_idx_);
+        Write(val.idx_);
+    }
+
+    void Read(ReverseIndex& val)
+    {
+        Read(val.rev_idx_);
+        Read(val.idx_);
+    }
+
+    template<typename TKey, typename TVal>
+    void Write(const Index<TKey, TVal>& val)
+    {
+        Write(val.k2id_);
+        Write(val.id2val_);
+    }
+
+    template<typename TKey, typename TVal>
+    void Read(Index<TKey, TVal>& val)
+    {
+        Read(val.k2id_);
+        Read(val.id2val_);
+    }
+
+    void Write(const People& val)
+    {
+        Write(val.movies_);
+    }
+
+    void Read(People& val)
+    {
+        Read(val.movies_);
+    }
+
 };
 
 };

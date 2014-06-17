@@ -9,9 +9,15 @@
 namespace imdb {
 
 using namespace std;
+static size_t NULLID = -1;
+
+template<bool ReadOnly>
+class Serializer;
 
 class ReverseIndex
 {
+    template<bool ReadOnly>
+    friend class Serializer;
 private:
     // reverse index, mapping keywords to all the 
     // candidates id that contains the corresponding keyword 
@@ -72,6 +78,8 @@ public:
 template <typename TKey, typename TVal>
 class Index
 {
+    template<bool ReadOnly>
+    friend class Serializer;
 private:
     // map of Key to internal ID , internal id is auto generated and auto increment,
     // it increases when inserting inexisting key 
@@ -81,6 +89,11 @@ private:
     vector<pair<TKey, TVal>> id2val_;
         
 public:
+
+    size_t Size() const
+    {
+        return id2val_.size();
+    }
 
     // retrieve record by internel ID, return triplet of:
     // (have result?,  key, pointer of value)
@@ -112,7 +125,7 @@ public:
         if (it == k2id_.end()) {
             // inexists
             get<0>(ret) = false;
-            get<1>(ret) = -1;
+            get<1>(ret) = NULLID;
             get<2>(ret) = nullptr;
         } else {
             get<0>(ret) = true;
@@ -134,7 +147,7 @@ public:
         } else {
             // inexists
             get<0>(ret) = false;
-            get<1>(ret) = -1;
+            get<1>(ret) = NULLID;
         }
         return move(ret);
     }
