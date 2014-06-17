@@ -81,11 +81,11 @@ std::vector<std::string> ActorsParser::splitMoiveName(const size_t begin, const 
 void ActorsParser::parseLine(const std::string input_line) {
     if ( strncmp(input_line, "----\t", 5) == 0) {
         begin_parse_ = true;
-	return;
+		return;
     }
     else if ( strncmp(input_line, "-----", 5) == 0) {
         begin_parse_ = false;
-	return;
+		return;
     }
 
     if (begin_parse_ == true) {
