@@ -96,4 +96,20 @@ private:
 	std::string movietype_;
 	std::string year_;
 };
+
+class LanguagesParser : public Parser
+{
+public:
+	using Parser::Parser;
+	
+	virtual void Init();
+	
+	virtual void parseLine(const std::string line);
+private:
+	std::string title_;
+	std::string titleyear_;
+	std::string subtitle_;
+	std::string movietype_;
+	std::string language_;
+};
 #endif
