@@ -27,6 +27,7 @@ HTMLBuilder::writeContent() {
 }
 
 HTMLBuilder::writeFooter() {
+    outputFile("<body>");
 	outputFile("</html>");
 }
 
