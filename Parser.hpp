@@ -1,3 +1,6 @@
+#ifndef _PARSER_HPP_
+#define _PARSER_HPP_
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -7,10 +10,10 @@
 
 // base class for the parser
 
-class Reader {
+class Parser {
 public:
 
-    Reader(const std::string str) : file_name_(str), line_num_(0) {
+    Parser(const std::string str) : file_name_(str), line_num_(0) {
     }
     void parseFile(const std::string file_name);
     virtual void parseLine(const std::string line) = 0;
@@ -18,10 +21,10 @@ public:
     long long line_num_;
 };
 
-class ActorsReader : public Reader {
+class ActorsParser : public Parser {
 public:
 
-    ActorsReader(const std::string str) : Reader(str), begin_parse_(false) {
+    ActorsParser(const std::string str) : Parser(str), begin_parse_(false) {
     }
     std::vector<std::string> splitMoiveName(const size_t begin, const std::string& input_line);
     std::string splitActorsName(const std::string& input_line);
@@ -30,20 +33,20 @@ private:
     bool begin_parse_;
 };
 
-class ActressesReader : public Reader {
+class ActressesParser : public Parser {
 public:
 
-    ActressesReader(const std::string str) : Reader(str) {
+    ActressesParser(const std::string str) : Parser(str) {
     };
 
     virtual void parseLine(const std::string line) {
     }
 };
 
-class KeywordsReader : public Reader {
+class KeywordsParser : public Parser {
 public:
 
-    KeywordsReader(const std::string str) : Reader(str) {
+    KeywordsParser(const std::string str) : Parser(str) {
     };
 
     virtual void parseLine(const std::string line) {
@@ -53,10 +56,10 @@ private:
     std::string file_name;
 };
 
-class DirectorsReader : public Reader {
+class DirectorsParser : public Parser {
 public:
 
-    DirectorsReader(const std::string str) : Reader(str) {
+    DirectorsParser(const std::string str) : Parser(str) {
     };
 
     virtual void parseLine(const std::string line) {
@@ -66,8 +69,8 @@ public:
 
 class TypeTable {
 private:
-    // map of data filename relate to Reader
-    std::unordered_map<std::string, Reader*> parser_map;
+    // map of data filename relate to Parser
+    std::unordered_map<std::string, Parser*> parser_map;
 
 public:
     TypeTable() = default;
@@ -75,3 +78,4 @@ public:
     void exec(const std::string file_name);
 };
 
+#endif

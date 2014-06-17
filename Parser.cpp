@@ -1,6 +1,6 @@
-#include "reader.hpp"
+#include "Parser.hpp"
 
-// load the database to the reader
+// load the database to the Parser
 
 template <typename T>
 auto debug(T t) -> decltype(t) {
@@ -8,7 +8,7 @@ auto debug(T t) -> decltype(t) {
     return t;
 }
 
-void Reader::parseFile(const std::string file_name) {
+void Parser::parseFile(const std::string file_name) {
     std::string line;
     std::ifstream inputfile(file_name);
     if (inputfile.is_open()) {
@@ -20,7 +20,7 @@ void Reader::parseFile(const std::string file_name) {
     }
 }
 
-std::string ActorsReader::splitActorsName(const std::string& input_line) {
+std::string ActorsParser::splitActorsName(const std::string& input_line) {
     size_t pos1 = 0, pos2 = 0;
     while (input_line[pos2] != '\t') {
         pos2++;
@@ -31,7 +31,7 @@ std::string ActorsReader::splitActorsName(const std::string& input_line) {
     return actor_name;
 }
 
-std::vector<std::string> ActorsReader::splitMoiveName(const size_t begin, const std::string& input_line) {
+std::vector<std::string> ActorsParser::splitMoiveName(const size_t begin, const std::string& input_line) {
     size_t left_pos = begin;
     std::vector<std::string> res;
 
@@ -83,7 +83,7 @@ std::vector<std::string> ActorsReader::splitMoiveName(const size_t begin, const 
     }
 }
 
-void ActorsReader::parseLine(const std::string input_line) {
+void ActorsParser::parseLine(const std::string input_line) {
     // begin parser in line 239, actors.list
     if (line_num_ == 239) {
         begin_parse_ = true;
@@ -114,16 +114,16 @@ void ActorsReader::parseLine(const std::string input_line) {
 void TypeTable::insert(const std::string file_name) {
 
     if (file_name == "actors.list") {
-        parser_map[file_name] = new ActorsReader(file_name);
+        parser_map[file_name] = new ActorsParser(file_name);
     }
     else if (file_name == "actresses.list") {
-        parser_map[file_name] = new ActressesReader(file_name);
+        parser_map[file_name] = new ActressesParser(file_name);
     }
     else if (file_name == "keywords.list") {
-        parser_map[file_name] = new KeywordsReader(file_name);
+        parser_map[file_name] = new KeywordsParser(file_name);
     }
     else if (file_name == "directors.list") {
-        parser_map[file_name] = new DirectorsReader(file_name);
+        parser_map[file_name] = new DirectorsParser(file_name);
     }
 }
 
