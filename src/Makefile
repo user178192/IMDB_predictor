@@ -25,7 +25,7 @@ parser: $(OBJS) $(PARSEROBJS)
 	$(CC) $(INC_PATH) -c $(CFLAGS) -o $@ $^
 
 clean:
-	rm -f *.o server parser
+	rm -f *.o parsers/*.o server parser
 
 rebuild: clean all
 
