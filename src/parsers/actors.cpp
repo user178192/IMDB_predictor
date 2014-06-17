@@ -79,14 +79,13 @@ std::vector<std::string> ActorsParser::splitMoiveName(const size_t begin, const 
 }
 
 void ActorsParser::parseLine(const std::string input_line) {
-    // begin parser in line 239, actors.list
-    if (line_num_ == 239) {
+    if ( strncmp(input_line, "----\t", 5) == 0) {
         begin_parse_ = true;
+	return;
     }
-        // stop parser in line 15835158, actors.list
-    else if (line_num_ == 15835158) {
-        // stop parser in line 15835158, actors.list
+    else if ( strncmp(input_line, "-----", 5) == 0) {
         begin_parse_ = false;
+	return;
     }
 
     if (begin_parse_ == true) {
