@@ -9,11 +9,20 @@
 #include <vector>
 
 // base class for the parser
+namespace imdb {
+    class MovieDB;
+}
+
+using namespace imdb;
 
 class Parser {
+protected:
+    MovieDB *db_;
+    virtual void Init() {}
+    
 public:
-
-    Parser(const std::string str) : file_name_(str), line_num_(0) {
+    Parser(const std::string str, MovieDB *db) : db_(db), file_name_(str), line_num_(0) {
+        Init();
     }
     void parseFile(const std::string file_name);
     virtual void parseLine(const std::string line) = 0;
@@ -23,9 +32,13 @@ public:
 
 class ActorsParser : public Parser {
 public:
+    using Parser::Parser;
 
-    ActorsParser(const std::string str) : Parser(str), begin_parse_(false) {
+    virtual void Init()
+    {
+        begin_parse_ = false;
     }
+
     std::vector<std::string> splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
     std::string splitActorsName(const std::string& input_line);
     virtual void parseLine(const std::string line);
@@ -36,9 +49,9 @@ private:
 
 class ActressesParser : public Parser {
 public:
+    using Parser::Parser;
 
-    ActressesParser(const std::string str) : Parser(str) {
-    };
+    virtual void Init() {}
 
     virtual void parseLine(const std::string line) {
     }
@@ -46,9 +59,9 @@ public:
 
 class KeywordsParser : public Parser {
 public:
+    using Parser::Parser;
 
-    KeywordsParser(const std::string str) : Parser(str) {
-    };
+    virtual void Init() {}
 
     virtual void parseLine(const std::string line) {
 
@@ -59,9 +72,9 @@ private:
 
 class DirectorsParser : public Parser {
 public:
+    using Parser::Parser;
 
-    DirectorsParser(const std::string str) : Parser(str) {
-    };
+    virtual void Init() {}
 
     virtual void parseLine(const std::string line) {
 
@@ -71,10 +84,11 @@ public:
 class  MoviesParser : public Parser
 {
 public:
-     MoviesParser(const std::string str) : Parser(str) {
-     };
+    using Parser::Parser;
 
-     virtual void parseLine(const std::string line) {
+    virtual void Init() {}
+
+    virtual void parseLine(const std::string line) {
 
      }
 };
@@ -85,7 +99,7 @@ private:
 
 public:
     TypeTable() = default;
-    void init();
+    void init(MovieDB *db);
     void exec(const std::string file_name);
 };
 
