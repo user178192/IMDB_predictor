@@ -82,6 +82,9 @@ static int my_handler(Response& resp, const Request& req)
         cout << "\t\tGenres:";
         for(const auto &i : get<2>(mdb->movies_.GetInfo(id))->genres_)
             cout << i << '\t';
+        cout << "\t\tTime:";
+        for(const auto &i : get<2>(mdb->movies_.GetInfo(id))->length_)
+            cout << i << '\t';
         cout << endl;
     }
     

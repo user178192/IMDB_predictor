@@ -1,5 +1,6 @@
 #include "Parser.hpp"
 #include <MovieDB.hpp>
+#include <Log.hpp>
 
 using namespace imdb;
 
@@ -153,5 +154,6 @@ void GenresParser::parseLine(const std::string input_line) {
         	get<2>(db_ret)->genres_.push_back(genr_);
     } else {
         // no such movie, inconsistant, ignore
+        LOG_DEBUG("Movie [%s] not found, inconsistant", key.c_str());
     }
 }
