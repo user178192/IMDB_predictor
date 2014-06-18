@@ -147,6 +147,11 @@ void RunningtimeParser::parseLine(const std::string input_line) {
                     		//to jump out of the for loop
                     		i = tempstr_len;
                     	}
+                    	//in case of no detail
+                    	if (len == tempstr_len) {
+                    		length_ = tempstr.substr(tempstart,len);
+                    		i = tempstr_len;
+                    	}
                     	
                     }
                     //to jump out of the loop
