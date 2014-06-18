@@ -108,7 +108,6 @@ private:
 	std::string language_;
 };
 
-<<<<<<< HEAD
 class CountriesParser : public Parser
 {
 public:
@@ -122,8 +121,6 @@ private:
 	std::string movietype_;
 	std::string country_;
 };
-=======
-
 // should delete the object in the end
 class TypeTable {
 private:
@@ -135,7 +132,4 @@ public:
     void exec(const std::string file_name);
 };
 
-
-
->>>>>>> 7b9c351aea613fce64d4942d7e40e94838353297
 #endif
