@@ -73,6 +73,16 @@ static int my_handler(Response& resp, const Request& req)
     auto query_result = mdb->ri_movie_.Lookup(query_words);
     for(const auto& id : query_result) {
         cout << *(get<1>(mdb->movies_.GetKey(id))) << endl;
+        cout << "\t\tLanguages:";
+        for(const auto &i : get<2>(mdb->movies_.GetInfo(id))->languages_)
+            cout << i << '\t';
+        cout << "\t\tCountries:";
+        for(const auto &i : get<2>(mdb->movies_.GetInfo(id))->countries_)
+            cout << i << '\t';
+        cout << "\t\tGenres:";
+        for(const auto &i : get<2>(mdb->movies_.GetInfo(id))->genres_)
+            cout << i << '\t';
+        cout << endl;
     }
     
     //// for test query
