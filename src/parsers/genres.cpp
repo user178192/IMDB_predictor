@@ -3,15 +3,15 @@
 
 using namespace imdb;
 
-void MoviesParser::Init() {
+void GenresParser::Init() {
     	title_ = "";
     	titleyear_ = "";
     	subtitle_ = "";
     	movietype_ = "";
-    	genr_ = ""
+    	genr_ = "";
 }
 
-void MoviesParser::parseLine(const std::string input_line) {
+void GenresParser::parseLine(const std::string input_line) {
 	int input_len = input_line.length();
     //title counts the number of "
     //subtitle counts the number of {or}

@@ -105,7 +105,7 @@ public:
 private:
 	std::string title_, titleyear_, subtitle_;
 	std::string movietype_;
-	std::string language_;
+	std::string lang_;
 };
 
 class CountriesParser : public Parser
