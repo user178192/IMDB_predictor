@@ -11,7 +11,7 @@ LIB_PATH=-L./
 
 OBJS=DataSchema.o MovieDB.o Log.o
 SERVEROBJS=server_main.o
-PARSEROBJS=Parser.o parsers/actors.o parsers/movies.o parsers/languages.o parsers/genres.o parsers/countries.o
+PARSEROBJS=Parser.o parsers/actors.o parsers/movies.o parsers/languages.o parsers/genres.o parsers/countries.o parsers/runningtime.o
 DBBUILDOBJ=db_build.o
 PARSERTESTOBJ=parser_test.o
 

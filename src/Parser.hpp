@@ -121,6 +121,21 @@ private:
 	std::string movietype_;
 	std::string country_;
 };
+
+class RunningtimeParser : public Parser
+{
+public:
+	using Parser::Parser;
+	
+	virtual void Init();
+	
+	virtual void parseLine(const std::string line);
+private:
+	std::string title_, titleyear_, subtitle_;
+	std::string movietype_;
+	std::string time_, detail_;
+};
+
 // should delete the object in the end
 class TypeTable {
 private:

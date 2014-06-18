@@ -35,6 +35,7 @@ void TypeTable::init(MovieDB *db)
     parser_map["movies.list"] = new MoviesParser("movies.list", db);
     parser_map["language.list"] = new LanguagesParser("language.list", db);
     parser_map["countries.list"] = new CountriesParser("countries.list", db);
+    parser_map["running-times.list"] = new RunningtimeParser("running-times.list", db);
 }
 
 void TypeTable::exec(const std::string file_name)
