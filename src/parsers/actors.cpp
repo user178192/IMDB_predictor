@@ -32,10 +32,9 @@ void ActorsParser::insertDB(const std::string& actor_name, const std::string& mo
     size_t actor_id = 0;
 
     auto act_obj = db_ -> actors_.GetInfo(act_key); // here is the actors info
-    auto mov_id = db_ -> movies_.GetID(mov_key); // here is the movie ID
     auto mov_obj = db_ -> movies_.GetInfo(mov_key);
 
-    if (!get<0>(mov_id) || !get<0>(mov_obj) ){
+    if (!get<0>(mov_obj) ){
         LOG_DEBUG("Movie [%s] not found, inconsistant", movie_name.c_str());
         return;
     }
@@ -45,13 +44,13 @@ void ActorsParser::insertDB(const std::string& actor_name, const std::string& mo
 
     if (get<0>(act_obj)) {
         // the actor already exists, insert the movie id to the actor
-        get<2>(act_obj)->movies_.push_back(get<1>(mov_id));
+        get<2>(act_obj)->movies_.push_back(get<1>(mov_obj));
         get<2>(mov_obj)->AddActor(actor_id, rank);
         
     } else {
         // insert new actor
         Actor a;
-        a.movies_.push_back(get<1>(mov_id));
+        a.movies_.push_back(get<1>(mov_obj));
         actor_id = db_->actors_.Insert(act_key, a);
         get<2>(mov_obj)->AddActor(actor_id, rank);
     }

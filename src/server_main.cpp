@@ -20,7 +20,6 @@ static string url_escape_remove(const string& s)
     string ret;
     for(size_t i = 0; i < s.size(); i++)
         if (s[i] == '%' && i + 2 < s.size()) {
-            i += 2;
             auto hextodec = [](char c) {
                 c = tolower(c);
                 if (c >= '0' && c <= '9')
@@ -29,6 +28,7 @@ static string url_escape_remove(const string& s)
                     return c - 'a' + 10;
             };
             ret.append(1, hextodec(s[i+1]) * 16 + hextodec(s[i+2]));
+            i += 2;
         } else if (s[i] == '+')
             ret.append(1, ' ');
         else
@@ -71,7 +71,10 @@ static int my_handler(Response& resp, const Request& req)
     // for test query
     auto query_words = split_string(params["movie"], ", \t");
     auto query_result = mdb->ri_movie_.Lookup(query_words);
+
+    string ret;
     for(const auto& id : query_result) {
+        ret.append(*(get<1>(mdb->movies_.GetKey(id))) + '\n');
         cout << *(get<1>(mdb->movies_.GetKey(id))) << endl;
         cout << "\t\tLanguages:";
         for(const auto &i : get<2>(mdb->movies_.GetInfo(id))->languages_)
@@ -89,6 +92,8 @@ static int my_handler(Response& resp, const Request& req)
     }
     
     //// for test query
+    resp.set_body(ret);
+    resp.set_header("Content-Type", "text/plain");
 
 
     return HTTP_200;
