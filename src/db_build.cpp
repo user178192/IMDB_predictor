@@ -16,6 +16,9 @@ int main(int argc, char *argv[]) {
     TypeTable testType;
     testType.init(db);
     testType.exec("movies.list");
+    testType.exec("genres.list");
+    testType.exec("language.list");
+    testType.exec("countries.list");
 
     db->SaveToFile(argv[1]);
     delete db;

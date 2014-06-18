@@ -44,7 +44,7 @@ void MovieDB::BuildIndex()
     LOG_INFO("Begin");
     ri_movie_.Clear();
     for(size_t i = 0; i < movies_.Size(); i++) {
-        ri_movie_.Insert(split_string(*(get<1>(movies_.GetKey(i))), " ,!#'"), i);
+        ri_movie_.Insert(split_string(*(get<1>(movies_.GetKey(i))), " ,!#'(){}"), i);
     }
     ri_movie_.ShrinkMemory();
     LOG_INFO("Done");
@@ -87,7 +87,16 @@ int MovieDB::SaveToFile(const std::string& filename)
     }
 
     for(size_t i = 0; i < movies_.Size(); i++) {
-        get<2>(movies_.GetInfo(i))->RankPeople();
+        auto m = get<2>(movies_.GetInfo(i));
+        m->RankPeople();
+        sort(m->languages_.begin(), m->languages_.end());
+        m->languages_.erase(unique(m->languages_.begin(), m->languages_.end()), m->languages_.end());
+
+        sort(m->countries_.begin(), m->countries_.end());
+        m->countries_.erase(unique(m->countries_.begin(), m->countries_.end()), m->countries_.end());
+
+        sort(m->genres_.begin(), m->genres_.end());
+        m->genres_.erase(unique(m->genres_.begin(), m->genres_.end()), m->genres_.end());
     }
 
     writer->Write(ri_movie_);

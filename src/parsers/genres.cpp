@@ -148,18 +148,10 @@ void GenresParser::parseLine(const std::string input_line) {
     string key = title_ + "(" + titleyear_ + ")";
     auto db_ret = db_->movies_.GetInfo(key);
     if (get<0>(db_ret)) {
-        // already exists, and have subtitle, (series)
-        // insert subtitle
-        if (!subtitle_.empty())
-            get<2>(db_ret)->subtitles_.push_back(subtitle_);
         // insert genres, since one movie may have mutiple genres
         if (!genr_.empty())
         	get<2>(db_ret)->genres_.push_back(genr_);
     } else {
-        // insert new entry
-        Movie m;
-        m.genres_.push_back(genr_);
-        m.type_ = movietype_;
-        db_->movies_.Insert(key, m);
+        // no such movie, inconsistant, ignore
     }
 }

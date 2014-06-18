@@ -148,18 +148,10 @@ void LanguagesParser::parseLine(const std::string input_line) {
     string key = title_ + "(" + titleyear_ + ")";
     auto db_ret = db_->movies_.GetInfo(key);
     if (get<0>(db_ret)) {
-        // already exists, and have subtitle, (series)
-        // insert subtitle
-        if (!subtitle_.empty())
-            get<2>(db_ret)->subtitles_.push_back(subtitle_);
         // insert languages, since one movie may have mutiple languages
         if (!lang_.empty())
         	get<2>(db_ret)->languages_.push_back(lang_);
     } else {
-        // insert new entry
-        Movie m;
-        m.languages_.push_back(lang_);
-        m.type_ = movietype_;
-        db_->movies_.Insert(key, m);
+        // no such movie, inconsistant, ignore
     }  
 }
