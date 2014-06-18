@@ -1,25 +1,25 @@
+Actors Data: actors.list, actresses.list
+
+Directors Data: directors.list
 
 Release Data:  release-dates.list 
 
-
 Ratings, Votes, Distribution:   ratings.list 
-
 
 Action, Adult, Sci-Fict .... categories: genres.list
 
 Directors: directors.list
 
-
-
 Composers:  composers.list 
-Production Countries:  countries.list
 
+Production Countries:  countries.list
 
 Plot of movie: plots.list
 
-
 length of movie: running-times.list 
 
-**** Movie relation(series) : movie-links.list
+Movie relation(series) : movie-links.list
+
+
 
 
