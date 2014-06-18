@@ -109,4 +109,19 @@ private:
 	std::string movietype_;
 	std::string language_;
 };
+
+
+// should delete the object in the end
+class TypeTable {
+private:
+    // map of data filename relate to Parser
+    std::unordered_map<std::string, Parser*> parser_map;
+public:
+    TypeTable() = default;
+    void init(MovieDB *db);
+    void exec(const std::string file_name);
+};
+
+
+
 #endif
