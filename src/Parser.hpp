@@ -41,8 +41,7 @@ public:
 
 private:
     bool begin_parse_;
-    std::string actor_name_, series_name1_, series_name2_, series_time_, actor_rank_;
-    std::string movie_name_, movie_time_;
+    std::string actor_name_;
 };
 
 class ActressesParser : public Parser {
