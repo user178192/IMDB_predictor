@@ -4,11 +4,10 @@
 using namespace imdb;
 
 void LanguagesParser::Init() {
-    	title_ = "";
-    	titleyear_ = "";
-    	subtitle_ = "";
-    	movietype_ = "";
-    	lang_ = "";
+    	title_ = titleyear_
+    		   = subtitle_
+    		   = movietype_
+    		   = lang_ = "";
 }
 
 void LanguagesParser::parseLine(const std::string input_line) {
@@ -143,6 +142,24 @@ void LanguagesParser::parseLine(const std::string input_line) {
                 }
                 
             }
-        }
-    }    
+        }//end of switch
+    }//end of for
+    
+    string key = title_ + "(" + titleyear_ + ")";
+    auto db_ret = db_->movies_.GetInfo(key);
+    if (get<0>(db_ret)) {
+        // already exists, and have subtitle, (series)
+        // insert subtitle
+        if (!subtitle_.empty())
+            get<2>(db_ret)->subtitles_.push_back(subtitle_);
+        // insert languages, since one movie may have mutiple languages
+        if (!lang_.empty())
+        	get<2>(db_ret)->languages_.push_back(lang_);
+    } else {
+        // insert new entry
+        Movie m;
+        m.languages_.push_back(lang_);
+        m.type_ = movietype_;
+        db_->movies_.Insert(key, m);
+    }  
 }
