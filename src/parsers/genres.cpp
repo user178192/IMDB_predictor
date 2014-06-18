@@ -47,7 +47,7 @@ void GenresParser::parseLine(const std::string input_line) {
                 //the substring between idxstart and idxend is title
                 //process value and reset idxstart and idxend
                 if(title == 1) {
-                    title_ = input_line.substr(idxstart,len - 1);
+                    title_ = input_line.substr(idxstart,len - 1).append(1,' ');
                     //ofs<<" "<<input_line.substr(idxstart,len - 1);
                     len = 0;
                     title = 0;
