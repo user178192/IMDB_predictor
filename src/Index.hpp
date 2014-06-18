@@ -26,6 +26,13 @@ private:
     unordered_map<size_t, vector<string>> idx_;
 
 public:
+    void ShrinkMemory()
+    {
+        for(auto& it : rev_idx_)
+            it.second.shrink_to_fit();
+        for(auto& it : idx_)
+            it.second.shrink_to_fit();
+    }
 
     void Insert(const vector<string>& keys, size_t id)
     {
@@ -33,6 +40,12 @@ public:
         for(const auto& s: keys)
             //be one of the candidates for every word
             rev_idx_[s].push_back(id);
+    }
+
+    void Clear()
+    {
+        rev_idx_.clear();
+        idx_.clear();
     }
 
     vector<size_t> Lookup(const vector<string>& keys)
@@ -89,6 +102,10 @@ private:
     vector<pair<TKey, TVal>> id2val_;
         
 public:
+    void ShrinkMemory()
+    {
+        id2val_.shrink_to_fit();
+    }
 
     size_t Size() const
     {

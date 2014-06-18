@@ -2,6 +2,8 @@
 #include <MovieDB.hpp>
 #include <stdio.h>
 
+#include <cstring>
+
 using namespace imdb;
 
 void ActorsParser::Init() {

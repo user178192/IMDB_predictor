@@ -147,6 +147,7 @@ public:
         size_t size;
         val.clear();
         Read(size);
+        val.reserve(size);
         for(size_t i = 0; i < size; i++) {
             TVal newitem;
             Read(newitem);
@@ -154,6 +155,19 @@ public:
         }
     }
 
+    template<typename TA, typename TB>
+    void Write(const pair<TA, TB> &val)
+    {
+        Write(val.first);
+        Write(val.second);
+    }
+
+    template<typename TA, typename TB>
+    void Read(pair<TA, TB> &val)
+    {
+        Read(val.first);
+        Read(val.second);
+    }
 
     template<typename TKey, typename TVal>
     void Write(const unordered_map<TKey, TVal> &val)
@@ -182,6 +196,9 @@ public:
     {
         Write(val.rate_);
         Write(val.votes_);
+        Write(val.year_);
+        Write(val.type_);
+        Write(val.subtitles_);
         Write(val.actors_);
         Write(val.genres_);
         Write(val.directors_);
@@ -196,6 +213,9 @@ public:
     {
         Read(val.rate_);
         Read(val.votes_);
+        Read(val.year_);
+        Read(val.type_);
+        Read(val.subtitles_);
         Read(val.actors_);
         Read(val.genres_);
         Read(val.directors_);

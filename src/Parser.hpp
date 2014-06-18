@@ -19,6 +19,7 @@ class Parser {
 protected:
     MovieDB *db_;
     virtual void Init() {}
+    virtual void Finish() {}
     
 public:
     Parser(const std::string str, MovieDB *db) : db_(db), file_name_(str), line_num_(0) {
@@ -85,6 +86,9 @@ public:
     virtual void Init();
 
     virtual void parseLine(const std::string line);
+
+    virtual void Finish();
+
 private:
 	std::string title_, titleyear_, subtitle_;
 	std::string movietype_, year_;

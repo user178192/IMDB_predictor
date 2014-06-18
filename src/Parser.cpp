@@ -1,5 +1,6 @@
-#include "Parser.hpp"
+#include <Parser.hpp>
 #include <MovieDB.hpp>
+#include <Log.hpp>
 
 // load the database to the Parser
 using namespace imdb;
@@ -20,6 +21,8 @@ void Parser::parseFile(const std::string file_name) {
         }
         inputfile.close();
     }
+    LOG_INFO("Parse %s done", file_name.c_str());
+    Finish();
 }
 
 
@@ -61,7 +64,7 @@ int main(int argc, char *argv[]) {
     MovieDB *db = new MovieDB();
     TypeTable testType;
     testType.init(db);
-    testType.exec("actors.list");
+    testType.exec("movies.list");
 
     db->SaveToFile(argv[1]);
     delete db;

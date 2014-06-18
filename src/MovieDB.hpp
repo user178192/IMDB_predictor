@@ -18,9 +18,6 @@ class MovieDB
 {
     //to do: split string function
 
-    ReverseIndex ri_movie_;
-    ReverseIndex ri_time_;
-    ReverseIndex ri_people_;
 
 public:
 
@@ -29,7 +26,11 @@ public:
     Index<string, People> composers_;
     Index<string, People> directors_;
 
+    ReverseIndex ri_movie_;
+    ReverseIndex ri_time_;
+    ReverseIndex ri_people_;
 
+    void BuildIndex();
     int LoadFromFile(const std::string& filename);
     int SaveToFile(const std::string& filename);
 };

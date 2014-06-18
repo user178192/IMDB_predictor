@@ -13,7 +13,16 @@ struct Movie
     double rate_;
     size_t votes_; 
     
-    /* ???? */
+    // movies.list,  like 1992-2013
+    string year_;
+
+    // movie type
+    string type_;
+
+    // for series
+    vector<string> subtitles_;
+
+    /* actors and actress */
     vector<size_t> actors_;
 
     /* genres.list */

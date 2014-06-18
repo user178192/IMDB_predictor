@@ -39,6 +39,16 @@ vector<string> split_string(const string& s, const string& delim, size_t max_spl
     return move(ret);
 }
 
+void MovieDB::BuildIndex()
+{
+    LOG_INFO("Begin");
+    ri_movie_.Clear();
+    for(size_t i = 0; i < movies_.Size(); i++) {
+        ri_movie_.Insert(split_string(*(get<1>(movies_.GetKey(i))), " ,!#'"), i);
+    }
+    ri_movie_.ShrinkMemory();
+    LOG_INFO("Done");
+}
 
 int MovieDB::LoadFromFile(const std::string& filename)
 {
@@ -60,6 +70,10 @@ int MovieDB::LoadFromFile(const std::string& filename)
     LOG_INFO("Load DB done, %llu movies, %llu people",
             movies_.Size(), actors_.Size() + composers_.Size() + directors_.Size());
     delete reader;
+    movies_.ShrinkMemory();
+    actors_.ShrinkMemory();
+    composers_.ShrinkMemory();
+    directors_.ShrinkMemory();
     return 0;
 }
 
