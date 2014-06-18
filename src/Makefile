@@ -21,10 +21,10 @@ server: $(OBJS) $(SERVEROBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(LIB_PATH)
 	
 parser_test: $(OBJS) $(PARSEROBJS) $(PARSERTESTOBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(LIB_PATH)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIB_PATH)
 
 db_build: $(OBJS) $(PARSEROBJS) $(DBBUILDOBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(LIB_PATH)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIB_PATH)
 
 %.o: %.cpp
 	$(CC) $(INC_PATH) -c $(CFLAGS) -o $@ $^
