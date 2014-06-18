@@ -5,20 +5,21 @@ class HTMLBuilder
 {
 public:
 	HTMLBuilder();
+	void Init();
 
-	void outputFile(const std::string content);
+	void outPut(const std::string content);
 	void buildHref(const std::string content);
-	vector<string> regex(const std::string content);
-
 	
-	void writeTitile();
+	void writeMoiveTitle(const std::string moiveTitle);
+
+	void writeActors(std::vector<std::string> actors_arr);
+
 	void writeHead();
 	void writeContent();
 	void writeFooter();
 
-	~HTMLBuilder();
+	std::string output_buffer_;
 
 private:
 	std::string file_name_;
-
 };
