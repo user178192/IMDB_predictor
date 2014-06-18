@@ -8,7 +8,7 @@ void MoviesParser::Init() {
     	titleyear_ = "";
     	subtitle_ = "";
     	movietype_ = "";
-    	lang_ = ""
+    	genr_ = ""
 }
 
 void MoviesParser::parseLine(const std::string input_line) {
@@ -23,8 +23,8 @@ void MoviesParser::parseLine(const std::string input_line) {
     bool hascontent = false;
     //tell title year has content or not
     bool titleyearhascontent = false;
-    //islang tells whether to start to record language
-    bool islang = false;
+    //isgenr tells whether to start to record genral
+    bool isgenr = false;
     //idxstart and idxend are used for marking the start and end of substring
     int idxstart = 0,len = 0;
     
@@ -127,17 +127,17 @@ void MoviesParser::parseLine(const std::string input_line) {
             break;
             case '\t':
             {
-                islang = true;
+                isgenr = true;
                 idxstart = i + 1;
             }
             break;
             default:
             {
-                if (islang) {
-                    lang_ = input_line.substr(idxstart,input_len - idxstart);
+                if (isgenr) {
+                    genr_ = input_line.substr(idxstart,input_len - idxstart);
                     //ofs<<" "<<input_line.substr(idxstart,input_len - idxstart)<<"\n";
                     len = 0;
-                    islang = false;
+                    isgenr = false;
                     //to jump out of the loop
                     i = input_len;
                 }

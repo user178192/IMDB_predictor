@@ -54,17 +54,17 @@ public:
     }
 };
 
-class KeywordsParser : public Parser {
+class GenresParser : public Parser {
 public:
     using Parser::Parser;
 
-    virtual void Init() {}
+    virtual void Init();
 
-    virtual void parseLine(const std::string line) {
-
-    }
+    virtual void parseLine(const std::string line);
 private:
-    std::string file_name;
+	std::string title_, titleyear_, subtitle_;
+	std::string movietype_;
+	std::string genr_;
 };
 
 class DirectorsParser : public Parser {
@@ -103,10 +103,22 @@ public:
 	
 	virtual void parseLine(const std::string line);
 private:
-	std::string title_;
-	std::string titleyear_;
-	std::string subtitle_;
+	std::string title_, titleyear_, subtitle_;
 	std::string movietype_;
 	std::string language_;
+};
+
+class CountriesParser : public Parser
+{
+public:
+	using Parser::Parser;
+	
+	virtual void Init();
+	
+	virtual void parseLine(const std::string line);
+private:
+	std::string title_, titleyear_, subtitle_;
+	std::string movietype_;
+	std::string country_;
 };
 #endif
