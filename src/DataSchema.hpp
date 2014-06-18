@@ -44,8 +44,7 @@ struct Movie
     vector<string> plots_;
 
     /* running-times.list */
-    int length_;
-
+    vector<string> length_;
 
 
 // For convenience
