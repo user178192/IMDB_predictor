@@ -12,13 +12,18 @@ LIB_PATH=-L./
 OBJS=DataSchema.o MovieDB.o Log.o
 SERVEROBJS=server_main.o
 PARSEROBJS=Parser.o parsers/actors.o parsers/movies.o
+DBBUILDOBJ=db_build.o
+PARSERTESTOBJ=parser_test.o
 
-all: server parser
+all: server db_build
 
 server: $(OBJS) $(SERVEROBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(LIB_PATH)
 	
-parser: $(OBJS) $(PARSEROBJS)
+parser_test: $(OBJS) $(PARSEROBJS) $(PARSERTESTOBJ)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(LIB_PATH)
+
+db_build: $(OBJS) $(PARSEROBJS) $(DBBUILDOBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(LIB_PATH)
 
 %.o: %.cpp

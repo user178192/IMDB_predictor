@@ -7,7 +7,7 @@
 using namespace imdb;
 
 void ActorsParser::Init() {
-    bool begin_parse_ = false;
+    begin_parse_ = false;
 }
 
 std::string ActorsParser::splitActorsName(const std::string& input_line) {
