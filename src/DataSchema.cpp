@@ -1,6 +1,7 @@
 #include <DataSchema.hpp>
 #include <Index.hpp> //for NULLID
 #include <algorithm>
+#include <unordered_set>
 
 
 using namespace std;
@@ -23,8 +24,15 @@ void Movie::RankPeople()
             [](const pair<size_t, int>& a, const pair<size_t, int>& b) {
                 return a.second < b.second;
             });
-    for(const auto& i: actors_rank_)
+
+    unordered_set<size_t> dedup;
+    for(const auto& i: actors_rank_) {
+        // no duplicate actors inside
+        if (dedup.count(i.first))
+            continue;
         actors_.push_back(i.first);
+        dedup.insert(i.first);
+    }
 }
 
 }

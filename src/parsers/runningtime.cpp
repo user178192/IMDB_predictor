@@ -165,11 +165,12 @@ void RunningtimeParser::parseLine(const std::string input_line) {
     string key = title_ + "(" + titleyear_ + ")";
     auto db_ret = db_->movies_.GetInfo(key);
     if (get<0>(db_ret)) {
-        // insert subtitle
-        if (!length_.empty())
+        // insert length
+        if (subtitle_.empty() && !length_.empty())
             get<2>(db_ret)->length_.push_back(length_);
     } else {
         //no such movie
+        LOG_DEBUG("Movie [%s] not found, inconsistant", key.c_str());
     }
 }
 

@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
     testType.exec("genres.list");
     testType.exec("language.list");
     testType.exec("countries.list");
+    testType.exec("running-times.list");
 
     db->SaveToFile(argv[1]);
     delete db;
