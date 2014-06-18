@@ -19,6 +19,8 @@ int main(int argc, char *argv[]) {
     testType.exec("genres.list");
     testType.exec("language.list");
     testType.exec("countries.list");
+    testType.exec("actors.list");
+    //testType.exec("actress.list");
     testType.exec("running-times.list");
 
     db->SaveToFile(argv[1]);
