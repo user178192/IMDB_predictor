@@ -3,7 +3,7 @@
 #OPT=-O4
 DEBUG=-g
 
-CFLAGS=-std=c++11 -Wall -Wextra -pedantic -Wno-format -fPIC $(OPT) $(DEBUG) 
+CFLAGS=-std=c++11 -Wall -Wextra -Wno-format -fPIC $(OPT) $(DEBUG) 
 CC=g++
 LIBS=-ltws
 INC_PATH=-I./

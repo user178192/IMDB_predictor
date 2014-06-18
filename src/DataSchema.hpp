@@ -49,8 +49,14 @@ struct Movie
 
 
 // For convenience
-    void AddActor(size_t id, size_t pos);
-    void AddDirector(size_t id, size_t pos);
+    void AddActor(size_t id, int pos);
+    void AddDirector(size_t id);
+
+    // sort the actors by rank and put them into actors list
+    void RankPeople();
+
+private:
+    vector<pair<size_t,int>> actors_rank_;
 };
 
 

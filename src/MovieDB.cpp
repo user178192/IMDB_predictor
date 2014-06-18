@@ -86,6 +86,10 @@ int MovieDB::SaveToFile(const std::string& filename)
         return -1;
     }
 
+    for(size_t i = 0; i < movies_.Size(); i++) {
+        get<2>(movies_.GetInfo(i))->RankPeople();
+    }
+
     writer->Write(ri_movie_);
     writer->Write(ri_time_);
     writer->Write(ri_people_);
