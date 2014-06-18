@@ -4,15 +4,15 @@
 
 using namespace imdb;
 
-void MoviesParser::Init() {
+void RunningtimeParser::Init() {
     	title_ = titleyear_ 
                = subtitle_ 
                = movietype_
-               = time_ 
+               = length_ 
                = detail_ = "";
 }
 
-void MoviesParser::parseLine(const std::string input_line) {
+void RunningtimeParser::parseLine(const std::string input_line) {
 	int input_len = input_line.length();
     //title counts the number of "
     //subtitle counts the number of {or}
@@ -142,7 +142,7 @@ void MoviesParser::parseLine(const std::string input_line) {
                     for (int i = 0; i < tempstr_len; ++i) {
                     	++len;
                     	if (tempstr[i] == '\t') {
-                    		time_ = tempstr.substr(tempstart,len - 1);
+                    		length_ = tempstr.substr(tempstart,len - 1);
                     		detail_ = tempstr.substr(len, tempstr_len - len);
                     		//to jump out of the for loop
                     		i = tempstr_len;
@@ -161,8 +161,8 @@ void MoviesParser::parseLine(const std::string input_line) {
     auto db_ret = db_->movies_.GetInfo(key);
     if (get<0>(db_ret)) {
         // insert subtitle
-        if (!time_.empty())
-            get<2>(db_ret)->time_.push_back(time_);
+        if (!length_.empty())
+            get<2>(db_ret)->length_.push_back(length_);
     } else {
         //no such movie
     }

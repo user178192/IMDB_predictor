@@ -133,7 +133,7 @@ public:
 private:
 	std::string title_, titleyear_, subtitle_;
 	std::string movietype_;
-	std::string time_, detail_;
+	std::string length_, detail_;
 };
 
 // should delete the object in the end
