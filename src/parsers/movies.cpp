@@ -1,5 +1,6 @@
 #include "Parser.hpp"
 #include <MovieDB.hpp>
+#include <Log.hpp>
 
 using namespace imdb;
 
@@ -10,8 +11,13 @@ void MoviesParser::Init() {
                = year_ = "";
 }
 
+void MoviesParser::Finish() 
+{
+    LOG_INFO("Read in %llu movies", db_->movies_.Size());
+}
+
 void MoviesParser::parseLine(const std::string input_line) {
-	int strlen = input_line.length();
+	int input_len = input_line.length();
     //title counts the number of "
     //subtitle counts the number of {or}
     //year counts for the number of ( or ), which is outside the { }
@@ -26,7 +32,11 @@ void MoviesParser::parseLine(const std::string input_line) {
     bool isyear = false;
     //idxstart and idxend are used for marking the start and end of substring
     int idxstart = 0,len = 0;
-    for (int i = 0; i < strlen; ++i) {
+
+    // clear the state
+    Init();
+
+    for (int i = 0; i < input_len; ++i) {
         ++len;
         switch(input_line[i]) {
             case '\"':
@@ -129,15 +139,32 @@ void MoviesParser::parseLine(const std::string input_line) {
             default:
             {
                 if (isyear) {
-                    year_ = input_line.substr(idxstart,strlen - idxstart);
-                    //ofs<<" "<<input_line.substr(idxstart,strlen - idxstart)<<"\n";
+                    year_ = input_line.substr(idxstart,input_len - idxstart);
+                    //ofs<<" "<<input_line.substr(idxstart,input_len - idxstart)<<"\n";
                     len = 0;
                     isyear = false;
                     //to jump out of the loop
-                    i = strlen;
+                    i = input_len;
                 }
                 
             }
-        }
-    }    
+        } //end switch..case..
+    }   // end for
+
+    //m.year_ = 
+    string key = title_ + "(" + titleyear_ + ")";
+    auto db_ret = db_->movies_.GetInfo(key);
+    if (get<0>(db_ret)) {
+        // already exists, and have subtitle, (series)
+        // insert subtitle
+        if (!subtitle_.empty())
+            get<2>(db_ret)->subtitles_.push_back(subtitle_);
+    } else {
+        // insert new entry
+        Movie m;
+        m.year_ = year_;
+        m.type_ = movietype_;
+        db_->movies_.Insert(key, m);
+    }
 }
+

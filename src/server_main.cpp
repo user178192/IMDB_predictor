@@ -68,6 +68,16 @@ static int my_handler(Response& resp, const Request& req)
     for(const auto& it : params)
         cout << it.first << " : " << it.second << endl;
     
+    // for test query
+    auto query_words = split_string(params["movie"], ", \t");
+    auto query_result = mdb->ri_movie_.Lookup(query_words);
+    for(const auto& id : query_result) {
+        cout << *(get<1>(mdb->movies_.GetKey(id))) << endl;
+    }
+    
+    //// for test query
+
+
     return HTTP_200;
 }
 
@@ -82,7 +92,9 @@ int main(int argc, char *argv[])
     port = atoi(argv[1]);
     
     mdb = new MovieDB();
-    //mdb->LoadFileFile(argv[2]);
+    mdb->LoadFromFile(argv[2]);
+
+    mdb->BuildIndex();
 
     // should catch execeptions if not sure the port is valid
     tws::HttpServer http_server(port, &my_handler, 4);
