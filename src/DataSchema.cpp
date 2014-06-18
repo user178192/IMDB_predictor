@@ -23,8 +23,15 @@ void Movie::RankPeople()
             [](const pair<size_t, int>& a, const pair<size_t, int>& b) {
                 return a.second < b.second;
             });
-    for(const auto& i: actors_rank_)
+
+    unordered_set<string> dedup;
+    for(const auto& i: actors_rank_) {
+        // no duplicate actors inside
+        if (dedup.count(i.first))
+            continue;
         actors_.push_back(i.first);
+        dedup.insert(i.first);
+    }
 }
 
 }

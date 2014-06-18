@@ -161,7 +161,7 @@ void MoviesParser::parseLine(const std::string input_line) {
     auto db_ret = db_->movies_.GetInfo(key);
     if (get<0>(db_ret)) {
         // insert subtitle
-        if (!time_.empty())
+        if (subtitle_.empty() && !time_.empty())
             get<2>(db_ret)->time_.push_back(time_);
     } else {
         //no such movie
