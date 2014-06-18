@@ -35,12 +35,13 @@ class ActorsParser : public Parser {
 public:
     using Parser::Parser;
     virtual void Init();
+    virtual void Finish();
+    virtual void parseLine(const std::string line);
     void splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
     std::string splitActorsName(const std::string& input_line);
-    virtual void parseLine(const std::string line);
-
+    void insertDB(const std::string& actor_name, const std::string& movie_name, const std::string& actor_rank);
 private:
-    bool begin_parse_;
+    bool begin_parse_ = false;
     std::string actor_name_;
 };
 
