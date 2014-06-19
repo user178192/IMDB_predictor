@@ -15,7 +15,7 @@ void MoviesParser::Finish()
     LOG_INFO("Read in %llu movies", db_->movies_.Size());
 }
 
-void Moviesparser::ProcessPart1(string part1)
+void MoviesParser::ProcessPart1(string part1)
 {
 	int idxstart = 0,idxend = part1.length() - 1;
 	bool findlb = false,findrb = false;

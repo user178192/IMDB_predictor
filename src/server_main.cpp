@@ -71,14 +71,18 @@ static int my_handler(Response& resp, const Request& req) {
     auto query_result = mdb->ri_movie_.Lookup(query_words);
 
     string ret;
-    int ret_limit = 5;
+    int ret_limit = 20;
     for(const auto& id : query_result) {
         if (ret_limit-- == 0)
             break;
 
         Movie *m = get<2>(mdb->movies_.GetInfo(id));
-        ret.append(*(get<1>(mdb->movies_.GetKey(id))) + ':');
-        int actor_limit = 5;
+
+        char tmpbuf[30];
+        snprintf(tmpbuf, 30, " (%.1f/%llu votes)", m->rating_, m->votes_);
+
+        ret.append(*(get<1>(mdb->movies_.GetKey(id))) + tmpbuf + ':');
+        int actor_limit = 10;
         for(const auto &i : m->actors_) {
             if (actor_limit-- == 0)
                 break;
