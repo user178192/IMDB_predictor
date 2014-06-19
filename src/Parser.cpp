@@ -32,6 +32,7 @@ void TypeTable::init(MovieDB *db) {
 
     parser_map["genres.list"] = new GenresParser("genres.list", db);
     parser_map["directors.list"] = new DirectorsParser("directors.list", db);
+    parser_map["composers.list"] = new DirectorsParser("composers.list", db);
     parser_map["movies.list"] = new MoviesParser("movies.list", db);
     parser_map["language.list"] = new LanguagesParser("language.list", db);
     parser_map["countries.list"] = new CountriesParser("countries.list", db);

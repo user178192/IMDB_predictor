@@ -80,6 +80,22 @@ private:
     std::string director_name_;
 };
 
+class ComposersParser : public Parser {
+public:
+    using Parser::Parser;
+    virtual void Init();
+    virtual void parseLine(const std::string line);
+    virtual void Finish();
+
+    void splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
+    std::string splitComposersName(const std::string& input_line);
+    void insertDB(const std::string& actor_name, const std::string& movie_name);
+
+private:
+    bool begin_parse_ = false;
+    std::string composer_name_;
+};
+
 class MoviesParser : public Parser {
 public:
     using Parser::Parser;

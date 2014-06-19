@@ -92,6 +92,45 @@ static int my_handler(Response& resp, const Request& req) {
     return HTTP_200;
 }
 
+static int request_handler(Response& resp, const Request& req) {
+    if (req.type() != HTTP_GET)
+        return HTTP_404;
+
+    string path;
+    unordered_map<string, string> params;
+
+    parse_request(req.path(), path, params);
+
+    cout << "REQ path:" << path << endl;
+    for (const auto& it : params)
+        cout << it.first << " : " << it.second << endl;
+
+    // for test query
+    auto query_words = split_string(params["movie"], ", \t");
+    auto query_result = mdb->ri_movie_.Lookup(query_words);
+    for (const auto& id : query_result) {
+        cout << *(get<1>(mdb->movies_.GetKey(id))) << endl;
+        cout << "\t\tLanguages:";
+        for (const auto &i : get<2>(mdb->movies_.GetInfo(id))->languages_)
+            cout << i << '\t';
+        cout << "\t\tCountries:";
+        for (const auto &i : get<2>(mdb->movies_.GetInfo(id))->countries_)
+            cout << i << '\t';
+        cout << "\t\tGenres:";
+        for (const auto &i : get<2>(mdb->movies_.GetInfo(id))->genres_)
+            cout << i << '\t';
+        cout << "\t\tTime:";
+        for (const auto &i : get<2>(mdb->movies_.GetInfo(id))->length_)
+            cout << i << '\t';
+        cout << endl;
+    }
+
+    //// for test query
+
+
+    return HTTP_200;
+}
+
 int main(int argc, char *argv[]) {
     int port = 8000;
 
