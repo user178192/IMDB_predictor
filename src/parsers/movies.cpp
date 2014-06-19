@@ -103,7 +103,6 @@ void MoviesParser::parseLine(const std::string input_line) {
     
     cout<<"{"<<title_<<"}"<<subtitle_<<"|"<<type_<<"|"<<year_<<"\n";
     
-    //m.year_ = 
     string key = title_;
     auto db_ret = db_->movies_.GetInfo(key);
     if (get<0>(db_ret)) {

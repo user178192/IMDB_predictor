@@ -58,9 +58,11 @@ public:
     virtual void Init();
 
     virtual void parseLine(const std::string line);
+    
+    void ProcessPart1(std::string part1);
 private:
     std::string title_, titleyear_, subtitle_;
-    std::string movietype_;
+    std::string type_;
     std::string genr_;
 };
 
@@ -115,9 +117,10 @@ public:
     using Parser::Parser;
     virtual void Init();
     virtual void parseLine(const std::string line);
+    void ProcessPart1(std::string part1);
 private:
     std::string title_, titleyear_, subtitle_;
-    std::string movietype_;
+    std::string type_;
     std::string lang_;
 };
 
@@ -126,9 +129,10 @@ public:
     using Parser::Parser;
     virtual void Init();
     virtual void parseLine(const std::string line);
+    void ProcessPart1(std::string part1);
 private:
     std::string title_, titleyear_, subtitle_;
-    std::string movietype_;
+    std::string type_;
     std::string country_;
 };
 
