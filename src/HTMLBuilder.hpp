@@ -1,25 +1,24 @@
 #include <string>
 #include <vector>
 
-class HTMLBuilder
-{
+class HTMLBuilder {
 public:
-	HTMLBuilder();
-	void Init();
+    HTMLBuilder();
+    void Init();
 
-	void outPut(const std::string content);
-	void buildHref(const std::string content);
-	
-	void writeMoiveTitle(const std::string moiveTitle);
+    void outPut(const std::string content);
+    void buildHref(const std::string content);
 
-	void writeActors(std::vector<std::string> actors_arr);
+    void writeMoiveTitle(const std::string moiveTitle);
 
-	void writeHead();
-	void writeContent();
-	void writeFooter();
+    void writeActors(std::vector<std::string> actors_arr);
 
-	std::string output_buffer_;
+    void writeHead();
+    void writeContent();
+    void writeFooter();
+
+    std::string output_buffer_;
 
 private:
-	std::string file_name_;
+    std::string file_name_;
 };

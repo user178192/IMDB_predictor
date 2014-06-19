@@ -7,15 +7,15 @@
 using namespace std;
 using namespace imdb;
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
+
     struct Movie {
         vector<size_t> actors;
         vector<size_t> directors;
         string plot;
     };
-    
-    
+
+
     Index<string, Movie> movie_index;
 
     Movie ma;
@@ -44,25 +44,25 @@ int main(int argc, char *argv[])
 
     auto ret = ri.Lookup({"edge", "of", "tomorrow"});
     cout << "query 'edge of tomorrow': ";
-    for(const auto i : ret) 
+    for (const auto i : ret)
         cout << i << '\t';
     cout << endl;
 
     ret = ri.Lookup({"edge", "of", "yesterday"});
     cout << "query 'edge of yesterday': ";
-    for(const auto i : ret) 
+    for (const auto i : ret)
         cout << i << '\t';
     cout << endl;
 
     ret = ri.Lookup({"edge"});
     cout << "query 'edge': ";
-    for(const auto i : ret) 
+    for (const auto i : ret)
         cout << i << '\t';
     cout << endl;
 
     ret = ri.Lookup({"and"});
     cout << "query 'and': ";
-    for(const auto i : ret) 
+    for (const auto i : ret)
         cout << i << '\t';
     cout << endl;
 

@@ -18,10 +18,15 @@ using namespace imdb;
 class Parser {
 protected:
     MovieDB *db_;
-    virtual void Init() {}
-    virtual void Finish() {}
-    
+
+    virtual void Init() {
+    }
+
+    virtual void Finish() {
+    }
+
 public:
+
     Parser(const std::string str, MovieDB *db) : db_(db), file_name_(str), line_num_(0) {
         Init();
     }
@@ -53,24 +58,24 @@ public:
 
     virtual void parseLine(const std::string line);
 private:
-	std::string title_, titleyear_, subtitle_;
-	std::string movietype_;
-	std::string genr_;
+    std::string title_, titleyear_, subtitle_;
+    std::string movietype_;
+    std::string genr_;
 };
 
 class DirectorsParser : public Parser {
 public:
     using Parser::Parser;
 
-    virtual void Init() {}
+    virtual void Init() {
+    }
 
     virtual void parseLine(const std::string line) {
 
     }
 };
 
-class  MoviesParser : public Parser
-{
+class MoviesParser : public Parser {
 public:
     using Parser::Parser;
 
@@ -81,53 +86,51 @@ public:
     virtual void Finish();
 
 private:
-	std::string title_, titleyear_, subtitle_;
-	std::string movietype_, year_;
+    std::string title_, titleyear_, subtitle_;
+    std::string movietype_, year_;
 };
 
-class LanguagesParser : public Parser
-{
+class LanguagesParser : public Parser {
 public:
-	using Parser::Parser;
-	
-	virtual void Init();
-	
-	virtual void parseLine(const std::string line);
+    using Parser::Parser;
+
+    virtual void Init();
+
+    virtual void parseLine(const std::string line);
 private:
-	std::string title_, titleyear_, subtitle_;
-	std::string movietype_;
-	std::string lang_;
+    std::string title_, titleyear_, subtitle_;
+    std::string movietype_;
+    std::string lang_;
 };
 
-class CountriesParser : public Parser
-{
+class CountriesParser : public Parser {
 public:
-	using Parser::Parser;
-	
-	virtual void Init();
-	
-	virtual void parseLine(const std::string line);
+    using Parser::Parser;
+
+    virtual void Init();
+
+    virtual void parseLine(const std::string line);
 private:
-	std::string title_, titleyear_, subtitle_;
-	std::string movietype_;
-	std::string country_;
+    std::string title_, titleyear_, subtitle_;
+    std::string movietype_;
+    std::string country_;
 };
 
-class RunningtimeParser : public Parser
-{
+class RunningtimeParser : public Parser {
 public:
-	using Parser::Parser;
-	
-	virtual void Init();
-	
-	virtual void parseLine(const std::string line);
+    using Parser::Parser;
+
+    virtual void Init();
+
+    virtual void parseLine(const std::string line);
 private:
-	std::string title_, titleyear_, subtitle_;
-	std::string movietype_;
-	std::string length_, detail_;
+    std::string title_, titleyear_, subtitle_;
+    std::string movietype_;
+    std::string length_, detail_;
 };
 
 // should delete the object in the end
+
 class TypeTable {
 private:
     // map of data filename relate to Parser

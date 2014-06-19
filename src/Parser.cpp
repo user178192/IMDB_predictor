@@ -25,9 +25,7 @@ void Parser::parseFile(const std::string file_name) {
     Finish();
 }
 
-
-void TypeTable::init(MovieDB *db)
-{
+void TypeTable::init(MovieDB *db) {
     // the actors and actresses are same
     parser_map["actors.list"] = new ActorsParser("actors.list", db);
     parser_map["actresses.list"] = new ActorsParser("actresses.list", db);
@@ -40,8 +38,7 @@ void TypeTable::init(MovieDB *db)
     parser_map["running-times.list"] = new RunningtimeParser("running-times.list", db);
 }
 
-void TypeTable::exec(const std::string file_name)
-{
+void TypeTable::exec(const std::string file_name) {
     assert(parser_map.count(file_name));
     parser_map[file_name] -> parseFile(file_name);
 }
