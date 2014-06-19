@@ -180,7 +180,7 @@ namespace imdb {
         }
 
         void Write(const Movie& val) {
-            Write(val.rate_);
+            Write(val.rating_);
             Write(val.votes_);
             Write(val.year_);
             Write(val.type_);
@@ -196,7 +196,7 @@ namespace imdb {
         }
 
         void Read(Movie& val) {
-            Read(val.rate_);
+            Read(val.rating_);
             Read(val.votes_);
             Read(val.year_);
             Read(val.type_);

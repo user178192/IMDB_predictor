@@ -26,12 +26,8 @@ static string url_escape_remove(const string& s) {
                 else
                     return c - 'a' + 10;
             };
-<<<<<<< HEAD
-            ret.append(1, hextodec(s[i+1]) * 16 + hextodec(s[i+2]));
-            i += 2;
-=======
             ret.append(1, hextodec(s[i + 1]) * 16 + hextodec(s[i + 2]));
->>>>>>> a9d2b1eee181ba93efe61d833c5d67c4f5f8d4b6
+            i += 2;
         } else if (s[i] == '+')
             ret.append(1, ' ');
         else

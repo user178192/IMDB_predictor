@@ -34,11 +34,7 @@ void ActorsParser::insertDB(const std::string& actor_name, const std::string& mo
     auto act_obj = db_ -> actors_.GetInfo(act_key); // here is the actors info
     auto mov_obj = db_ -> movies_.GetInfo(mov_key);
 
-<<<<<<< HEAD
-    if (!get<0>(mov_obj) ){
-=======
     if (!get<0>(mov_obj)) {
->>>>>>> a9d2b1eee181ba93efe61d833c5d67c4f5f8d4b6
         LOG_DEBUG("Movie [%s] not found, inconsistant", movie_name.c_str());
         return;
     }
