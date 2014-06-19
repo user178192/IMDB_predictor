@@ -1,5 +1,5 @@
 #include "Parser.hpp"
-#include "LOG.hpp"
+#include "Log.hpp"
 #include <MovieDB.hpp>
 #include <stdio.h>
 
@@ -103,21 +103,14 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
     // it is a Movie
     else {
 
-        size_t right_pos = input_line.find('(', left_pos + 1);
-        std::string movie_name, movie_time, actor_rank;
-
-        // Take the case like Title (????)
-        if (isdigit(input_line[right_pos + 1]) || input_line[right_pos + 1] == '?') {
-            movie_name.assign(input_line, left_pos, right_pos - left_pos - 1);
-        } else { // Take the case like title (title) (year)
-            right_pos = input_line.find(')', right_pos + 1);
-            movie_name.assign(input_line, left_pos, right_pos - left_pos + 1);
-
+        size_t right_pos = 0;
+        while (true) {      // find the end of year
+            if (input_line[right_pos] == ')' && isdigit(input_line[right_pos - 1])) { break;}
+            right_pos++;
         }
-
-        left_pos = input_line.find('(', right_pos);
-        right_pos = input_line.find(')', left_pos + 1);
-        movie_time.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+        
+        std::string movie_name, actor_rank;
+        movie_name.assign(input_line, left_pos, right_pos - left_pos + 1);
 
         left_pos = input_line.find('<', right_pos + 1);
         if (left_pos != std::string::npos) {
@@ -125,7 +118,7 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
             actor_rank.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
 
-        insertDB(actor_name, movie_name + " " + "(" + movie_time + ")", actor_rank);
+        insertDB(actor_name, movie_name, actor_rank);
     }
 }
 
