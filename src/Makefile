@@ -17,6 +17,7 @@ PARSEROBJS=Parser.o parsers/actors.o \
 		    parsers/languages.o \
 		    parsers/genres.o \
 		    parsers/countries.o \
+		    parsers/ratings.o \
 		    parsers/runningtime.o
 
 DBBUILDOBJ=db_build.o

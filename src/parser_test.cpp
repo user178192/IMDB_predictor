@@ -15,9 +15,9 @@ int main(int argc, char *argv[]) {
     MovieDB *db = new MovieDB();
     TypeTable testType;
     testType.init(db);
-    testType.exec("movies.list");
+    testType.exec("ratings.list");
 
-    db->SaveToFile(argv[1]);
+    //db->SaveToFile(argv[1]);
     delete db;
     return 0;
 }

@@ -8,7 +8,7 @@ namespace imdb {
 
     struct Movie {
         /* ratings.list */
-        double rate_;
+        double rating_;
         size_t votes_;
 
         // movies.list,  like 1992-2013
