@@ -137,6 +137,17 @@ private:
 	std::string length_, detail_;
 };
 
+class RatingParser : public Parser
+{
+public:
+	using Parser::Parser;
+
+    virtual void Finish();
+	virtual void parseLine(const std::string line);
+private:
+};
+
+
 // should delete the object in the end
 class TypeTable {
 private:
