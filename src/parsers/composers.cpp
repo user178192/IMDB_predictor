@@ -46,6 +46,7 @@ void ComposersParser::insertDB(const std::string& composer_name, const std::stri
         Composer c;
         c.movies_.push_back(get<1>(mov_obj));
         com_id = db_->composers_.Insert(com_key, c);
+        get<2>(mov_obj)->composer_ = com_id;
     }
 }
 

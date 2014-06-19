@@ -99,7 +99,7 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
             if (input_line[right_pos] == ')') {
                 //special case like (1999/II)
                 size_t close = input_line.rfind('(', right_pos);
-                if (isdigit(input_line[close + 1])) {
+                if (isdigit(input_line[close + 1]) || input_line[close + 1] == '?') {
                     break;
                 }
             }

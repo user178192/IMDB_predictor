@@ -1,7 +1,7 @@
 #include <MovieDB.hpp>
 #include <Serializer.hpp>
 #include <Log.hpp>
-
+#include <algorithm>
 #include <cctype>
 
 namespace imdb {
