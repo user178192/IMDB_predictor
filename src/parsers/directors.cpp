@@ -7,30 +7,29 @@
 
 using namespace imdb;
 
-void ActorsParser::Init() {
-
+void DirectorsParser::Init() {
 }
 
-std::string ActorsParser::splitActorsName(const std::string& input_line) {
+std::string DirectorsParser::splitDirectorsName(const std::string& input_line) {
     size_t pos1 = 0, pos2 = 0;
     while (input_line[pos2] != '\t') {
         pos2++;
     }
-    std::string actor_name(input_line, pos1, pos2);
-    splitMoiveName(pos2, actor_name, input_line);
-    return actor_name;
+    std::string director_name(input_line, pos1, pos2);
+    splitMoiveName(pos2, director_name, input_line);
+    return director_name;
 }
 
-void ActorsParser::Finish() {
-    LOG_INFO("Read in %llu actors", db_->actors_.Size());
+void DirectorsParser::Finish() {
+    LOG_INFO("Read in %llu directors", db_->directors_.Size());
 }
 
-void ActorsParser::insertDB(const std::string& actor_name, const std::string& movie_name, const std::string& actor_rank) {
-    auto act_key = actor_name;
+void DirectorsParser::insertDB(const std::string& director_name, const std::string& movie_name) {
+    auto dir_key = director_name;
     auto mov_key = movie_name;
-    size_t actor_id = 0;
+    size_t dir_id = 0;
 
-    auto act_obj = db_ -> actors_.GetInfo(act_key); // here is the actors info
+    auto act_obj = db_ -> directors_.GetInfo(dir_key); // here is the directors info
     auto mov_obj = db_ -> movies_.GetInfo(mov_key);
 
     if (!get<0>(mov_obj)) {
@@ -38,20 +37,17 @@ void ActorsParser::insertDB(const std::string& actor_name, const std::string& mo
         return;
     }
 
-    // if no rank, set INT_MAX
-    int rank = actor_rank.length() == 0 ? INT_MAX : std::stoi(actor_rank);
-
     if (get<0>(act_obj)) {
-        // the actor already exists, insert the movie id to the actor
+        // the director already exists, insert the movie id to the director
         get<2>(act_obj)->movies_.push_back(get<1>(mov_obj));
-        get<2>(mov_obj)->AddActor(actor_id, rank);
+        get<2>(mov_obj)->AddDirector(dir_id);
 
     } else {
-        // insert new actor
-        Actor a;
-        a.movies_.push_back(get<1>(mov_obj));
-        actor_id = db_->actors_.Insert(act_key, a);
-        get<2>(mov_obj)->AddActor(actor_id, rank);
+        // insert new director
+        Director d;
+        d.movies_.push_back(get<1>(mov_obj));
+        dir_id = db_->directors_.Insert(dir_key, d);
+        get<2>(mov_obj)->AddDirector(dir_id);
     }
 }
 
@@ -60,7 +56,7 @@ void ActorsParser::insertDB(const std::string& actor_name, const std::string& mo
     Not consider the subtitle
 */
 
-void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line) {
+void DirectorsParser::splitMoiveName(const size_t begin, const std::string& director_name, const std::string& input_line) {
     size_t left_pos = begin;
 
     while (input_line[left_pos] == '\t') {
@@ -70,7 +66,7 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
     // it is a Television Series 
     if (input_line[left_pos] == '"') {
 
-        std::string series_name, series_time, actor_rank;
+        std::string series_name, series_time, director_rank;
         size_t right_pos = input_line.find('"', left_pos + 1);
 
 
@@ -82,15 +78,10 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
             series_time.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
 
-        left_pos = input_line.find('<', right_pos + 1);
-        if (left_pos != std::string::npos) {
-            right_pos = input_line.find('>', left_pos + 1);
-            actor_rank.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
-        }
-
-        insertDB(actor_name, series_name + " " + "(" + series_time + ")", actor_rank);
+        insertDB(director_name, series_name + " " + "(" + series_time + ")");
     }
-        // it is a Movie
+    
+    // it is a Movie
     else {
 
         size_t right_pos = 0;
@@ -104,21 +95,13 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
             }
             right_pos++;
         }
-
-        std::string movie_name, actor_rank;
+        std::string movie_name, director_rank;
         movie_name.assign(input_line, left_pos, right_pos - left_pos + 1);
-
-        left_pos = input_line.find('<', right_pos + 1);
-        if (left_pos != std::string::npos) {
-            right_pos = input_line.find('>', left_pos + 1);
-            actor_rank.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
-        }
-
-        insertDB(actor_name, movie_name, actor_rank);
+        insertDB(director_name, movie_name);
     }
 }
 
-void ActorsParser::parseLine(const std::string input_line) {
+void DirectorsParser::parseLine(const std::string input_line) {
     Init();
     if (strncmp(input_line.c_str(), "----\t", 5) == 0) {
         begin_parse_ = true;
@@ -135,10 +118,10 @@ void ActorsParser::parseLine(const std::string input_line) {
         }
             // This line is movie name
         else if (*(input_line.begin()) == '\t') {
-            splitMoiveName(0, actor_name_, input_line);
-        }            // This line is actors name + movie name
+            splitMoiveName(0, director_name_, input_line);
+        }            // This line is directors name + movie name
         else {
-            actor_name_ = std::move(splitActorsName(input_line));
+            director_name_ = std::move(splitDirectorsName(input_line));
         }
     }
 }

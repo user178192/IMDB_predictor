@@ -42,6 +42,7 @@ public:
     virtual void Init();
     virtual void Finish();
     virtual void parseLine(const std::string line);
+
     void splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
     std::string splitActorsName(const std::string& input_line);
     void insertDB(const std::string& actor_name, const std::string& movie_name, const std::string& actor_rank);
@@ -66,23 +67,24 @@ private:
 class DirectorsParser : public Parser {
 public:
     using Parser::Parser;
+    virtual void Init();
+    virtual void parseLine(const std::string line);
+    virtual void Finish();
 
-    virtual void Init() {
-    }
+    void splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
+    std::string splitDirectorsName(const std::string& input_line);
+    void insertDB(const std::string& actor_name, const std::string& movie_name);
 
-    virtual void parseLine(const std::string line) {
-
-    }
+private:
+    bool begin_parse_ = false;
+    std::string director_name_;
 };
 
 class MoviesParser : public Parser {
 public:
     using Parser::Parser;
-
     virtual void Init();
-
     virtual void parseLine(const std::string line);
-
     virtual void Finish();
 
 private:
@@ -93,9 +95,7 @@ private:
 class LanguagesParser : public Parser {
 public:
     using Parser::Parser;
-
     virtual void Init();
-
     virtual void parseLine(const std::string line);
 private:
     std::string title_, titleyear_, subtitle_;
@@ -106,9 +106,7 @@ private:
 class CountriesParser : public Parser {
 public:
     using Parser::Parser;
-
     virtual void Init();
-
     virtual void parseLine(const std::string line);
 private:
     std::string title_, titleyear_, subtitle_;
@@ -119,9 +117,7 @@ private:
 class RunningtimeParser : public Parser {
 public:
     using Parser::Parser;
-
     virtual void Init();
-
     virtual void parseLine(const std::string line);
 private:
     std::string title_, titleyear_, subtitle_;
