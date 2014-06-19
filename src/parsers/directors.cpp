@@ -95,7 +95,7 @@ void DirectorsParser::splitMoiveName(const size_t begin, const std::string& dire
             }
             right_pos++;
         }
-        std::string movie_name, director_rank;
+        std::string movie_name;
         movie_name.assign(input_line, left_pos, right_pos - left_pos + 1);
         insertDB(director_name, movie_name);
     }

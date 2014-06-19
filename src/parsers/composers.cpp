@@ -16,21 +16,21 @@ std::string ComposersParser::splitComposersName(const std::string& input_line) {
         pos2++;
     }
     
-    std::string Composer_name(input_line, pos1, pos2);
-    splitMoiveName(pos2, Composer_name, input_line);
-    return Composer_name;
+    std::string composer_name(input_line, pos1, pos2);
+    splitMoiveName(pos2, composer_name, input_line);
+    return composer_name;
 }
 
 void ComposersParser::Finish() {
-    LOG_INFO("Read in %llu Composers", db_->Composers_.Size());
+    LOG_INFO("Read in %llu Composers", db_->composers_.Size());
 }
 
-void ComposersParser::insertDB(const std::string& Composer_name, const std::string& movie_name) {
-    auto dir_key = Composer_name;
+void ComposersParser::insertDB(const std::string& composer_name, const std::string& movie_name) {
+    auto com_key = composer_name;
     auto mov_key = movie_name;
-    size_t dir_id = 0;
+    size_t com_id = 0;
 
-    auto act_obj = db_ -> Composers_.GetInfo(dir_key); // here is the Composers info
+    auto com_obj = db_ -> composers_.GetInfo(com_key); // here is the composers info
     auto mov_obj = db_ -> movies_.GetInfo(mov_key);
 
     if (!get<0>(mov_obj)) {
@@ -38,17 +38,14 @@ void ComposersParser::insertDB(const std::string& Composer_name, const std::stri
         return;
     }
 
-    if (get<0>(act_obj)) {
-        // the Composer already exists, insert the movie id to the Composer
-        get<2>(act_obj)->movies_.push_back(get<1>(mov_obj));
-        get<2>(mov_obj)->AddComposer(dir_id);
-
+    if (get<0>(com_obj)) {
+        // the composer already exists, insert the movie id to the Composer
+        get<2>(com_obj)->movies_.push_back(get<1>(mov_obj));
     } else {
-        // insert new Composer
+        // insert new composer
         Composer c;
         c.movies_.push_back(get<1>(mov_obj));
-        dir_id = db_->Composers_.Insert(dir_key, c);
-        get<2>(mov_obj)->AddComposer(dir_id);
+        com_id = db_->composers_.Insert(com_key, c);
     }
 }
 
@@ -57,7 +54,7 @@ void ComposersParser::insertDB(const std::string& Composer_name, const std::stri
     Not consider the subtitle
 */
 
-void ComposersParser::splitMoiveName(const size_t begin, const std::string& Composer_name, const std::string& input_line) {
+void ComposersParser::splitMoiveName(const size_t begin, const std::string& composer_name, const std::string& input_line) {
     size_t left_pos = begin;
 
     while (input_line[left_pos] == '\t') {
@@ -79,7 +76,7 @@ void ComposersParser::splitMoiveName(const size_t begin, const std::string& Comp
             series_time.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
 
-        insertDB(Composer_name, series_name + " " + "(" + series_time + ")");
+        insertDB(composer_name, series_name + " " + "(" + series_time + ")");
     }
     
     // it is a Movie
@@ -95,9 +92,9 @@ void ComposersParser::splitMoiveName(const size_t begin, const std::string& Comp
             }
             right_pos++;
         }
-        std::string movie_name, Composer_rank;
+        std::string movie_name;
         movie_name.assign(input_line, left_pos, right_pos - left_pos + 1);
-        insertDB(Composer_name, movie_name);
+        insertDB(composer_name, movie_name);
     }
 }
 
@@ -118,10 +115,10 @@ void ComposersParser::parseLine(const std::string input_line) {
         }
             // This line is movie name
         else if (*(input_line.begin()) == '\t') {
-            splitMoiveName(0, Composer_name_, input_line);
+            splitMoiveName(0, composer_name_, input_line);
         }            // This line is Composers name + movie name
         else {
-            Composer_name_ = std::move(splitComposersName(input_line));
+            composer_name_ = std::move(splitComposersName(input_line));
         }
     }
 }
