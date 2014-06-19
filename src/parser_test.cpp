@@ -14,11 +14,11 @@ int main(int argc, char *argv[]) {
 
     MovieDB *db = new MovieDB();
     TypeTable testType;
-    //testType.init(db);
-    //testType.exec("ratings.list");
-    auto d = new ActorsParser("sdfa", db);
-    d->parseLine("----\t");
-    d->parseLine("\t\t\t\"Catherine\" (1999) {To <<bi>> or not to <<bi>> (#3.5)}  [Thomas]");
+    testType.init(db);
+    testType.exec("movies.list");
+    //auto d = new ActorsParser("sdfa", db);
+    //d->parseLine("----\t");
+    //d->parseLine("\t\t\t\"Catherine\" (1999) {To <<bi>> or not to <<bi>> (#3.5)}  [Thomas]");
 
     //db->SaveToFile(argv[1]);
     delete db;

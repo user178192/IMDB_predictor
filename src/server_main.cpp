@@ -1,5 +1,6 @@
 #include <http_server.hpp>
 #include <MovieDB.hpp>
+#include <HttpHandler.hpp>
 
 #include <unordered_map>
 #include <string>
@@ -66,11 +67,16 @@ static int my_handler(Response& resp, const Request& req) {
     for (const auto& it : params)
         cout << it.first << " : " << it.second << endl;
 
+    string ret, ret_type;
+    HttpHandler::process(path, params, ret, ret_type);
+    resp.set_body(ret);
+    resp.set_header("Content-Type", ret_type);
+    return HTTP_404;
+
     // for test query
     auto query_words = split_string(params["movie"], ", \t");
     auto query_result = mdb->ri_movie_.Lookup(query_words);
 
-    string ret;
     int ret_limit = 20;
     for(const auto& id : query_result) {
         if (ret_limit-- == 0)
@@ -162,11 +168,12 @@ int main(int argc, char *argv[]) {
     port = atoi(argv[1]);
 
     mdb = new MovieDB();
-    mdb->LoadFromFile(argv[2]);
+    //mdb->LoadFromFile(argv[2]);
 
-    mdb->BuildIndex();
+    //mdb->BuildIndex();
 
     // should catch execeptions if not sure the port is valid
+    HttpHandler::Init(mdb);
     tws::HttpServer http_server(port, &my_handler, 4);
     http_server.run();
     return 0;
