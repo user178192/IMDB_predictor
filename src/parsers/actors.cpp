@@ -40,7 +40,14 @@ void ActorsParser::insertDB(const std::string& actor_name, const std::string& mo
     }
 
     // if no rank, set INT_MAX
-    int rank = actor_rank.length() == 0 ? INT_MAX : std::stoi(actor_rank);
+    bool validrank = true;
+    for(const char i : actor_rank) 
+        if (!isdigit(i)) {
+            validrank = false;
+            break;
+        }
+
+    int rank = actor_rank.length() == 0 ? INT_MAX : (validrank ? std::stoi(actor_rank) : INT_MAX);
 
     if (get<0>(act_obj)) {
         // the actor already exists, insert the movie id to the actor
@@ -81,6 +88,11 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
         if (left_pos != std::string::npos) {
             right_pos = input_line.find(')', left_pos + 1);
             series_time.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+        }
+
+        left_pos = input_line.find('{', right_pos + 1);
+        if (left_pos != std::string::npos) {
+             right_pos = input_line.find('}', left_pos + 1);
         }
 
         left_pos = input_line.find('{', right_pos + 1);

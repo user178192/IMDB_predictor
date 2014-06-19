@@ -82,7 +82,7 @@ static int my_handler(Response& resp, const Request& req) {
         for(const auto &i : m->actors_) {
             if (actor_limit-- == 0)
                 break;
-            ret.append(*(get<1>(mdb->actors_.GetKey(i))) + ", ");
+            ret.append(*(get<1>(mdb->actors_.GetKey(i))) + " |  ");
         }
         ret.append(1, '\n');
 
