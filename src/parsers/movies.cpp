@@ -2,115 +2,98 @@
 #include <MovieDB.hpp>
 #include <Log.hpp>
 
-using namespace imdb;
-
 void MoviesParser::Init() {
-    	title_ = subtitle_ 
-               = type_ 
-               = year_ = "";
+	title_ = subtitle_ 
+           = type_ 
+           = year_ = "";
 }
 
-void MoviesParser::Finish() 
-{
-    LOG_INFO("Read in %llu movies", db_->movies_.Size());
+void MoviesParser::Finish() {
+	LOG_INFO("Read in %llu movies", db_->movies_.Size());
 }
 
-void MoviesParser::ProcessPart1(string part1)
-{
-	int idxend = part1.length() - 1;
-    int stkbrace = 0;
-    int stkpare = 0;
-	int endbrace = 0;
-	int endpare = 0;
-	bool istype = false;
-	size_t found;	
-    bool inbrace = false;
-	
-	for (int i = idxend; i >= 0; --i) {
-		if (part1[i] == '}') {
-            inbrace = true;
-			if (stkbrace == 0)
-				endbrace = i;
-			++stkbrace;
-		}
-		if(part1[i] == ')') {
-            if(!inbrace){
-                
-			if (stkpare == 0)
-				endpare = i;
-			++stkpare;
-			if (!isdigit(part1[i-1])) {
-				//is type
-				istype = true;	
-			} else {
-				istype = false;
-				title_ = part1.substr(0,i);
-				found = title_.find("\" (");
-				if(found != string::npos) {
-					title_.replace(found,3," (");
-				}
-                i = -1;
+void MoviesParser::splitMoiveName(const std::string input_line) { 
+	size_t left_pos = 0;
+	size_t right_pos = input_line.length(); 
+	left_pos = input_line.rfind('\t', right_pos - 1);
+	year_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+
+	// skip tab
+	while (input_line[left_pos] == '\t') {left_pos--;}
+
+	while(left_pos != 0) {
+		if (input_line[left_pos] == '}') {
+		// here is subtitle
+			right_pos = left_pos; 
+			left_pos = input_line.rfind('{', right_pos - 1);
+			subtitle_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+		} 
+		else if(input_line[left_pos] == ')') {
+		    // here is the year in title;
+		    // special case like (1999/II) 
+		    size_t close = input_line.rfind('(', left_pos);
+		    right_pos = left_pos;
+			string temp(input_line, close + 1, right_pos - close - 1);
+			// >=4 avoid like (V)
+			if (temp.find_first_not_of("0123456789IVX/?") == string::npos && temp.length() >= 4) {
+		     		left_pos = 0;
+
+		     		title_.assign(input_line, left_pos, right_pos - left_pos + 1);
+
+		     		if (title_[0] == '"') {
+		     			// For tv title , remove the "
+		     			title_.erase (std::remove(title_.begin(), title_.end(), '"'), title_.end());
+			 		}
+			 		break;
 			}
-            }
-		}
-		if (part1[i] == '{') {
-            inbrace = false;
-			--stkbrace;
-			if (stkbrace == 0)
-				subtitle_ = part1.substr(i+1,endbrace-i-1);
-		}
-		if (part1[i] == '(') {
-            if(!inbrace){
-			--stkpare;
-			if (stkpare == 0) {
-				if (istype) {
-                    //it is movie
-					type_ = part1.substr(i+1,endpare-i-1);
-					title_ = part1.substr(0,i-1);
-					found = title_.find("\" (");
-					if(found != string::npos) {
-						title_.replace(found,3," (");
-					}
-                    i = -1;
-				}
+			else {
+					// here is the type
+					left_pos = input_line.rfind('(', right_pos);
+					type_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
 			}
-            }   
 		}
+		left_pos--; 
 	}
-	if(title_[0] == '\"')
-		title_ = title_.substr(1,title_.length() - 1);
+
+	//std::cout << "{" << title_ << "}" << year_ << std::endl; 
 }
 
 void MoviesParser::parseLine(const std::string input_line) {
-	int input_len = input_line.length();
-    
-	string part1;
-    // clear the state
-    Init();
-       
-	for (int i = 0; i < input_len; ++i) {
-        if (input_line[i] == '\t') {
-            part1 = input_line.substr(0,i);
-            while(input_line[i] == '\t')
-            	++i;
-            year_ = input_line.substr(i,input_len - i);
-            //ofs<<" "<<vstr.substr(i,strlen - i)<<"\n";
-            i = input_len;
-        }                            
-    }//end of for
-        
-    ProcessPart1(part1);
-    
-    cout<<"{"<<title_<<"}"<<subtitle_<<"|"<<type_<<"|"<<year_<<"\n";
-    
+	//refresh the string in evey line
+	Init();
+	if (strncmp(input_line.c_str(), "=====", 5) == 0) {
+        begin_parse_ = true;
+        return;
+    }
+
+    else if (strncmp(input_line.c_str(), "-----", 5) == 0) {
+        begin_parse_ = false;
+        return;
+    }
+
+	if (begin_parse_ == true) { 
+		// This line is empty line
+		if (input_line.length() == 0) {
+            return;
+        }
+        else {
+        	splitMoiveName(input_line);
+        	insertDB();
+        }
+    }
+}
+
+void MoviesParser::insertDB() {
     string key = title_;
-    auto db_ret = db_->movies_.GetInfo(key);
-    if (get<0>(db_ret)) {
+    auto mov_obj = db_->movies_.GetInfo(key);
+    if (get<0>(mov_obj)) {
         // already exists, and have subtitle, (series)
         // insert subtitle
-        if (!subtitle_.empty())
-            get<2>(db_ret)->subtitles_.push_back(subtitle_);
-    } else {
+        if (!subtitle_.empty()) {
+            get<2>(mov_obj)->subtitles_.push_back(subtitle_);
+        }
+    } 
+    else {
         // insert new entry
         Movie m;
         m.year_ = year_;
@@ -118,4 +101,3 @@ void MoviesParser::parseLine(const std::string input_line) {
         db_->movies_.Insert(key, m);
     }
 }
-
