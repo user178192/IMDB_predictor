@@ -68,9 +68,11 @@ static int my_handler(Response& resp, const Request& req) {
         cout << it.first << " : " << it.second << endl;
 
     string ret, ret_type;
-    HttpHandler::process(path, params, ret, ret_type);
-    resp.set_body(ret);
-    resp.set_header("Content-Type", ret_type);
+    if (HttpHandler::process(path, params, ret, ret_type) == 0) {
+        resp.set_body(ret);
+        resp.set_header("Content-Type", ret_type);
+        return HTTP_200;
+    }
     return HTTP_404;
 
     // for test query
@@ -162,8 +164,8 @@ static int request_handler(Response& resp, const Request& req) {
 int main(int argc, char *argv[]) {
     int port = 8000;
 
-    if (argc < 3)
-        printf("Usage: %s port db.filename\n", argv[0]);
+    if (argc < 4)
+        printf("Usage: %s port db.filename ico.file\n", argv[0]);
 
     port = atoi(argv[1]);
 
@@ -173,7 +175,7 @@ int main(int argc, char *argv[]) {
     //mdb->BuildIndex();
 
     // should catch execeptions if not sure the port is valid
-    HttpHandler::Init(mdb);
+    HttpHandler::Init(mdb, argv[3]);
     tws::HttpServer http_server(port, &my_handler, 4);
     http_server.run();
     return 0;
