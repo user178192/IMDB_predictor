@@ -8,32 +8,31 @@
 
 namespace imdb {
 
-using namespace std;
+    using namespace std;
 
-//split string into vector of strings, by any delimiter, with limitation,
-//Lowercase every letter in the same time
-vector<string> split_string(const string& s, const string& delim, size_t max_split=numeric_limits<size_t>::max());
+    //split string into vector of strings, by any delimiter, with limitation,
+    //Lowercase every letter in the same time
+    vector<string> split_string(const string& s, const string& delim, size_t max_split = numeric_limits<size_t>::max());
 
-class MovieDB
-{
-    //to do: split string function
+    class MovieDB {
+        //to do: split string function
 
 
-public:
+    public:
 
-    Index<string, Movie> movies_;
-    Index<string, People> actors_;
-    Index<string, People> composers_;
-    Index<string, People> directors_;
+        Index<string, Movie> movies_;
+        Index<string, People> actors_;
+        Index<string, People> composers_;
+        Index<string, People> directors_;
 
-    ReverseIndex ri_movie_;
-    ReverseIndex ri_time_;
-    ReverseIndex ri_people_;
+        ReverseIndex ri_movie_;
+        ReverseIndex ri_time_;
+        ReverseIndex ri_people_;
 
-    void BuildIndex();
-    int LoadFromFile(const std::string& filename);
-    int SaveToFile(const std::string& filename);
-};
+        void BuildIndex();
+        int LoadFromFile(const std::string& filename);
+        int SaveToFile(const std::string& filename);
+    };
 
 
 
