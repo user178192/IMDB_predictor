@@ -89,10 +89,12 @@ public:
     virtual void parseLine(const std::string line);
 
     virtual void Finish();
+    
+    void ProcessPart1(std::string part1);
 
 private:
 	std::string title_, titleyear_, subtitle_;
-	std::string movietype_, year_;
+	std::string type_, year_;
 };
 
 class LanguagesParser : public Parser
