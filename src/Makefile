@@ -9,9 +9,18 @@ LIBS=-ltws
 INC_PATH=-I./
 LIB_PATH=-L./
 
-OBJS=DataSchema.o MovieDB.o Log.o
-SERVEROBJS=server_main.o
-PARSEROBJS=Parser.o parsers/actors.o parsers/movies.o parsers/languages.o parsers/genres.o parsers/countries.o parsers/runningtime.o
+OBJS=DataSchema.o MovieDB.o Log.o Index.o
+SERVEROBJS=server_main.o 
+PARSEROBJS=Parser.o parsers/actors.o \
+					parsers/directors.o \
+					parsers/movies.o \
+					parsers/languages.o \
+					parsers/composers.o \
+					parsers/genres.o \
+					parsers/countries.o \
+					parsers/ratings.o \
+					parsers/runningtime.o
+
 DBBUILDOBJ=db_build.o
 PARSERTESTOBJ=parser_test.o
 
