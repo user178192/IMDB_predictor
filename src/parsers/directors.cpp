@@ -41,15 +41,15 @@ void DirectorsParser::insertDB(const std::string& director_name, const std::stri
     if (get<0>(act_obj)) {
         // the director already exists, insert the movie id to the director
         get<2>(act_obj)->movies_.push_back(get<1>(mov_obj));
-        get<2>(mov_obj)->AddDirector(dir_id);
+        dir_id = get<1>(act_obj);
 
     } else {
         // insert new director
         Director d;
         d.movies_.push_back(get<1>(mov_obj));
         dir_id = db_->directors_.Insert(dir_key, d);
-        get<2>(mov_obj)->AddDirector(dir_id);
     }
+    get<2>(mov_obj)->AddDirector(dir_id);
 }
 
 /*
