@@ -42,7 +42,7 @@ namespace imdb {
         LOG_INFO("Begin");
         ri_movie_.Clear();
         for (size_t i = 0; i < movies_.Size(); i++) {
-            ri_movie_.Insert(split_string(*(get<1>(movies_.GetKey(i))), " ,!#'(){}"), i);
+            ri_movie_.Insert(split_string(*(get<1>(movies_.GetKey(i))), " ,!#'(){}/"), i);
         }
         ri_movie_.ShrinkMemory();
         LOG_INFO("Done");
