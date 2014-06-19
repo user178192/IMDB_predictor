@@ -45,16 +45,6 @@ private:
     std::string actor_name_;
 };
 
-class ActressesParser : public Parser {
-public:
-    using Parser::Parser;
-
-    virtual void Init() {}
-
-    virtual void parseLine(const std::string line) {
-    }
-};
-
 class GenresParser : public Parser {
 public:
     using Parser::Parser;
