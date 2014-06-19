@@ -17,21 +17,25 @@ void MoviesParser::Finish()
 
 void MoviesParser::ProcessPart1(string part1)
 {
-	int idxstart = 0,idxend = part1.length() - 1;
+	int idxend = part1.length() - 1;
     int stkbrace = 0;
     int stkpare = 0;
 	int endbrace = 0;
 	int endpare = 0;
 	bool istype = false;
 	size_t found;	
+    bool inbrace = false;
 	
 	for (int i = idxend; i >= 0; --i) {
 		if (part1[i] == '}') {
+            inbrace = true;
 			if (stkbrace == 0)
 				endbrace = i;
 			++stkbrace;
 		}
 		if(part1[i] == ')') {
+            if(!inbrace){
+                
 			if (stkpare == 0)
 				endpare = i;
 			++stkpare;
@@ -40,32 +44,41 @@ void MoviesParser::ProcessPart1(string part1)
 				istype = true;	
 			} else {
 				istype = false;
-				title_ = part1.substr(1,i);
+				title_ = part1.substr(0,i);
 				found = title_.find("\" (");
 				if(found != string::npos) {
 					title_.replace(found,3," (");
 				}
+                i = -1;
 			}
+            }
 		}
 		if (part1[i] == '{') {
+            inbrace = false;
 			--stkbrace;
 			if (stkbrace == 0)
 				subtitle_ = part1.substr(i+1,endbrace-i-1);
 		}
 		if (part1[i] == '(') {
+            if(!inbrace){
 			--stkpare;
 			if (stkpare == 0) {
 				if (istype) {
+                    //it is movie
 					type_ = part1.substr(i+1,endpare-i-1);
-					title_ = part1.substr(1,i-1);
+					title_ = part1.substr(0,i-1);
 					found = title_.find("\" (");
 					if(found != string::npos) {
 						title_.replace(found,3," (");
 					}
+                    i = -1;
 				}
 			}
+            }   
 		}
 	}
+	if(title_[0] == '\"')
+		title_ = title_.substr(1,title_.length() - 1);
 }
 
 void MoviesParser::parseLine(const std::string input_line) {
@@ -87,7 +100,9 @@ void MoviesParser::parseLine(const std::string input_line) {
     }//end of for
         
     ProcessPart1(part1);
-
+    
+    cout<<"["<<title_<<"] ["<<subtitle_<<" "<<type_<<" "<<year_<<"\n";
+    
     //m.year_ = 
     string key = title_;
     auto db_ret = db_->movies_.GetInfo(key);
