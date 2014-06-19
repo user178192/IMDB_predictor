@@ -5,9 +5,8 @@
 using namespace imdb;
 
 void MoviesParser::Init() {
-    	title_ = titleyear_ 
-               = subtitle_ 
-               = movietype_ 
+    	title_ = subtitle_ 
+               = type_ 
                = year_ = "";
 }
 
@@ -16,143 +15,96 @@ void MoviesParser::Finish()
     LOG_INFO("Read in %llu movies", db_->movies_.Size());
 }
 
+void MoviesParser::ProcessPart1(string part1)
+{
+	int idxend = part1.length() - 1;
+    int stkbrace = 0;
+    int stkpare = 0;
+	int endbrace = 0;
+	int endpare = 0;
+	bool istype = false;
+	size_t found;	
+    bool inbrace = false;
+	
+	for (int i = idxend; i >= 0; --i) {
+		if (part1[i] == '}') {
+            inbrace = true;
+			if (stkbrace == 0)
+				endbrace = i;
+			++stkbrace;
+		}
+		if(part1[i] == ')') {
+            if(!inbrace){
+                
+			if (stkpare == 0)
+				endpare = i;
+			++stkpare;
+			if (!isdigit(part1[i-1])) {
+				//is type
+				istype = true;	
+			} else {
+				istype = false;
+				title_ = part1.substr(0,i);
+				found = title_.find("\" (");
+				if(found != string::npos) {
+					title_.replace(found,3," (");
+				}
+                i = -1;
+			}
+            }
+		}
+		if (part1[i] == '{') {
+            inbrace = false;
+			--stkbrace;
+			if (stkbrace == 0)
+				subtitle_ = part1.substr(i+1,endbrace-i-1);
+		}
+		if (part1[i] == '(') {
+            if(!inbrace){
+			--stkpare;
+			if (stkpare == 0) {
+				if (istype) {
+                    //it is movie
+					type_ = part1.substr(i+1,endpare-i-1);
+					title_ = part1.substr(0,i-1);
+					found = title_.find("\" (");
+					if(found != string::npos) {
+						title_.replace(found,3," (");
+					}
+                    i = -1;
+				}
+			}
+            }   
+		}
+	}
+	if(title_[0] == '\"')
+		title_ = title_.substr(1,title_.length() - 1);
+}
+
 void MoviesParser::parseLine(const std::string input_line) {
 	int input_len = input_line.length();
-    //title counts the number of "
-    //subtitle counts the number of {or}
-    //year counts for the number of ( or ), which is outside the { }
-    int title = 0, subtitle = 0, year = 0, movietype = 0;
-    //ismovie tells this line is the desciption of a movie
-    bool ismovie = true;
-    //tell title has content or not
-    bool hascontent = false;
-    //tell title year has content or not
-    bool titleyearhascontent = false;
-    //isyear tells whether to start to record year, which is NOT the year in the title
-    bool isyear = false;
-    //idxstart and idxend are used for marking the start and end of substring
-    int idxstart = 0,len = 0;
-
+    
+	string part1;
     // clear the state
     Init();
-
-    for (int i = 0; i < input_len; ++i) {
-        ++len;
-        switch(input_line[i]) {
-            case '\"':
-            {
-            	//it is TV-serials
-            	ismovie = false;
-                if (title == 0) {
-                    ++title;
-                    idxstart = i + 1;
-                    len = 0;
-                    break;
-                }
-                //the substring between idxstart and idxend is title
-                //process value and reset idxstart and idxend
-                if(title == 1) {
-                    title_ = input_line.substr(idxstart,len - 1).append(1,' ');
-                    //ofs<<" "<<input_line.substr(idxstart,len - 1);
-                    len = 0;
-                    title = 0;
-                }
-            }
-            break;
-            case '(':
-            {
-            	//means it is in title or subtitle
-                if(title||subtitle) {
-                    break;
-                }
-                else {
-                	//if(ismovie && element.title.length() == 0) {
-                	if(ismovie && !hascontent) {
-                    	title_ = input_line.substr(idxstart,len - 1);
-                    	hascontent = true;
-                    	//ofs<<" "<<input_line.input_line(idxstart,len - 1);
-                    }
-                    if(year == 0 && !titleyearhascontent) {
-                        ++year;
-                        idxstart = i + 1;
-                        len = 0;
-                    }
-                    if(ismovie && titleyearhascontent && movietype == 0) {
-                    	++movietype;
-                        idxstart = i + 1;
-                        len = 0;
-                    }          
-                }
-            }
-            break;
-            case ')':
-            {
-                //means it is in title or subtitle
-                if (title||subtitle) {
-                    break;
-                }
-                else {
-                    if (year && movietype == 0 && !titleyearhascontent) {
-                        titleyear_ = input_line.substr(idxstart,len - 1);
-                        //ofs<<" "<<input_line.substr(idxstart,len - 1);
-                        len = 0;
-                        year = 0;
-                        titleyearhascontent = true;
-                    }
-                    //output movie type
-                    if (movietype && titleyearhascontent) {
-                    	movietype_ = input_line.substr(idxstart,len - 1);
-                        //ofs<<" "<<input_line.substr(idxstart,len - 1);
-                        len = 0;
-                        movietype = 0;
-                    }
-                }
-            }
-            break;
-            case '{':
-            {
-                if (subtitle == 0) {
-                    ++subtitle;
-                    idxstart = i + 1;
-                    len = 0;
-                }
-            }
-            break;
-            case '}':
-            {
-                //the substring between idxstart and idxend is title
-                //process value and reset idxstart and idxend
-                if(subtitle == 1) {
-                    subtitle_ = input_line.substr(idxstart,len - 1);
-                    //ofs<<" "<<input_line.substr(idxstart,len - 1);
-                    len = 0;
-                    subtitle = 0;
-                }
-            }
-            break;
-            case '\t':
-            {
-                isyear = true;
-                idxstart = i + 1;
-            }
-            break;
-            default:
-            {
-                if (isyear) {
-                    year_ = input_line.substr(idxstart,input_len - idxstart);
-                    //ofs<<" "<<input_line.substr(idxstart,input_len - idxstart)<<"\n";
-                    len = 0;
-                    isyear = false;
-                    //to jump out of the loop
-                    i = input_len;
-                }
-                
-            }
-        } //end switch..case..
-    }   // end for
-
+       
+	for (int i = 0; i < input_len; ++i) {
+        if (input_line[i] == '\t') {
+            part1 = input_line.substr(0,i);
+            while(input_line[i] == '\t')
+            	++i;
+            year_ = input_line.substr(i,input_len - i);
+            //ofs<<" "<<vstr.substr(i,strlen - i)<<"\n";
+            i = input_len;
+        }                            
+    }//end of for
+        
+    ProcessPart1(part1);
+    
+    //cout<<"["<<title_<<"] ["<<subtitle_<<" "<<type_<<" "<<year_<<"\n";
+    
     //m.year_ = 
-    string key = title_ + "(" + titleyear_ + ")";
+    string key = title_;
     auto db_ret = db_->movies_.GetInfo(key);
     if (get<0>(db_ret)) {
         // already exists, and have subtitle, (series)
@@ -163,7 +115,7 @@ void MoviesParser::parseLine(const std::string input_line) {
         // insert new entry
         Movie m;
         m.year_ = year_;
-        m.type_ = movietype_;
+        m.type_ = type_;
         db_->movies_.Insert(key, m);
     }
 }
