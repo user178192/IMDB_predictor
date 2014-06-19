@@ -18,7 +18,6 @@ void MoviesParser::Finish()
 void MoviesParser::ProcessPart1(string part1)
 {
 	int idxstart = 0,idxend = part1.length() - 1;
-	bool findlb = false,findrb = false;
     int stkbrace = 0;
     int stkpare = 0;
 	int endbrace = 0;
@@ -77,13 +76,13 @@ void MoviesParser::parseLine(const std::string input_line) {
     Init();
        
 	for (int i = 0; i < input_len; ++i) {
-        if (vstr[i] == '\t') {
+        if (input_line[i] == '\t') {
             part1 = input_line.substr(0,i);
-            while(vstr[i] == '\t')
+            while(input_line[i] == '\t')
             	++i;
-            year_ = input_line.substr(i,strlen - i);
+            year_ = input_line.substr(i,input_len - i);
             //ofs<<" "<<vstr.substr(i,strlen - i)<<"\n";
-            i = strlen;
+            i = input_len;
         }                            
     }//end of for
         
@@ -101,7 +100,7 @@ void MoviesParser::parseLine(const std::string input_line) {
         // insert new entry
         Movie m;
         m.year_ = year_;
-        m.type_ = movietype_;
+        m.type_ = type_;
         db_->movies_.Insert(key, m);
     }
 }
