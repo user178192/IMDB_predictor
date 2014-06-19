@@ -4,7 +4,6 @@
 #include <tuple>
 #include <vector>
 #include <string>
-#include <algorithm>
 
 namespace imdb {
 
@@ -22,65 +21,17 @@ namespace imdb {
         // candidates id that contains the corresponding keyword 
         unordered_map<string, vector<size_t>> rev_idx_;
         // index, mapping id to the keywords under it
-        unordered_map<size_t, vector<string>> idx_;
+        unordered_map<size_t, size_t> idx_;
 
     public:
 
-        void ShrinkMemory() {
-            for (auto& it : rev_idx_)
-                it.second.shrink_to_fit();
-            for (auto& it : idx_)
-                it.second.shrink_to_fit();
-        }
+        void ShrinkMemory();
 
-        void Insert(const vector<string>& keys, size_t id) {
-            idx_[id] = keys;
-            for (const auto& s : keys)
-                //be one of the candidates for every word
-                rev_idx_[s].push_back(id);
-        }
+        void Insert(const vector<string>& keys, size_t id);
 
-        void Clear() {
-            rev_idx_.clear();
-            idx_.clear();
-        }
+        void Clear();
 
-        vector<size_t> Lookup(const vector<string>& keys) {
-            vector<size_t> ret;
-            // mapping candidate to the number of query words it contained 
-            unordered_map<size_t, size_t> cands;
-            for (const auto& keyi : keys) {
-                // reverse index has the query word
-                if (rev_idx_.count(keyi))
-                    // insert into candidate id map, or increase the counter
-                    for (const auto& i : rev_idx_[keyi])
-                        cands[i]++;
-            }
-
-            // no result, return early
-            if (cands.empty())
-                return ret;
-
-            // sort result by the number of query words they contained
-            vector<pair<size_t, size_t>> rank;
-            // move to vector for sort
-            for (const auto& it : cands)
-                rank.emplace_back(it.first, it.second);
-            sort(rank.begin(), rank.end(),
-                    [&](const pair<size_t, size_t>& a, const pair<size_t, size_t>& b) {
-                        return a.second > b.second;
-                    });
-
-            // return result, ranked
-            for (const auto& it : rank) {
-                // if the first(best) result contained all query words, only return 
-                // these best results,
-                // Or return every candidates
-                if (it.second == keys.size() || rank[0].second < keys.size())
-                    ret.push_back(it.first);
-            }
-            return ret;
-        }
+        vector<size_t> Lookup(const vector<string>& keys);
     };
 
     template <typename TKey, typename TVal>

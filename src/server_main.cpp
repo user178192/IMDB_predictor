@@ -71,12 +71,24 @@ static int my_handler(Response& resp, const Request& req) {
     auto query_result = mdb->ri_movie_.Lookup(query_words);
 
     string ret;
+    int ret_limit = 5;
     for(const auto& id : query_result) {
-        ret.append(*(get<1>(mdb->movies_.GetKey(id))) + '\n');
+        if (ret_limit-- == 0)
+            break;
+
+        Movie *m = get<2>(mdb->movies_.GetInfo(id));
+        ret.append(*(get<1>(mdb->movies_.GetKey(id))) + ':');
+        int actor_limit = 5;
+        for(const auto &i : m->actors_) {
+            if (actor_limit-- == 0)
+                break;
+            ret.append(*(get<1>(mdb->actors_.GetKey(i))) + ", ");
+        }
+        ret.append(1, '\n');
 
         cout << *(get<1>(mdb->movies_.GetKey(id))) << endl;
         cout << "\t\tLanguages:";
-        for (const auto &i : get<2>(mdb->movies_.GetInfo(id))->languages_)
+        for (const auto &i : m->languages_)
             cout << i << '\t';
         cout << "\t\tCountries:";
         for (const auto &i : get<2>(mdb->movies_.GetInfo(id))->countries_)
