@@ -39,15 +39,9 @@ void ActorsParser::insertDB(const std::string& actor_name, const std::string& mo
         return;
     }
 
-    // if no rank, set INT_MAX
-    bool validrank = true;
-    for(const char i : actor_rank) 
-        if (!isdigit(i)) {
-            validrank = false;
-            break;
-        }
-
-    int rank = actor_rank.length() == 0 ? INT_MAX : (validrank ? std::stoi(actor_rank) : INT_MAX);
+    // if no rank or like <br>, set INT_MAX
+    bool valid = (actor_rank.find_first_not_of("0123456789") == string::npos);
+    int rank = valid && !actor_rank.empty() ? std::stoi(actor_rank) : INT_MAX;
 
     if (get<0>(act_obj)) {
         // the actor already exists, insert the movie id to the actor
