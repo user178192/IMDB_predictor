@@ -10,7 +10,7 @@ INC_PATH=-I./
 LIB_PATH=-L./
 
 OBJS=DataSchema.o MovieDB.o Log.o Index.o
-SERVEROBJS=server_main.o HttpHandler.o
+SERVEROBJS=server_main.o HttpHandler.o DynamicHTML.o
 PARSEROBJS=Parser.o parsers/actors.o \
 					parsers/directors.o \
 					parsers/movies.o \

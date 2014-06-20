@@ -1,5 +1,8 @@
 #include <DynamicHTML.hpp>
+#include <cstring>
 
+
+using namespace std;
 
 namespace dynamichtml{
 
@@ -61,7 +64,14 @@ void TemplateNode::Insert(const std::string& key, TemplateNode *t)
     assert(type_ == kNone || type_ == kMap);
     assert(t != this);
     type_ = kMap;
-    val_map_.insert(make_pair(key, t));
+    auto it = val_map_.find(key);
+    if (it != val_map_.end()) {
+        if (t != it->second)
+            delete it->second;
+        it->second = t;
+    } else {
+        val_map_.insert(make_pair(key, t));
+    }
 }
 
 void TemplateNode::Insert(const std::string& key, const std::string& val)
@@ -69,34 +79,143 @@ void TemplateNode::Insert(const std::string& key, const std::string& val)
     assert(type_ == kNone || type_ == kMap);
     type_ = kMap;
     auto *t = new TemplateNode(val);
-    val_map_.insert(make_pair(key, t));
+    Insert(key, t);
 }
 
-int generate_html(const std::string& template_html, 
+int generate_html(const std::string& s, 
     const TemplateNode& nodes,
     std::string& output, std::vector<std::string>& failed_tags)
 {
+    int ret = 0;
+    if (nodes.type_ != TemplateNode::kMap)
+        ret = -1;
 
-    return 0;
+    for(size_t i = 0; i  < s.size();) {
+
+        //tag found
+        if (i + 4 < s.size() && s[i] == '[' && s[i + 1] == '&') {
+
+            //find end of current tag, care about recursive tags.
+            auto find_right = [&](const char *left, const char *needle) {
+                size_t sleft = (left ? strlen(left) : 0), sneedle = strlen(needle);
+                size_t j = i;
+                int sstack = 1;
+                while(j < s.size()) {
+                // dont care about safety for simplicity
+                    if (left && (strncmp(left, &s[j], sleft) == 0)) {
+                        sstack++;
+                    } else if (strncmp(needle, &s[j], sneedle) == 0) {
+                        sstack--;
+                        if (sstack == 0) {
+                            break;
+                        }
+                    }
+                    j++;
+                }
+                return j;
+            };
+            
+            //special tag
+            i += 2;
+            if (s[i] == '&') {
+                // is vector
+                i++;
+                // find key    ' [&&key&  '
+                size_t j = find_right(nullptr, "&");
+                string key = s.substr(i, j - i);
+                i = j + 1;
+                j = find_right("[&", "&]");
+                // range error
+                if (i >= s.size()) {
+                    failed_tags.push_back("Bad template");
+                    ret = -1;
+                    break;
+                }
+                // cut down the recursive part
+                string subtemplate = s.substr(i, j - i);
+                i = j + 2;
+
+                auto it = nodes.val_map_.find(key);
+                if (it == nodes.val_map_.end()) {
+                    // key not found, can not replace
+                    failed_tags.push_back(key);
+                    ret = -1;
+                    continue;
+                } 
+
+                for(auto i : it->second->val_vector_) {
+                    string suboutput;
+                    int ret2 = generate_html(subtemplate, *i, suboutput, failed_tags);
+                    if (!ret2)
+                        ret = ret2;
+                    output.append(suboutput);
+                }
+            } else {
+                size_t j = find_right("[&", "&]");
+                string key = s.substr(i, j - i);
+                i = j + 2;
+
+                auto it = nodes.val_map_.find(key);
+                if (it == nodes.val_map_.end()) {
+                    // key not found, can not replace
+                    failed_tags.push_back(key);
+                    ret = -1;
+                    continue;
+                } 
+                output.append(it->second->val_string_);
+            }
+        } else {
+            output.append(1, s[i]);
+            i++;
+        }
+    }
+
+    return ret;
 }
 
 }
 
 
+/*
+#include <iostream>
 using namespace dynamichtml;
-using namespace std;
 int main()
 {
     TemplateNode n;
-    n.Insert("sb", "haha");
-    n.Insert("sb2", "haha2");
-    n.Insert("sb3", "haha3");
-    n.Insert("sb4", new TemplateNode(n));
-    
+    n.Insert("ka", "vala");
+    n.Insert("kb", "valb");
+    TemplateNode tmp, vec;
+    tmp.Insert("m1", "2001");
+    vec.Insert(new TemplateNode(tmp));
+    tmp.Insert("m1", "2002");
+    vec.Insert(new TemplateNode(tmp));
+    tmp.Insert("m1", "2003");
+    vec.Insert(new TemplateNode(tmp));
+    tmp.Insert("m1", "2004");
+    vec.Insert(new TemplateNode(tmp));
+    n.Insert("kc", new TemplateNode(vec));
 
+    string temp = "<html><body>\n"
+        "<h1>[&ka&]<h1>\n"
+        "<h2>[&kb&]<h2>\n"
+        "[&&kc&<td>[&m1&]</td>\n&]"
+        "</body></html>";
     string ret;
+
     vector<string> failed_tags;
     auto m = n;
-    generate_html("asdf", m, ret, failed_tags);
+
+
+    int succ = generate_html(temp, m, ret, failed_tags);
+    cout << "succ: " << succ << endl;
+    if (succ < 0) {
+        cout << "ERROR:" << endl;
+        for(const auto& i : failed_tags)
+            cout << i << endl;
+        cout << "===" << endl;
+    }
+    cout << ret << endl;
+    return 0;
 }
 
+*/
