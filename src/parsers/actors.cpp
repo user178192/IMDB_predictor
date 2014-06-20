@@ -128,7 +128,6 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
     }
     else {
         // it is a Movie
-
         size_t start = left_pos; // save the vaild begin in start
         std::string movie_name, actor_rank;
         size_t right_pos = input_line.find_last_of('>');
@@ -140,10 +139,6 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
 
         size_t end = find_last_vaild_year(input_line, start);        
         movie_name.assign(input_line, start, end - start + 1);
-        //if (movie_name.length() == 1 || movie_name.empty()) {
-           //std::cout << input_line << std::endl;
-        //   std::cout << "{" << movie_name << "}" << actor_rank <<std::endl;
-        //}
         insertDB(actor_name, movie_name, actor_rank);
     }
 }
