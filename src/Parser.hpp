@@ -45,6 +45,7 @@ public:
 
     void splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
     std::string splitActorsName(const std::string& input_line);
+    size_t find_last_vaild_year(const std::string input_line, size_t begin);
     void insertDB(const std::string& actor_name, const std::string& movie_name, const std::string& actor_rank);
 private:
     bool begin_parse_ = false;
@@ -104,12 +105,13 @@ public:
     virtual void Init();
     virtual void parseLine(const std::string line);
     virtual void Finish();
-    
-    void ProcessPart1(std::string part1);
+
+    void splitMoiveName(const std::string input_line);
+    void insertDB();
 
 private:
-	std::string title_, titleyear_, subtitle_;
-	std::string type_, year_;
+    bool begin_parse_ = false;
+	std::string title_, subtitle_, type_, year_;
 };
 
 class LanguagesParser : public Parser {

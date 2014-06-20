@@ -2,7 +2,7 @@
 #include <Log.hpp>
 #include <MovieDB.hpp>
 #include <stdio.h>
-
+#include <vector>
 #include <cstring>
 #include <climits>
 
@@ -10,6 +10,33 @@ using namespace imdb;
 
 void ActorsParser::Init() {
 
+}
+
+size_t ActorsParser::find_last_vaild_year(const std::string input_line, size_t begin) {
+        size_t flag = begin;
+        size_t left_pos = begin, right_pos = begin;
+        vector<size_t> checker;
+        for(size_t index = begin ; index < input_line.length(); index++) {
+            if (input_line[index] == '(') {left_pos = index;}
+            if (input_line[index] == ')') {right_pos = index;}
+
+            if (right_pos > left_pos && right_pos - left_pos >= 4) {
+                std::string temp(input_line, left_pos + 1, right_pos - left_pos - 1);
+                if (temp.find_first_not_of("0123456789IVX/?") == std::string::npos) {
+                    checker.push_back(right_pos);
+                }
+            }
+        }
+
+        checker.erase(unique(checker.begin(), checker.end()), checker.end());
+
+        for (size_t i = checker.size() - 1; ; i--) {
+            if (input_line[ checker[i] + 1] != ']') {
+                flag = checker[i]; break;
+            }
+        }
+
+        return flag;       
 }
 
 std::string ActorsParser::splitActorsName(const std::string& input_line) {
@@ -35,7 +62,7 @@ void ActorsParser::insertDB(const std::string& actor_name, const std::string& mo
     auto mov_obj = db_ -> movies_.GetInfo(mov_key);
 
     if (!get<0>(mov_obj)) {
-        LOG_DEBUG("Movie [%s] not found, inconsistant", movie_name.c_str());
+        std::cout << "Movie [%s] not found, inconsistant" << movie_name.c_str() << std::endl;
         return;
     }
 
@@ -65,9 +92,8 @@ void ActorsParser::insertDB(const std::string& actor_name, const std::string& mo
 void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line) {
     size_t left_pos = begin;
 
-    while (input_line[left_pos] == '\t') {
-        left_pos++;
-    }
+    // skip tab
+    while (input_line[left_pos] == '\t') {left_pos++;}
 
     // it is a Television Series 
     if (input_line[left_pos] == '"') {
@@ -101,30 +127,24 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
 
         insertDB(actor_name, series_name + " " + "(" + series_time + ")", actor_rank);
     }
-        // it is a Movie
     else {
+        // it is a Movie
 
-        size_t right_pos = 0;
-        while (right_pos < input_line.length() ) { // find the end of year   
-            if (input_line[right_pos] == ')') {
-                //special case like (1999/II)
-                size_t close = input_line.rfind('(', right_pos);
-                if (isdigit(input_line[close + 1]) || input_line[close + 1] == '?') {
-                    break;
-                }
-            }
-            right_pos++;
-        }
-
+        size_t start = left_pos; // save the vaild begin in start
         std::string movie_name, actor_rank;
-        movie_name.assign(input_line, left_pos, right_pos - left_pos + 1);
+        size_t right_pos = input_line.find_last_of('>');
 
-        left_pos = input_line.find('<', right_pos + 1);
-        if (left_pos != std::string::npos) {
-            right_pos = input_line.find('>', left_pos + 1);
+        if (right_pos != std::string::npos) {
+            left_pos = input_line.rfind('<', right_pos - 1);
             actor_rank.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
 
+        size_t end = find_last_vaild_year(input_line, start);        
+        movie_name.assign(input_line, start, end - start + 1);
+        //if (movie_name.length() == 1 || movie_name.empty()) {
+           //std::cout << input_line << std::endl;
+        //   std::cout << "{" << movie_name << "}" << actor_rank <<std::endl;
+        //}
         insertDB(actor_name, movie_name, actor_rank);
     }
 }
