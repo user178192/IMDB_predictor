@@ -18,9 +18,10 @@ namespace imdb {
         Index<string, People> composers_;
         Index<string, People> directors_;
 
-        ReverseIndex ri_movie_;
-        ReverseIndex ri_time_;
-        ReverseIndex ri_people_;
+        ReverseIndex ri_movies_;
+        ReverseIndex ri_actors_;
+        ReverseIndex ri_composers_;
+        ReverseIndex ri_directors_;
 
         void BuildIndex();
         int LoadFromFile(const std::string& filename);

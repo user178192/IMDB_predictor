@@ -8,11 +8,30 @@ namespace imdb {
 
 void MovieDB::BuildIndex() {
     LOG_INFO("Begin");
-    ri_movie_.Clear();
+    ri_movies_.Clear();
     for (size_t i = 0; i < movies_.Size(); i++) {
-        ri_movie_.Insert(split_string(*(get<1>(movies_.GetKey(i))), " ,!#'(){}/"), i);
+        ri_movies_.Insert(split_string(*(get<1>(movies_.GetKey(i))), " ,!#'(){}/"), i);
     }
-    ri_movie_.ShrinkMemory();
+    ri_movies_.ShrinkMemory();
+
+    ri_actors_.Clear();
+    for (size_t i = 0; i < actors_.Size(); i++) {
+        ri_actors_.Insert(split_string(*(get<1>(actors_.GetKey(i))), " ,!#'(){}/"), i);
+    }
+    ri_actors_.ShrinkMemory();
+
+    ri_directors_.Clear();
+    for (size_t i = 0; i < directors_.Size(); i++) {
+        ri_directors_.Insert(split_string(*(get<1>(directors_.GetKey(i))), " ,!#'(){}/"), i);
+    }
+    ri_directors_.ShrinkMemory();
+
+    ri_composers_.Clear();
+    for (size_t i = 0; i < composers_.Size(); i++) {
+        ri_composers_.Insert(split_string(*(get<1>(composers_.GetKey(i))), " ,!#'(){}/"), i);
+    }
+    ri_composers_.ShrinkMemory();
+
     LOG_INFO("Done");
 }
 
@@ -24,9 +43,11 @@ int MovieDB::LoadFromFile(const std::string& filename) {
         return -1;
     }
 
+    /*
     reader->Read(ri_movie_);
     reader->Read(ri_time_);
     reader->Read(ri_people_);
+    */
 
     reader->Read(movies_);
     reader->Read(actors_);
@@ -63,9 +84,11 @@ int MovieDB::SaveToFile(const std::string& filename) {
         m->genres_.erase(unique(m->genres_.begin(), m->genres_.end()), m->genres_.end());
     }
 
+    /*
     writer->Write(ri_movie_);
     writer->Write(ri_time_);
     writer->Write(ri_people_);
+    */
 
     writer->Write(movies_);
     writer->Write(actors_);

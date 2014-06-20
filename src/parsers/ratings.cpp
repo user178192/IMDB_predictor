@@ -45,8 +45,9 @@ void RatingParser::parseLine(const std::string input_line)
         pos++;
 
     double rating = atof(input_line.c_str() + pos);
-    while(isdigit(input_line[pos]) || input_line[pos] == '.' || input_line[pos] == '\"' 
-            || input_line[pos] == ' ')
+    while(isdigit(input_line[pos]) || input_line[pos] == '.' || input_line[pos] == '\"')
+        pos++;
+    while(input_line[pos] == ' ' || input_line[pos] == '\"')
         pos++;
     
     string key;

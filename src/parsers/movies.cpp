@@ -1,6 +1,8 @@
 #include "Parser.hpp"
 #include <MovieDB.hpp>
 #include <Log.hpp>
+#include <cstring>
+#include <algorithm>
 
 void MoviesParser::Init() {
 	title_ = subtitle_ 
@@ -40,9 +42,9 @@ void MoviesParser::splitMoiveName(const std::string input_line) {
 
 		     		title_.assign(input_line, left_pos, right_pos - left_pos + 1);
 
-		     		if (title_[0] == '"') {
+		     		if (title_[0] == '\"') {
 		     			// For tv title , remove the "
-		     			title_.erase (std::remove(title_.begin(), title_.end(), '"'), title_.end());
+		     			title_.erase (std::remove(title_.begin(), title_.end(), '\"'), title_.end());
 			 		}
 			 		break;
 			}
@@ -59,7 +61,6 @@ void MoviesParser::splitMoiveName(const std::string input_line) {
 }
 
 void MoviesParser::parseLine(const std::string input_line) {
-<<<<<<< HEAD
 	//refresh the string in evey line
 	Init();
 	if (strncmp(input_line.c_str(), "=====", 5) == 0) {
@@ -85,29 +86,6 @@ void MoviesParser::parseLine(const std::string input_line) {
 }
 
 void MoviesParser::insertDB() {
-=======
-	int input_len = input_line.length();
-    
-	string part1;
-    // clear the state
-    Init();
-       
-	for (int i = 0; i < input_len; ++i) {
-        if (input_line[i] == '\t') {
-            part1 = input_line.substr(0,i);
-            while(input_line[i] == '\t')
-            	++i;
-            year_ = input_line.substr(i,input_len - i);
-            //ofs<<" "<<vstr.substr(i,strlen - i)<<"\n";
-            i = input_len;
-        }                            
-    }//end of for
-        
-    ProcessPart1(part1);
-    
-    cout<<"["<<title_<<"] ["<<subtitle_<<" "<<type_<<" "<<year_<<"\n";
-    
->>>>>>> FETCH_HEAD
     string key = title_;
     auto mov_obj = db_->movies_.GetInfo(key);
     if (get<0>(mov_obj)) {

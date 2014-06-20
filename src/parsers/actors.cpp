@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstring>
 #include <climits>
+#include <algorithm>
 
 using namespace imdb;
 
