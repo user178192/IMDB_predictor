@@ -122,10 +122,6 @@ static int my_handler(Response& resp, const Request& req) {
     return HTTP_200;
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> FETCH_HEAD
 int main(int argc, char *argv[]) {
     int port = 8000;
 
