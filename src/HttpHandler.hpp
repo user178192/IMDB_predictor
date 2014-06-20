@@ -13,7 +13,6 @@ class MovieDB;
 class HttpHandler
 {
     static MovieDB *db_;
-    static string image_ico_;
 
     static int proc_query(const unordered_map<string, string>& params, string& ret, string& ret_type);
 
@@ -28,10 +27,12 @@ class HttpHandler
     typedef int (*Handler)(const unordered_map<string, string>& params, string& ret, string& ret_type);
     
     static unordered_map<string, Handler> handlers_;
+    static unordered_map<string, string> html_templates_;
 
 public:
 
-    static void Init(MovieDB *db, const string& ico);
+    static void Init(MovieDB *db);
+    static void LoadTemplates(const string& dir);
 
     //process("/search", "[type = movie] [title = 'edge of tomorrow']", 
     //ret = "<html>...</html>", ret_type = "text/html"

@@ -50,6 +50,7 @@ TemplateNode& TemplateNode::operator=(const TemplateNode& t)
     
     for(auto &i : val_map_)
         i.second = new TemplateNode(*(i.second));
+    return *this;
 }
 
 void TemplateNode::Insert(TemplateNode *t)
@@ -82,12 +83,28 @@ void TemplateNode::Insert(const std::string& key, const std::string& val)
     Insert(key, t);
 }
 
+void TemplateNode::Clear()
+{
+    if (type_ == kVector) {
+        for(auto i : val_vector_)
+            delete i;
+    } else if (type_ == kMap) {
+        for(auto i : val_map_)
+            delete i.second;
+    }
+    type_ = kNone;
+    val_string_.clear();
+    val_vector_.clear();
+    val_map_.clear();
+}
+
 int generate_html(const std::string& s, 
     const TemplateNode& nodes,
     std::string& output, std::vector<std::string>& failed_tags)
 {
     int ret = 0;
-    if (nodes.type_ != TemplateNode::kMap)
+    if (nodes.type_ != TemplateNode::kMap
+            && nodes.type_ != TemplateNode::kNone)
         ret = -1;
 
     for(size_t i = 0; i  < s.size();) {

@@ -44,6 +44,7 @@ public:
     void Insert(TemplateNode *t);
     void Insert(const std::string& key, TemplateNode *t);
     void Insert(const std::string& key, const std::string& val);
+    void Clear();
 };
 
 

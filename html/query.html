@@ -14,17 +14,10 @@ Query: <select name="query_type">
 <input type="reset" value="Reset">
 </form>
 
-<h2>[&movietitle&]</h2>
+<h2>Query for [&keywords&]</h2>
 <ul>
-<li>Rating: [&rating&], [&votes&] votes</li>
-<li>Actors: [&&actors&<a href="people/type=actor&id=[&id&]">[&name&]</a>&]</li>
-<li>Directors: [&&directors&<a href="people/type=director&id=[&id&]">[&name&]</a>&]</li>
-<li>Genres:<a>Sci-Fict</a>,<a>Comedy</a></li>
-<li>Composer:<a>Himmer Hans</a></li>
-<li>Movie length: 133</li>
-<li>Language: English, Japanese</li>
-<li>Countries: United States</li>
+[&&result&<li><a href="/movie?id=[&id&]">[&title&]</a></li>
+&]
 </ul>
-
 
 </body>
