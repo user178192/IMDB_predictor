@@ -10,11 +10,16 @@ using namespace imdb;
 static bool is_year_tag(const char *s)
 {
     if (*s-- != ')') return false;
-    if (!isdigit(*s--)) return false;
-    if (!isdigit(*s--)) return false;
-    if (!isdigit(*s--)) return false;
-    if (!isdigit(*s--)) return false;
-    if (*s != '(') return false;
+    const char *t = s;
+    // safe check ignored
+    while(*t != '(')
+        t--;
+    t++;
+
+    if (!isdigit(*t++)) return false;
+    if (!isdigit(*t++)) return false;
+    if (!isdigit(*t++)) return false;
+    if (!isdigit(*t++)) return false;
     return true;
 }
 

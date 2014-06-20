@@ -6,108 +6,76 @@
 
 namespace imdb {
 
-    vector<string> split_string(const string& s, const string& delim, size_t max_split) {
-        vector<string> ret;
-
-        string cur;
-        for (const char c : s) {
-            bool isdelim = false;
-
-            if (ret.size() >= max_split - 1) {
-                cur.append(1, ::tolower(c));
-                continue;
-            }
-
-            for (const char d : delim)
-                if (d == c) {
-                    isdelim = true;
-                    break;
-                }
-
-            if (isdelim) {
-                if (!cur.empty()) {
-                    ret.push_back(cur);
-                    cur.clear();
-                }
-            } else
-                cur.append(1, ::tolower(c));
-        }
-        if (!cur.empty())
-            ret.push_back(cur);
-
-        return move(ret);
+void MovieDB::BuildIndex() {
+    LOG_INFO("Begin");
+    ri_movie_.Clear();
+    for (size_t i = 0; i < movies_.Size(); i++) {
+        ri_movie_.Insert(split_string(*(get<1>(movies_.GetKey(i))), " ,!#'(){}/"), i);
     }
+    ri_movie_.ShrinkMemory();
+    LOG_INFO("Done");
+}
 
-    void MovieDB::BuildIndex() {
-        LOG_INFO("Begin");
-        ri_movie_.Clear();
-        for (size_t i = 0; i < movies_.Size(); i++) {
-            ri_movie_.Insert(split_string(*(get<1>(movies_.GetKey(i))), " ,!#'(){}/"), i);
-        }
-        ri_movie_.ShrinkMemory();
-        LOG_INFO("Done");
-    }
-
-    int MovieDB::LoadFromFile(const std::string& filename) {
-        auto *reader = new Serializer<true>(filename);
-        if (!reader->IsValid()) {
-            LOG_ERROR("Load Movie DB File failed");
-            delete reader;
-            return -1;
-        }
-
-        reader->Read(ri_movie_);
-        reader->Read(ri_time_);
-        reader->Read(ri_people_);
-
-        reader->Read(movies_);
-        reader->Read(actors_);
-        reader->Read(composers_);
-        reader->Read(directors_);
-        LOG_INFO("Load DB done, %llu movies, %llu people",
-                movies_.Size(), actors_.Size() + composers_.Size() + directors_.Size());
+int MovieDB::LoadFromFile(const std::string& filename) {
+    auto *reader = new Serializer<true>(filename);
+    if (!reader->IsValid()) {
+        LOG_ERROR("Load Movie DB File failed");
         delete reader;
-        movies_.ShrinkMemory();
-        actors_.ShrinkMemory();
-        composers_.ShrinkMemory();
-        directors_.ShrinkMemory();
-        return 0;
+        return -1;
     }
 
-    int MovieDB::SaveToFile(const std::string& filename) {
-        auto *writer = new Serializer<false>(filename);
-        if (!writer->IsValid()) {
-            LOG_ERROR("Open Movie DB File for write failed");
-            delete writer;
-            return -1;
-        }
+    reader->Read(ri_movie_);
+    reader->Read(ri_time_);
+    reader->Read(ri_people_);
 
-        for (size_t i = 0; i < movies_.Size(); i++) {
-            auto m = get<2>(movies_.GetInfo(i));
-            m->RankPeople();
-            sort(m->languages_.begin(), m->languages_.end());
-            m->languages_.erase(unique(m->languages_.begin(), m->languages_.end()), m->languages_.end());
+    reader->Read(movies_);
+    reader->Read(actors_);
+    reader->Read(composers_);
+    reader->Read(directors_);
+    LOG_INFO("Load DB done, %llu movies, %llu people",
+            movies_.Size(), actors_.Size() + composers_.Size() + directors_.Size());
+    delete reader;
+    movies_.ShrinkMemory();
+    actors_.ShrinkMemory();
+    composers_.ShrinkMemory();
+    directors_.ShrinkMemory();
+    return 0;
+}
 
-            sort(m->countries_.begin(), m->countries_.end());
-            m->countries_.erase(unique(m->countries_.begin(), m->countries_.end()), m->countries_.end());
-
-            sort(m->genres_.begin(), m->genres_.end());
-            m->genres_.erase(unique(m->genres_.begin(), m->genres_.end()), m->genres_.end());
-        }
-
-        writer->Write(ri_movie_);
-        writer->Write(ri_time_);
-        writer->Write(ri_people_);
-
-        writer->Write(movies_);
-        writer->Write(actors_);
-        writer->Write(composers_);
-        writer->Write(directors_);
-        LOG_INFO("Load DB done, %llu movies, %llu people",
-                movies_.Size(), actors_.Size() + composers_.Size() + directors_.Size());
+int MovieDB::SaveToFile(const std::string& filename) {
+    auto *writer = new Serializer<false>(filename);
+    if (!writer->IsValid()) {
+        LOG_ERROR("Open Movie DB File for write failed");
         delete writer;
-        return 0;
+        return -1;
     }
+
+    for (size_t i = 0; i < movies_.Size(); i++) {
+        auto m = get<2>(movies_.GetInfo(i));
+        m->RankPeople();
+        sort(m->languages_.begin(), m->languages_.end());
+        m->languages_.erase(unique(m->languages_.begin(), m->languages_.end()), m->languages_.end());
+
+        sort(m->countries_.begin(), m->countries_.end());
+        m->countries_.erase(unique(m->countries_.begin(), m->countries_.end()), m->countries_.end());
+
+        sort(m->genres_.begin(), m->genres_.end());
+        m->genres_.erase(unique(m->genres_.begin(), m->genres_.end()), m->genres_.end());
+    }
+
+    writer->Write(ri_movie_);
+    writer->Write(ri_time_);
+    writer->Write(ri_people_);
+
+    writer->Write(movies_);
+    writer->Write(actors_);
+    writer->Write(composers_);
+    writer->Write(directors_);
+    LOG_INFO("Load DB done, %llu movies, %llu people",
+            movies_.Size(), actors_.Size() + composers_.Size() + directors_.Size());
+    delete writer;
+    return 0;
+}
 
 
 }

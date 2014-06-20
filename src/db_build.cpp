@@ -20,17 +20,10 @@ int main(int argc, char *argv[]) {
     //testType.exec("language.list");
     //testType.exec("countries.list");
     testType.exec("actors.list");
-<<<<<<< HEAD
-    //testType.exec("actress.list");
-    //testType.exec("composers.list");
-    //testType.exec("directors.list");
-    //testType.exec("ratings.list");
-=======
     testType.exec("actresses.list");
     testType.exec("composers.list");
     testType.exec("directors.list");
     testType.exec("ratings.list");
->>>>>>> FETCH_HEAD
     //testType.exec("running-times.list");
 
     db->SaveToFile(argv[1]);
