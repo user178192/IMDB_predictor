@@ -1,5 +1,6 @@
 #include <http_server.hpp>
 #include <MovieDB.hpp>
+#include <HttpHandler.hpp>
 
 #include <unordered_map>
 #include <string>
@@ -66,19 +67,30 @@ static int my_handler(Response& resp, const Request& req) {
     for (const auto& it : params)
         cout << it.first << " : " << it.second << endl;
 
+    string ret, ret_type;
+    if (HttpHandler::process(path, params, ret, ret_type) == 0) {
+        resp.set_body(ret);
+        resp.set_header("Content-Type", ret_type);
+        return HTTP_200;
+    }
+    return HTTP_404;
+
     // for test query
     auto query_words = split_string(params["movie"], ", \t");
     auto query_result = mdb->ri_movie_.Lookup(query_words);
 
-    string ret;
-    int ret_limit = 5;
+    int ret_limit = 20;
     for(const auto& id : query_result) {
         if (ret_limit-- == 0)
             break;
 
         Movie *m = get<2>(mdb->movies_.GetInfo(id));
-        ret.append(*(get<1>(mdb->movies_.GetKey(id))) + ':');
-        int actor_limit = 5;
+
+        char tmpbuf[30];
+        snprintf(tmpbuf, 30, " (%.1f/%llu votes)", m->rating_, m->votes_);
+
+        ret.append(*(get<1>(mdb->movies_.GetKey(id))) + tmpbuf + ':');
+        int actor_limit = 10;
         for(const auto &i : m->actors_) {
             if (actor_limit-- == 0)
                 break;
@@ -110,11 +122,15 @@ static int my_handler(Response& resp, const Request& req) {
     return HTTP_200;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> FETCH_HEAD
 int main(int argc, char *argv[]) {
     int port = 8000;
 
-    if (argc < 3)
-        printf("Usage: %s port db.filename\n", argv[0]);
+    if (argc < 4)
+        printf("Usage: %s port db.filename ico.file\n", argv[0]);
 
     port = atoi(argv[1]);
 
@@ -124,6 +140,8 @@ int main(int argc, char *argv[]) {
     mdb->BuildIndex();
 
     // should catch execeptions if not sure the port is valid
+    HttpHandler::Init(mdb);
+    HttpHandler::LoadTemplates(argv[3]);
     tws::HttpServer http_server(port, &my_handler, 4);
     http_server.run();
     return 0;

@@ -73,15 +73,14 @@ void ActorsParser::insertDB(const std::string& actor_name, const std::string& mo
     if (get<0>(act_obj)) {
         // the actor already exists, insert the movie id to the actor
         get<2>(act_obj)->movies_.push_back(get<1>(mov_obj));
-        get<2>(mov_obj)->AddActor(actor_id, rank);
-
+        actor_id = get<1>(act_obj);
     } else {
         // insert new actor
         Actor a;
         a.movies_.push_back(get<1>(mov_obj));
         actor_id = db_->actors_.Insert(act_key, a);
-        get<2>(mov_obj)->AddActor(actor_id, rank);
     }
+    get<2>(mov_obj)->AddActor(actor_id, rank);
 }
 
 /*
