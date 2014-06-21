@@ -50,7 +50,7 @@ std::vector<std::string> split(const std::string &input_line, const char &delim 
             begin++;
         }
     }
-    return tokens;
+    return move(tokens);
 }
 
 size_t find_year_pos(const std::string input_line, size_t begin) {
