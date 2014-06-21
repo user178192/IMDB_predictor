@@ -30,7 +30,11 @@ void ReverseIndex::Clear() {
 vector<size_t> ReverseIndex::Lookup(const vector<string>& keys) {
     vector<size_t> ret;
     // mapping candidate to the number of query words it contained 
+#ifdef USE_SPARSE_HASH
+    sparse_hash_map<size_t, size_t> cands;
+#else
     unordered_map<size_t, size_t> cands;
+#endif
     for (const auto& keyi : keys) {
         // reverse index has the query word
         if (rev_idx_.count(keyi)) {

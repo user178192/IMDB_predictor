@@ -7,6 +7,9 @@
 
 #include <vector>
 #include <string>
+#ifdef USE_SPARSE_HASH
+#include <sparsehash/sparse_hash_map>
+#endif
 #include <unordered_map>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -20,6 +23,9 @@ namespace imdb {
 
 
     using namespace std;
+#ifdef USE_SPARSE_HASH
+    using namespace google;
+#endif
 
     template<bool ReadOnly = false >
     class Serializer {
@@ -178,6 +184,29 @@ namespace imdb {
                 Read(val[nk]);
             }
         }
+
+#ifdef USE_SPARSE_HASH
+        template<typename TKey, typename TVal>
+        void Write(const sparse_hash_map<TKey, TVal> &val) {
+            Write(val.size());
+            for (const auto& item : val) {
+                Write(item.first);
+                Write(item.second);
+            }
+        }
+
+        template<typename TKey, typename TVal>
+        void Read(sparse_hash_map<TKey, TVal> &val) {
+            size_t size;
+            val.clear();
+            Read(size);
+            for (size_t i = 0; i < size; i++) {
+                TKey nk;
+                Read(nk);
+                Read(val[nk]);
+            }
+        }
+#endif
 
         void Write(const Movie& val) {
             Write(val.rating_);
