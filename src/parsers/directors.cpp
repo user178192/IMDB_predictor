@@ -64,33 +64,15 @@ void DirectorsParser::splitMoiveName(const size_t begin, const std::string& dire
         left_pos++;
     }
 
-    // it is a Television Series 
-    if (input_line[left_pos] == '"') {
-
-        std::string series_name, series_time, director_rank;
-        size_t right_pos = input_line.find('"', left_pos + 1);
-
-
-        series_name.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
-
-        left_pos = input_line.find('(', right_pos + 1);
-        if (left_pos != std::string::npos) {
-            right_pos = input_line.find(')', left_pos + 1);
-            series_time.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
-        }
-
-        insertDB(director_name, series_name + " " + "(" + series_time + ")");
+    std::string movie_name;
+    size_t start = left_pos;
+    size_t end = find_year_pos(input_line, start);        
+    movie_name.assign(input_line, start, end - start + 1);
+    if (movie_name[0] == '\"') {
+        // For tv title , remove the "
+        movie_name.erase (std::remove(movie_name.begin(), movie_name.end(), '\"'), movie_name.end());
     }
-    
-    else {
-        // it is a Movie
-        size_t start = left_pos; // save the vaild begin in start
-        std::string movie_name;
-
-        size_t end = find_year_pos(input_line, start);        
-        movie_name.assign(input_line, start, end - start + 1);
-        insertDB(director_name, movie_name);
-    }
+    insertDB(director_name, movie_name);
 }
 
 void DirectorsParser::parseLine(const std::string input_line) {

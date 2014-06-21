@@ -17,7 +17,6 @@ void GenresParser::splitMoiveName(const std::string input_line) {
         return;
     }
 
-
     auto split_vec = split(input_line, '\t');
     // split_vec[0] is the title + subtitle
     auto title = split_vec[0];
@@ -28,7 +27,6 @@ void GenresParser::splitMoiveName(const std::string input_line) {
          // For tv title , remove the "
          title.erase (std::remove(title.begin(), title.end(), '\"'), title.end());
     }
-
     size_t end = find_year_pos(title, 0);
 	title_.assign(title, 0, end + 1);
 }

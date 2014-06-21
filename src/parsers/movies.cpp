@@ -4,64 +4,72 @@
 #include <cstring>
 #include <algorithm>
 
+std::string get_vaild_subtitle(const std::string input_line, const size_t begin) {
+        auto left_pos = input_line.find('{', begin);
+        if (left_pos != std::string::npos && input_line[left_pos + 1] != '{') {
+            size_t right_pos = input_line.find('}', left_pos + 1);
+            return string(input_line, left_pos + 1, right_pos - left_pos - 1);
+        }   
+        return "";
+}
+
+std::string get_vaild_type(const std::string input_line, const size_t begin) {
+        auto checker = input_line.find('{', begin);
+        auto left_pos = input_line.find('(', begin);
+        if (checker != std::string::npos && 
+            left_pos != std::string::npos && 
+            left_pos > checker) { // means that the {......( invaild
+            return "";
+        }
+
+        if (left_pos != std::string::npos) {
+            size_t right_pos = input_line.find(')', left_pos + 1);
+            std::string temp(input_line, left_pos + 1, right_pos - left_pos - 1);
+            if (temp.find_first_not_of("TV") == std::string::npos && temp.length() < 3) {
+                return temp;
+            }
+        }
+        return "";
+}
+
+
 void MoviesParser::Init() {
-	title_ = subtitle_ 
+    title_ = subtitle_ 
            = type_ 
            = year_ = "";
 }
 
 void MoviesParser::Finish() {
-	LOG_INFO("Read in %llu movies", db_->movies_.Size());
+    LOG_INFO("Read in %llu movies", db_->movies_.Size());
 }
 
 void MoviesParser::splitMoiveName(const std::string input_line) { 
-	size_t left_pos = 0;
-	size_t right_pos = input_line.length(); 
-	left_pos = input_line.rfind('\t', right_pos - 1);
-	year_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
+    // split by tab
+    auto split_vec = split(input_line, '\t');
+    // split_vec[0] is the title + subtitle
+    auto title = split_vec[0];
 
-	// skip tab
-	while (input_line[left_pos] == '\t') {left_pos--;}
+    year_.assign(split_vec.back());
 
-	while(left_pos != 0) {
-		if (input_line[left_pos] == '}') {
-			// here is subtitle
-			right_pos = left_pos; 
-			left_pos = input_line.rfind('{', right_pos - 1);
-			subtitle_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
-		} 
-		else if(input_line[left_pos] == ')') {
-		    // here is the year in title;
-		    // special case like (1999/II) 
-		    size_t close = input_line.rfind('(', left_pos);
-		    right_pos = left_pos;
-			string temp(input_line, close + 1, right_pos - close - 1);
-			// >=4 avoid like (V)
-			if (temp.find_first_not_of("0123456789IVX/?") == string::npos && temp.length() >= 4) {
-		     		left_pos = 0;
+    size_t end = find_year_pos(title, 0);        
+    title_.assign(title, 0, end + 1);
 
-		     		title_.assign(input_line, left_pos, right_pos - left_pos + 1);
+    if (title_[0] == '\"') {
+        // For tv title , remove the "
+        title_.erase(std::remove(title_.begin(), title_.end(), '\"'), title_.end());
+    }
 
-		     		if (title_[0] == '\"') {
-		     			// For tv title , remove the "
-		     			title_.erase (std::remove(title_.begin(), title_.end(), '\"'), title_.end());
-			 		}
-			 		break;
-			}
-			else {
-					// here is the type
-					left_pos = input_line.rfind('(', right_pos);
-					type_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
-			}
-		}
-		left_pos--; 
-	}
+    type_ = get_vaild_type(input_line, end);
+
+    subtitle_ = get_vaild_subtitle(title, end);
+
+
 }
 
 void MoviesParser::parseLine(const std::string input_line) {
-	//refresh the string in evey line
-	Init();
-	if (strncmp(input_line.c_str(), "=====", 5) == 0) {
+    //refresh the string in evey line
+    Init();
+    if (strncmp(input_line.c_str(), "=====", 5) == 0) {
         begin_parse_ = true;
         return;
     }
@@ -71,14 +79,14 @@ void MoviesParser::parseLine(const std::string input_line) {
         return;
     }
 
-	if (begin_parse_ == true) { 
-		// This line is empty line
-		if (input_line.length() == 0) {
+    if (begin_parse_ == true) { 
+        // This line is empty line
+        if (input_line.length() == 0) {
             return;
         }
         else {
-        	splitMoiveName(input_line);
-        	insertDB();
+            splitMoiveName(input_line);
+            insertDB();
         }
     }
 }
