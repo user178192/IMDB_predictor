@@ -1,4 +1,5 @@
-#include "Parser.hpp"
+#include <Parser.hpp>
+#include <Common.hpp>
 #include <MovieDB.hpp>
 #include <Log.hpp>
 #include <cstring>
@@ -29,7 +30,7 @@ void GenresParser::splitMoiveName(const std::string input_line) {
          title.erase (std::remove(title.begin(), title.end(), '\"'), title.end());
     }
     size_t end = find_year_pos(title, 0);
-	title_.assign(title, 0, end + 1);
+    title_.assign(title, 0, end + 1);
 }
 
 void GenresParser::parseLine(const std::string input_line) {
