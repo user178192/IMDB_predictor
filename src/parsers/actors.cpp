@@ -85,11 +85,6 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
              right_pos = input_line.find('}', left_pos + 1);
         }
 
-        left_pos = input_line.find('{', right_pos + 1);
-        if (left_pos != std::string::npos) {
-             right_pos = input_line.find('}', left_pos + 1);
-        }
-
         left_pos = input_line.find('<', right_pos + 1);
         if (left_pos != std::string::npos) {
             right_pos = input_line.find('>', left_pos + 1);
