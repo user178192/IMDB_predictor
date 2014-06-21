@@ -1,6 +1,7 @@
 #include "Parser.hpp"
 #include <MovieDB.hpp>
 #include <Log.hpp>
+#include <cstring>
 
 using namespace imdb;
 

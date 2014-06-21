@@ -1,7 +1,12 @@
 #ifndef _INDEX_HPP_
 #define _INDEX_HPP_
 #include <Common.hpp>
+
+#ifdef USE_SPARSE_HASH
+#include <sparsehash/sparse_hash_map>
+#else
 #include <unordered_map>
+#endif
 #include <tuple>
 #include <vector>
 #include <string>
@@ -9,6 +14,9 @@
 namespace imdb {
 
     using namespace std;
+#ifdef USE_SPARSE_HASH
+    using namespace google;
+#endif
 
     template<bool ReadOnly>
     class Serializer;
@@ -17,11 +25,16 @@ namespace imdb {
         template<bool ReadOnly>
         friend class Serializer;
     private:
+#ifdef USE_SPARSE_HASH
         // reverse index, mapping keywords to all the 
         // candidates id that contains the corresponding keyword 
-        unordered_map<string, vector<size_t>> rev_idx_;
+        sparse_hash_map<string, vector<size_t>> rev_idx_;
         // index, mapping id to the keywords under it
+        sparse_hash_map<size_t, size_t> idx_;
+#else
+        unordered_map<string, vector<size_t>> rev_idx_;
         unordered_map<size_t, size_t> idx_;
+#endif
 
     public:
 
@@ -41,7 +54,11 @@ namespace imdb {
     private:
         // map of Key to internal ID , internal id is auto generated and auto increment,
         // it increases when inserting inexisting key 
+#ifdef USE_SPARSE_HASH
+        sparse_hash_map<TKey, size_t> k2id_;
+#else
         unordered_map<TKey, size_t> k2id_;
+#endif
 
         // store the keys and values, index by internel id 
         vector<pair<TKey, TVal>> id2val_;

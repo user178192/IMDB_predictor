@@ -2,8 +2,10 @@
 
 #OPT=-O4
 DEBUG=-g
+#SPARSEHASH=-DUSE_SPARSE_HASH
 
-CFLAGS=-std=c++11 -Wall -Wextra -Wno-format -fPIC $(OPT) $(DEBUG) 
+
+CFLAGS=-std=c++11 -Wall -Wextra -Wno-format -fPIC $(OPT) $(DEBUG) $(SPARSEHASH)
 CC=g++
 LIBS=-ltws
 INC_PATH=-I./
@@ -27,13 +29,13 @@ PARSERTESTOBJ=parser_test.o
 all: server db_build
 
 server: $(OBJS) $(SERVEROBJS)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(LIB_PATH)
+	$(CC) -o $@ $^ $(LIBS) $(LIB_PATH)
 	
 parser_test: $(OBJS) $(PARSEROBJS) $(PARSERTESTOBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIB_PATH)
+	$(CC) -o $@ $^ $(LIB_PATH)
 
 db_build: $(OBJS) $(PARSEROBJS) $(DBBUILDOBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIB_PATH)
+	$(CC) -o $@ $^ $(LIB_PATH)
 
 %.o: %.cpp
 	$(CC) $(INC_PATH) -c $(CFLAGS) -o $@ $^
