@@ -77,7 +77,7 @@ static int my_handler(Response& resp, const Request& req) {
 
     // for test query
     auto query_words = split_string(params["movie"], ", \t");
-    auto query_result = mdb->ri_movie_.Lookup(query_words);
+    auto query_result = mdb->ri_movies_.Lookup(query_words);
 
     int ret_limit = 20;
     for(const auto& id : query_result) {

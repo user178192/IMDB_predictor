@@ -82,21 +82,13 @@ void DirectorsParser::splitMoiveName(const size_t begin, const std::string& dire
         insertDB(director_name, series_name + " " + "(" + series_time + ")");
     }
     
-    // it is a Movie
     else {
-        size_t right_pos = 0;
-        while (right_pos < input_line.length() ) { // find the end of year   
-            if (input_line[right_pos] == ')') {
-                //special case like (1999/II)
-                size_t close = input_line.rfind('(', right_pos);
-                if (isdigit(input_line[close + 1])) {
-                    break;
-                }
-            }
-            right_pos++;
-        }
+        // it is a Movie
+        size_t start = left_pos; // save the vaild begin in start
         std::string movie_name;
-        movie_name.assign(input_line, left_pos, right_pos - left_pos + 1);
+
+        size_t end = find_year_pos(input_line, start);        
+        movie_name.assign(input_line, start, end - start + 1);
         insertDB(director_name, movie_name);
     }
 }

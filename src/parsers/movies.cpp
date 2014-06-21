@@ -1,6 +1,8 @@
 #include "Parser.hpp"
 #include <MovieDB.hpp>
 #include <Log.hpp>
+#include <cstring>
+#include <algorithm>
 
 void MoviesParser::Init() {
 	title_ = subtitle_ 
@@ -23,7 +25,7 @@ void MoviesParser::splitMoiveName(const std::string input_line) {
 
 	while(left_pos != 0) {
 		if (input_line[left_pos] == '}') {
-		// here is subtitle
+			// here is subtitle
 			right_pos = left_pos; 
 			left_pos = input_line.rfind('{', right_pos - 1);
 			subtitle_.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
@@ -40,9 +42,9 @@ void MoviesParser::splitMoiveName(const std::string input_line) {
 
 		     		title_.assign(input_line, left_pos, right_pos - left_pos + 1);
 
-		     		if (title_[0] == '"') {
+		     		if (title_[0] == '\"') {
 		     			// For tv title , remove the "
-		     			title_.erase (std::remove(title_.begin(), title_.end(), '"'), title_.end());
+		     			title_.erase (std::remove(title_.begin(), title_.end(), '\"'), title_.end());
 			 		}
 			 		break;
 			}

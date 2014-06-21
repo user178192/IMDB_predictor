@@ -1,5 +1,6 @@
 #ifndef _INDEX_HPP_
 #define _INDEX_HPP_
+#include <Common.hpp>
 #include <unordered_map>
 #include <tuple>
 #include <vector>
@@ -8,7 +9,6 @@
 namespace imdb {
 
     using namespace std;
-    static size_t NULLID = -1;
 
     template<bool ReadOnly>
     class Serializer;

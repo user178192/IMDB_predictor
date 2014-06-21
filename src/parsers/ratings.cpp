@@ -10,11 +10,16 @@ using namespace imdb;
 static bool is_year_tag(const char *s)
 {
     if (*s-- != ')') return false;
-    if (!isdigit(*s--)) return false;
-    if (!isdigit(*s--)) return false;
-    if (!isdigit(*s--)) return false;
-    if (!isdigit(*s--)) return false;
-    if (*s != '(') return false;
+    const char *t = s;
+    // safe check ignored
+    while(*t != '(')
+        t--;
+    t++;
+
+    if (!isdigit(*t++)) return false;
+    if (!isdigit(*t++)) return false;
+    if (!isdigit(*t++)) return false;
+    if (!isdigit(*t++)) return false;
     return true;
 }
 
@@ -40,8 +45,9 @@ void RatingParser::parseLine(const std::string input_line)
         pos++;
 
     double rating = atof(input_line.c_str() + pos);
-    while(isdigit(input_line[pos]) || input_line[pos] == '.' || input_line[pos] == '\"' 
-            || input_line[pos] == ' ')
+    while(isdigit(input_line[pos]) || input_line[pos] == '.' || input_line[pos] == '\"')
+        pos++;
+    while(input_line[pos] == ' ' || input_line[pos] == '\"')
         pos++;
     
     string key;

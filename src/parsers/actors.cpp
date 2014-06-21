@@ -2,7 +2,6 @@
 #include <Log.hpp>
 #include <MovieDB.hpp>
 #include <stdio.h>
-#include <vector>
 #include <cstring>
 #include <climits>
 
@@ -10,33 +9,6 @@ using namespace imdb;
 
 void ActorsParser::Init() {
 
-}
-
-size_t ActorsParser::find_last_vaild_year(const std::string input_line, size_t begin) {
-        size_t flag = begin;
-        size_t left_pos = begin, right_pos = begin;
-        vector<size_t> checker;
-        for(size_t index = begin ; index < input_line.length(); index++) {
-            if (input_line[index] == '(') {left_pos = index;}
-            if (input_line[index] == ')') {right_pos = index;}
-
-            if (right_pos > left_pos && right_pos - left_pos >= 4) {
-                std::string temp(input_line, left_pos + 1, right_pos - left_pos - 1);
-                if (temp.find_first_not_of("0123456789IVX/?") == std::string::npos) {
-                    checker.push_back(right_pos);
-                }
-            }
-        }
-
-        checker.erase(unique(checker.begin(), checker.end()), checker.end());
-
-        for (size_t i = checker.size() - 1; ; i--) {
-            if (input_line[ checker[i] + 1] != ']') {
-                flag = checker[i]; break;
-            }
-        }
-
-        return flag;       
 }
 
 std::string ActorsParser::splitActorsName(const std::string& input_line) {
@@ -137,14 +109,18 @@ void ActorsParser::splitMoiveName(const size_t begin, const std::string& actor_n
             actor_rank.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
         }
 
-        size_t end = find_last_vaild_year(input_line, start);        
+        size_t end = find_year_pos(input_line, start);        
         movie_name.assign(input_line, start, end - start + 1);
+        /*if (movie_name.length() == 1) {
+            std::cout << input_line << std::endl;
+        }*/
         insertDB(actor_name, movie_name, actor_rank);
     }
 }
 
 void ActorsParser::parseLine(const std::string input_line) {
     Init();
+
     if (strncmp(input_line.c_str(), "----\t", 5) == 0) {
         begin_parse_ = true;
         return;

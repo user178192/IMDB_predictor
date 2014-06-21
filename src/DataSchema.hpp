@@ -2,6 +2,7 @@
 #define _DATASCHEMA_HPP_
 #include <vector>
 #include <string>
+#include <Common.hpp>
 
 namespace imdb {
     using namespace std;
@@ -44,6 +45,12 @@ namespace imdb {
         /* running-times.list */
         vector<string> length_;
 
+
+        //Init
+        Movie()
+            : rating_(0.0), votes_(0), composer_(NULLID)
+        {
+        }
 
         // For convenience
         void AddActor(size_t id, int pos);

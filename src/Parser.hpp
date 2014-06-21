@@ -7,6 +7,15 @@
 #include <fstream>
 #include <cassert>
 #include <vector>
+#include <algorithm>
+
+
+// debug output
+template <typename T>
+auto debug(T t) -> decltype(t) {
+    std::cout << t << std::endl;
+    return t;
+}
 
 // base class for the parser
 namespace imdb {
@@ -30,10 +39,14 @@ public:
     Parser(const std::string str, MovieDB *db) : db_(db), file_name_(str), line_num_(0) {
         Init();
     }
+
+    std::vector<std::string> split(const std::string &input_line, const char &delim );
+    size_t find_year_pos(const std::string input_line, size_t begin);
+
     void parseFile(const std::string file_name);
     virtual void parseLine(const std::string line) = 0;
     std::string file_name_;
-    long long line_num_;
+    long line_num_;
 };
 
 class ActorsParser : public Parser {
@@ -45,26 +58,11 @@ public:
 
     void splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
     std::string splitActorsName(const std::string& input_line);
-    size_t find_last_vaild_year(const std::string input_line, size_t begin);
     void insertDB(const std::string& actor_name, const std::string& movie_name, const std::string& actor_rank);
+
 private:
     bool begin_parse_ = false;
     std::string actor_name_;
-};
-
-class GenresParser : public Parser {
-public:
-    using Parser::Parser;
-
-    virtual void Init();
-
-    virtual void parseLine(const std::string line);
-    
-    void ProcessPart1(std::string part1);
-private:
-    std::string title_, titleyear_, subtitle_;
-    std::string type_;
-    std::string genr_;
 };
 
 class DirectorsParser : public Parser {
@@ -90,7 +88,7 @@ public:
     virtual void parseLine(const std::string line);
     virtual void Finish();
 
-    void splitMoiveName(const size_t begin, const std::string& actor_name, const std::string& input_line);
+    void splitMoiveName(const size_t begin, const std::string& composers_name, const std::string& input_line);
     std::string splitComposersName(const std::string& input_line);
     void insertDB(const std::string& actor_name, const std::string& movie_name);
 
@@ -111,7 +109,23 @@ public:
 
 private:
     bool begin_parse_ = false;
-	std::string title_, subtitle_, type_, year_;
+    std::string title_, subtitle_, type_, year_;
+};
+
+class GenresParser : public Parser {
+public:
+    using Parser::Parser;
+
+    virtual void Init();
+    virtual void parseLine(const std::string line);
+    virtual void Finish();
+
+    void splitMoiveName(const std::string input_line);
+    void insertDB();
+
+private:
+    bool begin_parse_ = false;
+    std::string title_, genr_;
 };
 
 class LanguagesParser : public Parser {
@@ -119,11 +133,13 @@ public:
     using Parser::Parser;
     virtual void Init();
     virtual void parseLine(const std::string line);
-    void ProcessPart1(std::string part1);
+    virtual void Finish();
+
+    void splitMoiveName(const std::string input_line);
+    void insertDB();    
 private:
-    std::string title_, titleyear_, subtitle_;
-    std::string type_;
-    std::string lang_;
+    bool begin_parse_ = false;
+    std::string title_, lang_;
 };
 
 class CountriesParser : public Parser {
@@ -131,11 +147,13 @@ public:
     using Parser::Parser;
     virtual void Init();
     virtual void parseLine(const std::string line);
-    void ProcessPart1(std::string part1);
+    virtual void Finish();
+
+    void splitMoiveName(const std::string input_line);
+    void insertDB();
 private:
-    std::string title_, titleyear_, subtitle_;
-    std::string type_;
-    std::string country_;
+    bool begin_parse_ = false;
+    std::string title_, country_;
 };
 
 class RunningtimeParser : public Parser {
@@ -143,10 +161,14 @@ public:
     using Parser::Parser;
     virtual void Init();
     virtual void parseLine(const std::string line);
+    virtual void Finish();
+
+    void splitMoiveName(const std::string input_line);
+    void insertDB();
+
 private:
-    std::string title_, titleyear_, subtitle_;
-    std::string movietype_;
-    std::string length_, detail_;
+    bool begin_parse_ = false;
+    std::string title_, length_;
 };
 
 class RatingParser : public Parser

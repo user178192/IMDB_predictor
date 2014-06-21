@@ -90,7 +90,7 @@ int HttpHandler::proc_query(const unordered_map<string, string>& params, string&
     TemplateNode nodes;
     nodes.Insert("keywords", keywords);
     auto query_words = split_string(keywords, ", ()\t");
-    auto query_result = db_->ri_movie_.Lookup(query_words);
+    auto query_result = db_->ri_movies_.Lookup(query_words);
     int ret_limit = 20;
     
     TemplateNode movielist;
