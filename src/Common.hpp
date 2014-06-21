@@ -18,7 +18,7 @@ vector<string> split_string(const string& s, const string& delim, size_t max_spl
 // split string into vector of strings, by any delimiter, can split by mutil-delim input 
 std::vector<std::string> split(const std::string &input_line, const char &delim );
 
-// find fisrt vaild year input
+// find fisrt vaild year position like .....(1989) will retunn the position for ')'
 size_t find_year_pos(const std::string input_line, size_t begin);
 }
 
