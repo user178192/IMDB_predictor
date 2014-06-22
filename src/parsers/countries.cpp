@@ -20,7 +20,6 @@ void CountriesParser::splitMoiveName(const std::string input_line) {
     auto split_vec = split(input_line, '\t');
     // split_vec[0] is the title + subtitle
     auto title = split_vec[0];
-
     country_.assign(split_vec.back());
 
     if (title[0] == '\"') {
