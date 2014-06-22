@@ -20,8 +20,7 @@ void CountriesParser::splitMoiveName(const std::string input_line) {
     auto split_vec = split(input_line, '\t');
     // split_vec[0] is the title + subtitle
     auto title = split_vec[0];
-
-	country_.assign(split_vec.back());
+    country_.assign(split_vec.back());
 
     if (title[0] == '\"') {
          // For tv title , remove the "
@@ -34,19 +33,19 @@ void CountriesParser::splitMoiveName(const std::string input_line) {
 void CountriesParser::parseLine(const std::string input_line) {
 	Init();
 	if (strncmp(input_line.c_str(), "=====", 5) == 0) {
-        begin_parse_ = true;
-        return;
-    }
+        	begin_parse_ = true;
+        	return;
+    	}
 
-    else if (strncmp(input_line.c_str(), "-----", 5) == 0) {
-        begin_parse_ = false;
-        return;
-    }
+    	else if (strncmp(input_line.c_str(), "-----", 5) == 0) {
+        	begin_parse_ = false;
+        	return;
+    	}
 
 	if (begin_parse_ == true) { 
 		// This line is empty line
 		if (input_line.length() == 0) {
-            return;
+            		return;
         }
         else {
         	splitMoiveName(input_line);
