@@ -17,7 +17,7 @@ std::string ComposersParser::splitComposersName(const std::string& input_line) {
     while (input_line[pos2] != '\t') {
         pos2++;
     }
-    
+
     std::string composer_name(input_line, pos1, pos2);
     splitMoiveName(pos2, composer_name, input_line);
     return composer_name;
@@ -55,7 +55,7 @@ void ComposersParser::insertDB(const std::string& composer_name, const std::stri
 /*
     For Television Series 
     Not consider the subtitle
-*/
+ */
 
 void ComposersParser::splitMoiveName(const size_t begin, const std::string& composer_name, const std::string& input_line) {
     size_t left_pos = begin;
@@ -66,11 +66,11 @@ void ComposersParser::splitMoiveName(const size_t begin, const std::string& comp
 
     std::string movie_name;
     size_t start = left_pos;
-    size_t end = find_year_pos(input_line, start);        
+    size_t end = find_year_pos(input_line, start);
     movie_name.assign(input_line, start, end - start + 1);
     if (movie_name[0] == '\"') {
         // For tv title , remove the "
-        movie_name.erase (std::remove(movie_name.begin(), movie_name.end(), '\"'), movie_name.end());
+        movie_name.erase(std::remove(movie_name.begin(), movie_name.end(), '\"'), movie_name.end());
     }
     insertDB(composer_name, movie_name);
 }
@@ -89,11 +89,10 @@ void ComposersParser::parseLine(const std::string input_line) {
         // This line is empty line
         if (input_line.length() == 0) {
             return;
-        }
-            // This line is movie name
+        }            // This line is movie name
         else if (*(input_line.begin()) == '\t') {
             splitMoiveName(0, composer_name_, input_line);
-        }            // This line is Composers name + movie name
+        }// This line is Composers name + movie name
         else {
             composer_name_ = std::move(splitComposersName(input_line));
         }
