@@ -1,6 +1,8 @@
-#include "Parser.hpp"
-#include "Log.hpp"
+#include <Parser.hpp>
+#include <Log.hpp>
 #include <MovieDB.hpp>
+#include <Common.hpp>
+
 #include <stdio.h>
 #include <climits>
 #include <cstring>
@@ -15,7 +17,7 @@ std::string ComposersParser::splitComposersName(const std::string& input_line) {
     while (input_line[pos2] != '\t') {
         pos2++;
     }
-    
+
     std::string composer_name(input_line, pos1, pos2);
     splitMoiveName(pos2, composer_name, input_line);
     return composer_name;
@@ -53,7 +55,7 @@ void ComposersParser::insertDB(const std::string& composer_name, const std::stri
 /*
     For Television Series 
     Not consider the subtitle
-*/
+ */
 
 void ComposersParser::splitMoiveName(const size_t begin, const std::string& composer_name, const std::string& input_line) {
     size_t left_pos = begin;
@@ -62,32 +64,15 @@ void ComposersParser::splitMoiveName(const size_t begin, const std::string& comp
         left_pos++;
     }
 
-    // it is a Television Series 
-    if (input_line[left_pos] == '"') {
-
-        std::string series_name, series_time, Composer_rank;
-        size_t right_pos = input_line.find('"', left_pos + 1);
-
-
-        series_name.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
-
-        left_pos = input_line.find('(', right_pos + 1);
-        if (left_pos != std::string::npos) {
-            right_pos = input_line.find(')', left_pos + 1);
-            series_time.assign(input_line, left_pos + 1, right_pos - left_pos - 1);
-        }
-
-        insertDB(composer_name, series_name + " " + "(" + series_time + ")");
+    std::string movie_name;
+    size_t start = left_pos;
+    size_t end = find_year_pos(input_line, start);
+    movie_name.assign(input_line, start, end - start + 1);
+    if (movie_name[0] == '\"') {
+        // For tv title , remove the "
+        movie_name.erase(std::remove(movie_name.begin(), movie_name.end(), '\"'), movie_name.end());
     }
-    
-    // it is a Movie
-    else {
-        size_t start = left_pos; // save the vaild begin in start
-        std::string movie_name;
-        size_t end = find_year_pos(input_line, start);        
-        movie_name.assign(input_line, start, end - start + 1);
-        insertDB(composer_name, movie_name);
-    }
+    insertDB(composer_name, movie_name);
 }
 
 void ComposersParser::parseLine(const std::string input_line) {
@@ -104,11 +89,10 @@ void ComposersParser::parseLine(const std::string input_line) {
         // This line is empty line
         if (input_line.length() == 0) {
             return;
-        }
-            // This line is movie name
+        }            // This line is movie name
         else if (*(input_line.begin()) == '\t') {
             splitMoiveName(0, composer_name_, input_line);
-        }            // This line is Composers name + movie name
+        }// This line is Composers name + movie name
         else {
             composer_name_ = std::move(splitComposersName(input_line));
         }

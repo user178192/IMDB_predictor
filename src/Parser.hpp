@@ -40,9 +40,6 @@ public:
         Init();
     }
 
-    std::vector<std::string> split(const std::string &input_line, const char &delim );
-    size_t find_year_pos(const std::string input_line, size_t begin);
-
     void parseFile(const std::string file_name);
     virtual void parseLine(const std::string line) = 0;
     std::string file_name_;

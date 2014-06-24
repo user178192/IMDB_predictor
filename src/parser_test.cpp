@@ -14,8 +14,8 @@ int main(int argc, char *argv[]) {
     chdir(argv[1]);
     TypeTable testType;
     testType.init(db);
-    //testType.exec("movies.list");
-    testType.exec("genres.list");
+    testType.exec("movies.list");
+    //testType.exec("genres.list");
     delete db;
     return 0;
 }

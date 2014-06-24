@@ -41,7 +41,7 @@ db_build: $(OBJS) $(PARSEROBJS) $(DBBUILDOBJ)
 	$(CC) $(INC_PATH) -c $(CFLAGS) -o $@ $^
 
 clean:
-	rm -f *.o parsers/*.o server parser
+	rm -f *.o parsers/*.o server parser_test
 
 rebuild: clean all
 
