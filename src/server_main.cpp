@@ -1,6 +1,7 @@
 #include <http_server.hpp>
 #include <MovieDB.hpp>
 #include <HttpHandler.hpp>
+#include <ZlibCompression.hpp>
 
 #include <unordered_map>
 #include <string>
@@ -69,12 +70,19 @@ static int my_handler(Response& resp, const Request& req) {
 
     string ret, ret_type;
     if (HttpHandler::process(path, params, ret, ret_type) == 0) {
-        resp.set_body(ret);
-        resp.set_header("Content-Type", ret_type);
+        string deflated = zlib_compress(ret);
+        if (!deflated.empty()) {
+            resp.set_header("Content-Encoding", "deflate");
+            resp.set_body(deflated);
+        } else {
+            resp.set_body(ret);
+        }
+        resp.set_header("Content-Type", "text/html");
         return HTTP_200;
     }
     return HTTP_404;
 
+    /*
     // for test query
     auto query_words = split_string(params["movie"], ", \t");
     auto query_result = mdb->ri_movies_.Lookup(query_words);
@@ -115,11 +123,19 @@ static int my_handler(Response& resp, const Request& req) {
     }
 
     //// for test query
-    resp.set_body(ret);
+    if (!ret.empty()) {
+        string deflated = zlib_compress(ret);
+        if (!deflated.empty()) {
+            resp.set_header("Content-Encoding", "deflate");
+            resp.set_body(deflated);
+        } else {
+            resp.set_body(ret);
+        }
+    } else 
+        resp.set_body(ret);
     resp.set_header("Content-Type", "text/plain");
-
-
     return HTTP_200;
+    */
 }
 
 int main(int argc, char *argv[]) {

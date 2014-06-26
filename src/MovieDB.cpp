@@ -14,6 +14,7 @@ void MovieDB::BuildIndex() {
     }
     ri_movies_.ShrinkMemory();
 
+    /*
     ri_actors_.Clear();
     for (size_t i = 0; i < actors_.Size(); i++) {
         ri_actors_.Insert(split_string(*(get<1>(actors_.GetKey(i))), " ,!#'(){}/"), i);
@@ -31,6 +32,7 @@ void MovieDB::BuildIndex() {
         ri_composers_.Insert(split_string(*(get<1>(composers_.GetKey(i))), " ,!#'(){}/"), i);
     }
     ri_composers_.ShrinkMemory();
+    */
 
     LOG_INFO("Done");
 }
