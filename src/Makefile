@@ -7,12 +7,12 @@ DEBUG=-g
 
 CFLAGS=-std=c++11 -Wall -Wextra -Wno-format -fPIC $(OPT) $(DEBUG) $(SPARSEHASH)
 CC=g++
-LIBS=-ltws -lz
+LIBS=-ltws
 INC_PATH=-I./
 LIB_PATH=-L./
 
 OBJS=DataSchema.o MovieDB.o Log.o Index.o Common.o
-SERVEROBJS=server_main.o HttpHandler.o DynamicHTML.o ZlibCompression.o
+SERVEROBJS=server_main.o HttpHandler.o DynamicHTML.o
 PARSEROBJS=Parser.o parsers/actors.o \
 					parsers/directors.o \
 					parsers/movies.o \

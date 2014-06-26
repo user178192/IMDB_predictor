@@ -45,9 +45,9 @@ void HttpHandler::LoadTemplates(const string& dir)
          if (ifs.good()) {
             i.second.assign( (std::istreambuf_iterator<char>(ifs) ),
             (std::istreambuf_iterator<char>()    ));
-            LOG_INFO("Lode %s succeed, size %llu", fn, i.second.size());
+            LOG_INFO("Load %s succeed, size %llu", fn, i.second.size());
          } else {
-            LOG_DEBUG("Lode file[%s] failed", fn);
+            LOG_DEBUG("Load file[%s] failed", fn);
          }
          ifs.close();
      }
