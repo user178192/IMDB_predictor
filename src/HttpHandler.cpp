@@ -180,6 +180,16 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
     nodes.Insert("directors", new TemplateNode(lists));
 
     lists.Clear();
+    if (m->composer_ != NULLID) {
+        TemplateNode tmp;
+        tmp.Insert("composername", MovieDB::NameReorder(*(get<1>(db_->composers_.GetKey(m->composer_)))));
+        snprintf(tmpbuf, 30, "%llu", m->composer_);
+        tmp.Insert("composerid", tmpbuf);
+        lists.Insert(new TemplateNode(tmp));
+    } 
+    nodes.Insert("composers", new TemplateNode(lists));
+
+    lists.Clear();
     for(const auto &i : m->genres_) {
         TemplateNode tmp;
         tmp.Insert("genre", i);

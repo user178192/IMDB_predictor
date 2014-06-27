@@ -43,6 +43,7 @@ void ComposersParser::insertDB(const std::string& composer_name, const std::stri
     if (get<0>(com_obj)) {
         // the composer already exists, insert the movie id to the Composer
         get<2>(com_obj)->movies_.push_back(get<1>(mov_obj));
+        com_id = get<1>(com_obj);
     } else {
         // insert new composer
         Composer c;
