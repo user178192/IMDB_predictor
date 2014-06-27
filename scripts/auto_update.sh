@@ -11,8 +11,8 @@ do
         echo "same"
     else
         echo "Updating ${i}.list....."
-        curl -o ${i}.list.gz "ftp://ftp.funet.fi/pub/mirrors/ftp.imdb.com/pub/${i}.list.gz"
-        gunzip -f ${i}.list.gz
+        curl -o $2/${i}.list.gz "ftp://ftp.funet.fi/pub/mirrors/ftp.imdb.com/pub/${i}.list.gz"
+        gunzip -f $2/${i}.list.gz
         newdata=1
         mv tmp $2/${i}.info
     fi
