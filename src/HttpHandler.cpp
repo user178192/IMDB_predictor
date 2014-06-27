@@ -147,33 +147,69 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
     TemplateNode nodes, lists;
     char tmpbuf[30];
     nodes.Insert("movietitle", *get<1>(info));
-    snprintf(tmpbuf, 30, "%.1f", m->rating_);
-    nodes.Insert("rating", tmpbuf);
-    snprintf(tmpbuf, 30, "%llu", m->votes_);
-    nodes.Insert("votes", tmpbuf);
+    if (m->votes_ > 10) {
+        snprintf(tmpbuf, 30, "%llu", m->votes_);
+        nodes.Insert("votes", tmpbuf);
+        snprintf(tmpbuf, 30, "%.1f", m->rating_);
+        nodes.Insert("rating", tmpbuf);
+    } else {
+        nodes.Insert("votes", "< 10");
+        nodes.Insert("rating", "Unavailable");
+    }
 
     int actor_limit = 10;
     for(const auto &i : m->actors_) {
         if (actor_limit-- == 0)
             break;
         TemplateNode tmp;
-        tmp.Insert("name", *(get<1>(db_->actors_.GetKey(i))));
+        tmp.Insert("name", MovieDB::NameReorder(*(get<1>(db_->actors_.GetKey(i)))));
         snprintf(tmpbuf, 30, "%llu", i);
         tmp.Insert("id", tmpbuf);
         lists.Insert(new TemplateNode(tmp));
     }
     nodes.Insert("actors", new TemplateNode(lists));
+
     lists.Clear();
     for(const auto &i : m->directors_) {
-        if (actor_limit-- == 0)
-            break;
         TemplateNode tmp;
-        tmp.Insert("name", *(get<1>(db_->directors_.GetKey(i))));
+        tmp.Insert("name", MovieDB::NameReorder(*(get<1>(db_->directors_.GetKey(i)))));
         snprintf(tmpbuf, 30, "%llu", i);
         tmp.Insert("id", tmpbuf);
         lists.Insert(new TemplateNode(tmp));
     }
     nodes.Insert("directors", new TemplateNode(lists));
+
+    lists.Clear();
+    for(const auto &i : m->genres_) {
+        TemplateNode tmp;
+        tmp.Insert("genre", i);
+        lists.Insert(new TemplateNode(tmp));
+    }
+    nodes.Insert("genres", new TemplateNode(lists));
+
+    lists.Clear();
+    for(const auto &i : m->length_) {
+        TemplateNode tmp;
+        tmp.Insert("length", i);
+        lists.Insert(new TemplateNode(tmp));
+    }
+    nodes.Insert("lengths", new TemplateNode(lists));
+
+    lists.Clear();
+    for(const auto &i : m->languages_) {
+        TemplateNode tmp;
+        tmp.Insert("language", i);
+        lists.Insert(new TemplateNode(tmp));
+    }
+    nodes.Insert("languages", new TemplateNode(lists));
+
+    lists.Clear();
+    for(const auto &i : m->countries_) {
+        TemplateNode tmp;
+        tmp.Insert("country", i);
+        lists.Insert(new TemplateNode(tmp));
+    }
+    nodes.Insert("countries", new TemplateNode(lists));
 
     ret.clear();
     vector<string> failed_tags;

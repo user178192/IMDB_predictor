@@ -46,7 +46,7 @@ void GenresParser::parseLine(const std::string input_line) {
             return;
         } else {
             splitMoiveName(input_line);
-            //insertDB();
+            insertDB();
         }
     }
 }
