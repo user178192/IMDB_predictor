@@ -7,8 +7,8 @@
 
 <form action="/query" method="get" enctype="text/plain">
 Query: <select name="query_type">
-<option value="people">Movie Title</option>
-<option value="movie">People</option>
+<option value="movie">Movie Title</option>
+<option value="people">People</option>
 <input type="text" name="keywords" value="Taxi Driver"><br>
 <input type="submit" value="Look up">
 <input type="reset" value="Reset">
@@ -17,13 +17,13 @@ Query: <select name="query_type">
 <h2>[&movietitle&]</h2>
 <ul>
 <li>Rating: [&rating&], [&votes&] votes</li>
-<li>Actors: [&&actors&<a href="people/type=actor&id=[&id&]">[&name&]</a>&]</li>
-<li>Directors: [&&directors&<a href="people/type=director&id=[&id&]">[&name&]</a>&]</li>
-<li>Genres:<a>Sci-Fict</a>,<a>Comedy</a></li>
-<li>Composer:<a>Himmer Hans</a></li>
-<li>Movie length: 133</li>
-<li>Language: English, Japanese</li>
-<li>Countries: United States</li>
+<li>Actors: [&&actors&<a href="people/type=actor&id=[&id&]">[&name&]</a>,&nbsp;&]</li>
+<li>Directors: [&&directors&<a href="people/type=director&id=[&id&]">[&name&]</a>,&nbsp;&]</li>
+<li>Genres: [&&genres&<a>[&genre&]</a>,&nbsp;&]</li>
+<li>Composer: <a>Himmer Hans</a></li>
+<li>Movie length: [&&lengths&<a>[&length&]</a>,&nbsp;&]</li>
+<li>Language: [&&languages&<a>[&language&]</a>,&nbsp;&]</li>
+<li>Countries: [&&countries&<a>[&country&]</a>,&nbsp;&]</li>
 </ul>
 
 
