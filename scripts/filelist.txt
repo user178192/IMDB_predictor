@@ -1,0 +1,10 @@
+actors
+actresses
+genres
+directors
+composers
+movies
+language
+countries
+running-times
+ratings

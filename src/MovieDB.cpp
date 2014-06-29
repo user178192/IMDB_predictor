@@ -82,6 +82,9 @@ int MovieDB::SaveToFile(const std::string& filename) {
         sort(m->countries_.begin(), m->countries_.end());
         m->countries_.erase(unique(m->countries_.begin(), m->countries_.end()), m->countries_.end());
 
+        sort(m->directors_.begin(), m->directors_.end());
+        m->directors_.erase(unique(m->directors_.begin(), m->directors_.end()), m->directors_.end());
+
         sort(m->genres_.begin(), m->genres_.end());
         m->genres_.erase(unique(m->genres_.begin(), m->genres_.end()), m->genres_.end());
     }
@@ -102,6 +105,30 @@ int MovieDB::SaveToFile(const std::string& filename) {
     return 0;
 }
 
+string MovieDB::NameReorder(const string& name)
+{
+    string last, first;
+    const string &s(name);
+    bool infirst = true;
+    for(size_t i = 0; i < name.size(); i++) {
+        if (s[i] == ',' && s[i + 1] == ' ') {
+            infirst = false;
+            i++;
+            continue;
+        }
+
+        // (I) (II)
+        if (s[i] == '(')
+            break;
+
+        if (infirst)
+            first.append(1, s[i]);
+        else
+            last.append(1, s[i]);
+    }
+    last.append(1, ' ');
+    return move(last + first);
+}
 
 }
 

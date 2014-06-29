@@ -24,8 +24,9 @@ namespace imdb {
         ReverseIndex ri_directors_;
 
         void BuildIndex();
-        int LoadFromFile(const std::string& filename);
-        int SaveToFile(const std::string& filename);
+        int LoadFromFile(const string& filename);
+        int SaveToFile(const string& filename);
+        static string NameReorder(const string& name);
     };
 
 
