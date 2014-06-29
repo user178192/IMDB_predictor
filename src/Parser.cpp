@@ -37,6 +37,7 @@ void TypeTable::init(MovieDB *db) {
 void TypeTable::exec(const std::string file_name) {
     assert(parser_map.count(file_name));
     parser_map[file_name] -> parseFile(file_name);
+    delete parser_map[file_name];
 }
 
 

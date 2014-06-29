@@ -40,6 +40,10 @@ public:
         Init();
     }
 
+    virtual ~Parser() {
+        
+    }
+
     void parseFile(const std::string file_name);
     virtual void parseLine(const std::string line) = 0;
     std::string file_name_;
