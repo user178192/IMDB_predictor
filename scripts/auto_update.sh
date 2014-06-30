@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "./auto_update.sh filelist.txt outputdir db_build.exec output.file"
+echo "example: ./auto_update.sh filelist.txt /disk2/imdb/ ~/IMDB_predictor/src/db_build temp.dat"
 newdata=0
 
 for i in `cat $1`
@@ -20,6 +22,8 @@ done
 rm -f tmp
 
 if [ $newdata -eq 1 ]
+then
 #Run the parsers
+$3 $4 $2
 fi
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#OPT=-O4
+OPT=-O4
 DEBUG=-g
 #SPARSEHASH=-DUSE_SPARSE_HASH
 
