@@ -1,5 +1,6 @@
 #!/bin/sh
 
+BUILDDIR=../build/
 OPT=-O4
 DEBUG=-g
 #SPARSEHASH=-DUSE_SPARSE_HASH
@@ -26,22 +27,28 @@ PARSEROBJS=Parser.o parsers/actors.o \
 DBBUILDOBJ=db_build.o
 PARSERTESTOBJ=parser_test.o
 
-all: server db_build
+all: $(BUILDDIR) $(BUILDDIR)imdb_server $(BUILDDIR)imdb_db_build
 
-server: $(OBJS) $(SERVEROBJS)
+parser_test: $(BUILDDIR) $(BUILDDIR)parser_test
+
+
+$(BUILDDIR): 
+	mkdir -p $(BUILDDIR)
+
+$(BUILDDIR)imdb_server: $(OBJS) $(SERVEROBJS)
 	$(CC) -o $@ $^ $(LIBS) $(LIB_PATH)
 	
-parser_test: $(OBJS) $(PARSEROBJS) $(PARSERTESTOBJ)
+$(BUILDDIR)parser_test: $(OBJS) $(PARSEROBJS) $(PARSERTESTOBJ)
 	$(CC) -o $@ $^ $(LIB_PATH)
 
-db_build: $(OBJS) $(PARSEROBJS) $(DBBUILDOBJ)
+$(BUILDDIR)imdb_db_build: $(OBJS) $(PARSEROBJS) $(DBBUILDOBJ)
 	$(CC) -o $@ $^ $(LIB_PATH)
 
 %.o: %.cpp
 	$(CC) $(INC_PATH) -c $(CFLAGS) -o $@ $^
 
 clean:
-	rm -f *.o parsers/*.o server parser_test db_build
+	rm -f *.o parsers/*.o server $(BUILDDIR)imdb* $(BUILDDIR)parser_test
 
 rebuild: clean all
 
