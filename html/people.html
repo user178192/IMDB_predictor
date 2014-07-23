@@ -5,26 +5,19 @@
 
 <h1>IMDB Predictor</h1>
 
-<form action="http://www.baidu.com/" method="get" enctype="text/plain">
+<form action="/query" method="get" enctype="text/plain">
 Query: <select name="query_type">
-<option value="people">Movie Title</option>
-<option value="movie">People</option>
-<option value="time">Release Time</option>
-<input type="text" name="movie_title" value="Taxi Driver"><br>
+<option value="movie">Movie Title</option>
+<option value="people">People</option>
+<input type="text" name="keywords" value="Taxi Driver"><br>
 <input type="submit" value="Look up">
 <input type="reset" value="Reset">
-
 </form>
 
-<h2>Movies of Al Pacino</h2>
+<h2>MOvie(s) by [&people&]</h2>
 <ul>
-<li><a href="books/thinking_in_cpp/vol_2/">Godfather (1982)</a></li>
-<li><a href="books/thinking_in_cpp/vol_2/">Godfather II (1983)</a></li>
-<li><a href="books/thinking_in_cpp/vol_2/">Godfather III (1991)</a></li>
-<li><a href="books/thinking_in_cpp/vol_2/">Chinese Coffee (1994)</a></li>
-<li><a href="books/thinking_in_cpp/vol_2/">Heat (1996)</a></li>
-<li><a href="books/thinking_in_cpp/vol_2/">Donniel Brasco (1994)</a></li>
+[&&result&<li><a href="/movie?id=[&id&]">[&title&]</a></li>
+&]
 </ul>
-
 
 </body>

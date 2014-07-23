@@ -142,7 +142,7 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
     auto info = db_->movies_.GetInfo(id);
     Movie *m = get<2>(info);
     if (!get<0>(info))
-        return false;
+        return -1;
 
     TemplateNode nodes, lists;
     char tmpbuf[30];
@@ -236,8 +236,65 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
 
 int HttpHandler::proc_people(const unordered_map<string, string>& params, string& ret, string& ret_type)
 {
-    (void)params;
-    ret = "<html><body><h1>People Page</h1></body></html>";
+    string template_html;
+    {
+        auto it = html_templates_.find("people");
+        if (it == html_templates_.end())
+            return -1;
+        template_html = it->second;
+    }
+
+    size_t id;
+    string query_type;
+    {
+        auto it = params.find("id");
+        if (it == params.end())
+            return -1;
+        id = atol(it->second.c_str());
+
+        it = params.find("type");
+        if (it == params.end())
+            return -1;
+        query_type = it->second;
+    }
+
+    auto info = db_->actors_.GetInfo(0);
+    if (query_type == "composer")
+        info = db_->composers_.GetInfo(id);
+    else if (query_type == "actor")
+        info = db_->actors_.GetInfo(id);
+    else if (query_type == "director")
+        info = db_->directors_.GetInfo(id);
+    else
+        return -1;
+
+    // actors composers directors are same type
+    People *p = get<2>(info);
+    if (!get<0>(info))
+        return -1;
+
+    TemplateNode nodes, lists;
+    nodes.Insert("people", *(get<1>(info)));
+    for(const auto &i : p->movies_) {
+        auto title = get<1>(db_->movies_.GetKey(i));
+        TemplateNode tmp;
+        char bufid[30];
+        snprintf(bufid, 30, "%llu", i);
+        tmp.Insert("id", bufid);
+        tmp.Insert("title", *title);
+        lists.Insert(new TemplateNode(tmp));
+    }
+    nodes.Insert("result", new TemplateNode(lists));
+
+    ret.clear();
+    vector<string> failed_tags;
+    if (generate_html(template_html, nodes, ret, failed_tags) < 0) {
+        LOG_ERROR("Html template applied failed:");
+        for(const auto &i : failed_tags)
+            LOG_ERROR("bad tag(s): %s", i.c_str());
+        ret.clear();
+        return -1;
+    }
     ret_type = "text/html";
     return 0;
 }

@@ -10,7 +10,7 @@ CFLAGS=-std=c++11 -Wall -Wextra -Wno-format -fPIC $(OPT) $(DEBUG) $(SPARSEHASH)
 CC=g++
 LIBS=-ltws
 INC_PATH=-I./
-LIB_PATH=-L./
+LIB_PATH=-L../libs/
 
 OBJS=DataSchema.o MovieDB.o Log.o Index.o Common.o
 SERVEROBJS=server_main.o HttpHandler.o DynamicHTML.o
