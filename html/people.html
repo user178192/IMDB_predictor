@@ -1,23 +1,81 @@
-<!DOCTYPE html>
 <html>
-<head><title>IMDB Predictor</title>
-<body>
+    <head>
+        <title>Movies by [&people&]</title>
+        <style type="text/css">
+            #btnSubmit
+            {
+                height: 37px;
+                width: 94px;
+            }
+            #txtquery
+            {
+                height:37px;
+                width:60%;
+            }
+            #selectType
+            {
+                height:37px;
+                vertical-align:middle;
+                font-size:large; 
+                width:100px;
+            }
 
-<h1>IMDB Predictor</h1>
+            #logo
+            {
+                text-align:center; 
+                font-size:xx-large; 
+                font-style:italic;
+                font-family:Arial,Helvetica,sans-serif;
+            }
+            .tb table{border-right:1px solid gray;border-bottom:1px solid gray}
+            .tb table td{border-left:1px solid gray;border-top:1px solid gray}
+        </style>
+    </head>
 
-<form action="/query" method="get" enctype="text/plain">
-Query: <select name="query_type">
-<option value="movie">Movie Title</option>
-<option value="people">People</option>
-<input type="text" name="keywords" value="Taxi Driver"><br>
-<input type="submit" value="Look up">
-<input type="reset" value="Reset">
-</form>
+    <body>
+       <div id="showLogo">
+            <p id="logo" >IMDB Predictor</p>
+       </div>
+       <form action="/query" method="get" enctype="text/plain" id="form1">
+                <div id="searchDiv">
+                    <table style="width:80%; height:30px" align="left">
+                        <tr>
+                            <td style="width:60%" align="right">
+                            <input id="txtquery" style="font-size:large" type="text" name="keywords">
+                            </td>
+                            <td style="width:3%">
+                                <select id="selectType" name="query_type">
+                                    <option value="text" style="font-size:large">Movie</option>
+                                    <option value="people" style="font-size:large">People</option>
+                                </select>
+                            </td>
+                            <td style="width:10%" align="left">
+                                <input id="btnSubmit" type="submit" size="100%" value="Search" >
+                            </td>
+                        </tr>                
+                    </table>
+                </div>
+                <br />
+       </form>
 
-<h2>MOvie(s) by [&people&]</h2>
-<ul>
-[&&result&<li><a href="/movie?id=[&id&]">[&title&]</a></li>
-&]
-</ul>
-
-</body>
+           <br />
+           <table width="100%" border="0">
+                    <tr>
+                        <td width="25%"></td>
+                        <td width="50%"><p style="float:left; font-size:x-large; position:relative">Movie(s) by [&people&]</p></td>
+                        <td width="25%"></td>
+                    </tr>
+                </table>
+           <div class="tb">                                
+                <table align="center" style="width:60%" id="tbResult" cellpadding="5" border="0">
+                    [&&result&<tr>
+                        <td align="right" width="5%">&bull;</td>
+                        <td>
+                            <a style="font-size:medium" href="/movie?id=[&id&]">[&title&]</a>
+                        </td>
+                    </tr>
+                    &]
+                </table>
+            </div>
+    </body>
+</html>

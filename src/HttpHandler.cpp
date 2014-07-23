@@ -4,6 +4,7 @@
 #include <Log.hpp>
 
 #include <fstream>
+#include <algorithm>
 
 
 using namespace dynamichtml;
@@ -274,8 +275,15 @@ int HttpHandler::proc_people(const unordered_map<string, string>& params, string
         return -1;
 
     TemplateNode nodes, lists;
-    nodes.Insert("people", *(get<1>(info)));
-    for(const auto &i : p->movies_) {
+    nodes.Insert("people", MovieDB::NameReorder(*(get<1>(info))));
+
+    //sort the result
+    auto movies = p->movies_;
+    sort(movies.begin(), movies.end(), [&](const size_t a, const size_t b) {
+                return get<2>(db_->movies_.GetInfo(a))->votes_ >
+                get<2>(db_->movies_.GetInfo(b))->votes_;
+            });
+    for(const auto &i : movies) {
         auto title = get<1>(db_->movies_.GetKey(i));
         TemplateNode tmp;
         char bufid[30];

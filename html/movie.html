@@ -1,22 +1,33 @@
 <html>
     <head>
-        <title>MovieDetail</title>
-        <script language="javascript" type="text/javascript">
-            function ActorClick(id) {
-                var targetid = "txtActorID" + id[id.length - 1];
-                //passid is used to pass to direct web, which will use it to ask server for the detail of this people
-                var passid = document.getElementById(targetid).value;
-                location.href = "peopledetail.html?peopleid = " + passid;
+        <title>Info for '[&name&]'</title>
+        <style type="text/css">
+            #btnSubmit
+            {
+                height: 37px;
+                width: 94px;
+            }
+            #txtquery
+            {
+                height:37px;
+                width:60%;
+            }
+            #selectType
+            {
+                height:37px;
+                vertical-align:middle;
+                font-size:large; 
+                width:100px;
             }
 
-            function DirectorClick(id) {
-                var targetid = "txtDireID" + id[id.length - 1];
-                //passid is used to pass to direct web, which will use it to ask server for the detail of this people
-                var passid = document.getElementById(targetid).value;
-                location.href = "peopledetail.html?peopleid = " + passid;
+            #logo
+            {
+                text-align:center; 
+                font-size:xx-large; 
+                font-style:italic;
+                font-family:Arial,Helvetica,sans-serif;
             }
-        </script>
-        <style type="text/css">
+
             #txtRate
             {
                 width: 31px;
@@ -25,32 +36,44 @@
             {
                 width: 42px;
             }
-            #logo
-            {
-                text-align:center; 
-                font-size:xx-large; 
-                font-style:italic;
-                font-family:Arial,Helvetica,sans-serif;
-            }
             .tb table{border-right:1px solid gray;border-bottom:1px solid gray}
             .tb table td{border-left:1px solid gray;border-top:1px solid gray}
 
         </style>
     </head>
 
-    <body onload="CheckSource()">
-        <form id="form1" action="search.html">
-           <div id="showLogo">
-                <p id="logo" >IMDB Predictor</p>
-           </div>
-           <br />
-           <br />
-           <br />
+    <body>
+       <div id="showLogo">
+            <p id="logo" >IMDB Predictor</p>
+       </div>
+       <form action="/query" method="get" enctype="text/plain" id="form1">
+                <div id="searchDiv">
+                    <table style="width:80%; height:30px" align="left">
+                        <tr>
+                            <td style="width:60%" align="right">
+                            <input id="txtquery" style="font-size:large" type="text" name="keywords">
+                            </td>
+                            <td style="width:3%">
+                                <select id="selectType" name="query_type">
+                                    <option value="text" style="font-size:large">Movie</option>
+                                    <option value="people" style="font-size:large">People</option>
+                                </select>
+                            </td>
+                            <td style="width:10%" align="left">
+                                <input id="btnSubmit" type="submit" size="100%" value="Search" >
+                            </td>
+                        </tr>                
+                    </table>
+                </div>
+                <br />
+       </form>
+
+       <br />
+
            <table width="100%" border="0">
                     <tr>
                         <td width="25%"></td>
-                        <td width="25%"><p style="float:left; font-size:large; position:relative">[&movietitle&]</p></td>
-                        <td width="25%"></td>
+                        <td width="50%"><p style="float:left; font-size:x-large; position:relative">[&movietitle&]</p></td>
                         <td width="25%"></td>
                     </tr>
                 </table>
