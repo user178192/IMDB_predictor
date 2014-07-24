@@ -1,5 +1,6 @@
 #include <HttpHandler.hpp>
 #include <DynamicHTML.hpp>
+#include <MovieSimilarity.hpp>
 #include <MovieDB.hpp>
 #include <Log.hpp>
 
@@ -145,6 +146,8 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
     if (!get<0>(info))
         return -1;
 
+    auto simis = GetSimilarMovies(*m, db_);
+
     TemplateNode nodes, lists;
     char tmpbuf[30];
     nodes.Insert("movietitle", *get<1>(info));
@@ -158,6 +161,7 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
         nodes.Insert("rating", "Unavailable");
     }
 
+    lists.Clear();
     int actor_limit = 10;
     for(const auto &i : m->actors_) {
         if (actor_limit-- == 0)
@@ -221,6 +225,16 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
         lists.Insert(new TemplateNode(tmp));
     }
     nodes.Insert("countries", new TemplateNode(lists));
+
+    lists.Clear();
+    for(const auto &i : simis) {
+        TemplateNode tmp;
+        tmp.Insert("name", *(get<1>(db_->movies_.GetKey(i))));
+        snprintf(tmpbuf, 30, "%llu", i);
+        tmp.Insert("id", tmpbuf);
+        lists.Insert(new TemplateNode(tmp));
+    }
+    nodes.Insert("simis", new TemplateNode(lists));
 
     ret.clear();
     vector<string> failed_tags;
