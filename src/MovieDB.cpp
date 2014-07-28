@@ -96,8 +96,24 @@ int MovieDB::SaveToFile(const std::string& filename) {
     */
 
     writer->Write(movies_);
+
+    for (size_t i = 0; i < actors_.Size(); i++) {
+        auto p = get<2>(actors_.GetInfo(i));
+        sort(p->movies_.begin(), p->movies_.end());
+        p->movies_.erase(unique(p->movies_.begin(), p->movies_.end()), p->movies_.end());
+    }
     writer->Write(actors_);
+    for (size_t i = 0; i < composers_.Size(); i++) {
+        auto p = get<2>(composers_.GetInfo(i));
+        sort(p->movies_.begin(), p->movies_.end());
+        p->movies_.erase(unique(p->movies_.begin(), p->movies_.end()), p->movies_.end());
+    }
     writer->Write(composers_);
+    for (size_t i = 0; i < directors_.Size(); i++) {
+        auto p = get<2>(directors_.GetInfo(i));
+        sort(p->movies_.begin(), p->movies_.end());
+        p->movies_.erase(unique(p->movies_.begin(), p->movies_.end()), p->movies_.end());
+    }
     writer->Write(directors_);
     LOG_INFO("Load DB done, %llu movies, %llu people",
             movies_.Size(), actors_.Size() + composers_.Size() + directors_.Size());

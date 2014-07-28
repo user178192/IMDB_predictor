@@ -1,30 +1,182 @@
-<!DOCTYPE html>
 <html>
-<head><title>IMDB Predictor</title>
-<body>
+    <head>
+        <title>Info for '[&movietitle&]'</title>
+        <style type="text/css">
+            #btnSubmit
+            {
+                height: 37px;
+                width: 94px;
+            }
+            #txtquery
+            {
+                height:37px;
+                width:60%;
+            }
+            #selectType
+            {
+                height:37px;
+                vertical-align:middle;
+                font-size:large; 
+                width:100px;
+            }
 
-<h1>IMDB Predictor</h1>
+            #logo
+            {
+                text-align:center; 
+                font-size:xx-large; 
+                font-style:italic;
+                font-family:Arial,Helvetica,sans-serif;
+            }
 
-<form action="/query" method="get" enctype="text/plain">
-Query: <select name="query_type">
-<option value="movie">Movie Title</option>
-<option value="people">People</option>
-<input type="text" name="keywords" value="Taxi Driver"><br>
-<input type="submit" value="Look up">
-<input type="reset" value="Reset">
-</form>
+            #txtRate
+            {
+                width: 31px;
+            }
+            #txtNum
+            {
+                width: 42px;
+            }
+            .tb table{border-right:1px solid gray;border-bottom:1px solid gray}
+            .tb table td{border-left:1px solid gray;border-top:1px solid gray}
 
-<h2>[&movietitle&]</h2>
-<ul>
-<li>Rating: [&rating&], [&votes&] votes</li>
-<li>Actors: [&&actors&<a href="people/type=actor&id=[&id&]">[&name&]</a>,&nbsp;&]</li>
-<li>Directors: [&&directors&<a href="people/type=director&id=[&id&]">[&name&]</a>,&nbsp;&]</li>
-<li>Genres: [&&genres&<a>[&genre&]</a>,&nbsp;&]</li>
-<li>Composer: [&&composers&<a href="people/type=composer&id=[&composerid&]">[&composername&]</a>&]</li>
-<li>Movie length: [&&lengths&<a>[&length&]</a>,&nbsp;&]</li>
-<li>Language: [&&languages&<a>[&language&]</a>,&nbsp;&]</li>
-<li>Countries: [&&countries&<a>[&country&]</a>,&nbsp;&]</li>
-</ul>
+        </style>
+    </head>
 
+    <body>
+       <div id="showLogo">
+            <p id="logo" >IMDB Predictor</p>
+       </div>
+       <form action="/query" method="get" enctype="text/plain" id="form1">
+                <div id="searchDiv">
+                    <table style="width:80%; height:30px" align="left">
+                        <tr>
+                            <td style="width:60%" align="right">
+                            <input id="txtquery" style="font-size:large" type="text" name="keywords">
+                            </td>
+                            <td style="width:3%">
+                                <select id="selectType" name="query_type">
+                                    <option value="text" style="font-size:large">Movie</option>
+                                    <option value="people" style="font-size:large">People</option>
+                                </select>
+                            </td>
+                            <td style="width:10%" align="left">
+                                <input id="btnSubmit" type="submit" size="100%" value="Search" >
+                            </td>
+                        </tr>                
+                    </table>
+                </div>
+                <br />
+       </form>
 
-</body>
+       <br />
+
+           <table width="100%" border="0">
+                    <tr>
+                        <td width="25%"></td>
+                        <td width="50%"><p style="float:left; font-size:x-large; position:relative">[&movietitle&]</p></td>
+                        <td width="25%"></td>
+                    </tr>
+                </table>
+ 
+            <div id="contentArea" align="center" class="tb">
+                <table id="tbShowDetail" width="60%" border="0" cellpadding="5">
+                    <tr>
+                        <td align="right">&bull;</td>
+                        <td style="width:inherit">
+                            <div>
+                                <label>Rating</label>
+                                <label>[&rating&]</label>
+                                <label>[&votes&]</label>
+                                <!--<input size="30px" style="border:0" id="txtRate" type="text" value="9.0" />
+                                <input id="txtNum" style="border:0" size="200px" type="text" value="1000" />-->
+                                <label>votes</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">&bull;</td>
+                        <td>
+                            <div>
+                                <label>Actors</label>
+                                <!--<input id="txtActor1" value="asdfasdfsaf" style="border:0" type="button" onclick="ActorClick(id)" />-->
+                                [&&actors&
+                                <a style="font-size:medium" href="/people?type=actor&id=[&id&]">[&name&]</a>&]
+                                <!--<input id="txtActorID1" type="hidden" value="1" />-->
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">&bull;</td>
+                        <td>
+                            <label>Directors</label>
+                            <!--<input id="txtDire1" value="qweqweqweqw" type="button" style="border:0" onclick="DirectorClick(id)" />
+                            <input id="txtDireID1" type="hidden" value="1" />-->
+                                [&&directors&
+                                <a style="font-size:medium" href="/people?type=director&id=[&id&]">[&name&]</a>&]
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">&bull;</td>
+                        <td>
+                            <div>
+                                <label>Genres</label>
+                                <input id="txtGenr" style="border:0" value="[&&genres&[&genre&],&]" type="text" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">&bull;</td>
+                        <td>
+                            <div>
+                                <label>Composer</label>
+                                [&&composers&
+                                <a style="font-size:medium" href="/people?type=composer&id=[&composerid&]">[&composername&]</a>&]
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">&bull;</td>
+                        <td>
+                            <div>
+                                <label>Moive length (min)</label>
+                                <input id="txtMovielen" style="border:0" value="[&&lengths&[&length&],&]" type="text" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">&bull;</td>
+                        <td>
+                            <div>
+                                <label>Language</label>
+                                <input id="txtLang" style="border:0" value="[&&languages&[&language&],&]" type="text" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">&bull;</td>
+                        <td>
+                            <div>
+                                <label>Country</label>
+                                <input id="txtCountry" style="border:0" value="[&&countries&[&country&],&]" type="text" />
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align="right">&bull;</td>
+                        <td>
+                            <div>
+                                <label>Similar Movies</label>
+                                <!--<input id="txtActor1" value="asdfasdfsaf" style="border:0" type="button" onclick="ActorClick(id)" />-->
+                                [&&simis&
+                                <a style="font-size:medium" href="/movie?id=[&id&]">[&name&]</a>&]
+                                <!--<input id="txtActorID1" type="hidden" value="1" />-->
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </form>
+    </body>
+</html>

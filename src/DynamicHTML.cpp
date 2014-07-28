@@ -163,7 +163,7 @@ int generate_html(const std::string& s,
                 for(auto i : it->second->val_vector_) {
                     string suboutput;
                     int ret2 = generate_html(subtemplate, *i, suboutput, failed_tags);
-                    if (!ret2)
+                    if (ret2)
                         ret = ret2;
                     output.append(suboutput);
                 }

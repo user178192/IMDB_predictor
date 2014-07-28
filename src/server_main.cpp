@@ -74,68 +74,13 @@ static int my_handler(Response& resp, const Request& req) {
         return HTTP_200;
     }
     return HTTP_404;
-
-    /*
-    // for test query
-    auto query_words = split_string(params["movie"], ", \t");
-    auto query_result = mdb->ri_movies_.Lookup(query_words);
-
-    int ret_limit = 20;
-    for(const auto& id : query_result) {
-        if (ret_limit-- == 0)
-            break;
-
-        Movie *m = get<2>(mdb->movies_.GetInfo(id));
-
-        char tmpbuf[30];
-        snprintf(tmpbuf, 30, " (%.1f/%llu votes)", m->rating_, m->votes_);
-
-        ret.append(*(get<1>(mdb->movies_.GetKey(id))) + tmpbuf + ':');
-        int actor_limit = 10;
-        for(const auto &i : m->actors_) {
-            if (actor_limit-- == 0)
-                break;
-            ret.append(*(get<1>(mdb->actors_.GetKey(i))) + " |  ");
-        }
-        ret.append(1, '\n');
-
-        cout << *(get<1>(mdb->movies_.GetKey(id))) << endl;
-        cout << "\t\tLanguages:";
-        for (const auto &i : m->languages_)
-            cout << i << '\t';
-        cout << "\t\tCountries:";
-        for (const auto &i : get<2>(mdb->movies_.GetInfo(id))->countries_)
-            cout << i << '\t';
-        cout << "\t\tGenres:";
-        for (const auto &i : get<2>(mdb->movies_.GetInfo(id))->genres_)
-            cout << i << '\t';
-        cout << "\t\tTime:";
-        for (const auto &i : get<2>(mdb->movies_.GetInfo(id))->length_)
-            cout << i << '\t';
-        cout << endl;
-    }
-
-    //// for test query
-    if (!ret.empty()) {
-        string deflated = zlib_compress(ret);
-        if (!deflated.empty()) {
-            resp.set_header("Content-Encoding", "deflate");
-            resp.set_body(deflated);
-        } else {
-            resp.set_body(ret);
-        }
-    } else 
-        resp.set_body(ret);
-    resp.set_header("Content-Type", "text/plain");
-    return HTTP_200;
-    */
 }
 
 int main(int argc, char *argv[]) {
     int port = 8000;
 
     if (argc < 4)
-        printf("Usage: %s port db.filename ico.file\n", argv[0]);
+        printf("Usage: %s port db.filename html_template_path\n", argv[0]);
 
     port = atoi(argv[1]);
 

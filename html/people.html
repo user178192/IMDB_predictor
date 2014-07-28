@@ -1,30 +1,81 @@
-<!DOCTYPE html>
 <html>
-<head><title>IMDB Predictor</title>
-<body>
+    <head>
+        <title>Movies by [&people&]</title>
+        <style type="text/css">
+            #btnSubmit
+            {
+                height: 37px;
+                width: 94px;
+            }
+            #txtquery
+            {
+                height:37px;
+                width:60%;
+            }
+            #selectType
+            {
+                height:37px;
+                vertical-align:middle;
+                font-size:large; 
+                width:100px;
+            }
 
-<h1>IMDB Predictor</h1>
+            #logo
+            {
+                text-align:center; 
+                font-size:xx-large; 
+                font-style:italic;
+                font-family:Arial,Helvetica,sans-serif;
+            }
+            .tb table{border-right:1px solid gray;border-bottom:1px solid gray}
+            .tb table td{border-left:1px solid gray;border-top:1px solid gray}
+        </style>
+    </head>
 
-<form action="http://www.baidu.com/" method="get" enctype="text/plain">
-Query: <select name="query_type">
-<option value="people">Movie Title</option>
-<option value="movie">People</option>
-<option value="time">Release Time</option>
-<input type="text" name="movie_title" value="Taxi Driver"><br>
-<input type="submit" value="Look up">
-<input type="reset" value="Reset">
+    <body>
+       <div id="showLogo">
+            <p id="logo" >IMDB Predictor</p>
+       </div>
+       <form action="/query" method="get" enctype="text/plain" id="form1">
+                <div id="searchDiv">
+                    <table style="width:80%; height:30px" align="left">
+                        <tr>
+                            <td style="width:60%" align="right">
+                            <input id="txtquery" style="font-size:large" type="text" name="keywords">
+                            </td>
+                            <td style="width:3%">
+                                <select id="selectType" name="query_type">
+                                    <option value="text" style="font-size:large">Movie</option>
+                                    <option value="people" style="font-size:large">People</option>
+                                </select>
+                            </td>
+                            <td style="width:10%" align="left">
+                                <input id="btnSubmit" type="submit" size="100%" value="Search" >
+                            </td>
+                        </tr>                
+                    </table>
+                </div>
+                <br />
+       </form>
 
-</form>
-
-<h2>Movies of Al Pacino</h2>
-<ul>
-<li><a href="books/thinking_in_cpp/vol_2/">Godfather (1982)</a></li>
-<li><a href="books/thinking_in_cpp/vol_2/">Godfather II (1983)</a></li>
-<li><a href="books/thinking_in_cpp/vol_2/">Godfather III (1991)</a></li>
-<li><a href="books/thinking_in_cpp/vol_2/">Chinese Coffee (1994)</a></li>
-<li><a href="books/thinking_in_cpp/vol_2/">Heat (1996)</a></li>
-<li><a href="books/thinking_in_cpp/vol_2/">Donniel Brasco (1994)</a></li>
-</ul>
-
-
-</body>
+           <br />
+           <table width="100%" border="0">
+                    <tr>
+                        <td width="25%"></td>
+                        <td width="50%"><p style="float:left; font-size:x-large; position:relative">Movie(s) by [&people&]</p></td>
+                        <td width="25%"></td>
+                    </tr>
+                </table>
+           <div class="tb">                                
+                <table align="center" style="width:60%" id="tbResult" cellpadding="5" border="0">
+                    [&&result&<tr>
+                        <td align="right" width="5%">&bull;</td>
+                        <td>
+                            <a style="font-size:medium" href="/movie?id=[&id&]">[&title&]</a>
+                        </td>
+                    </tr>
+                    &]
+                </table>
+            </div>
+    </body>
+</html>
