@@ -20,18 +20,3 @@ namespace imdb {
 }
 
 #endif
-
-int main(int argc, char *argv[]) {
-	if (argc < 2) {
-        return 1;
-    }
-
-    /*MovieDB *db = new MovieDB();
-    chdir(argv[1]);
-    db->LoadFromFile(argv[1]);
-    db->BuildIndex();
-
-    Similarity test;
-    test.BuildSimilarity(db);
-    return 0;*/
-}
