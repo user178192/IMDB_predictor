@@ -183,6 +183,8 @@ private:
 };
 
 
+
+
 // should delete the object in the end
 
 class TypeTable {
@@ -193,6 +195,9 @@ public:
     TypeTable() = default;
     void init(MovieDB *db);
     void exec(const std::string file_name);
+
+    // insert the realtion movies 
+    void join(MovieDB *db);
 };
 
 #endif

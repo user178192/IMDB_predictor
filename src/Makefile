@@ -1,7 +1,7 @@
 #!/bin/sh
 
 BUILDDIR=../build/
-OPT=-O4
+OPT=-O3
 DEBUG=-g
 #SPARSEHASH=-DUSE_SPARSE_HASH
 
@@ -26,11 +26,13 @@ PARSEROBJS=Parser.o parsers/actors.o \
 
 DBBUILDOBJ=db_build.o
 PARSERTESTOBJ=parser_test.o
+REALTONOBJ=Relation.o
 
 all: $(BUILDDIR) $(BUILDDIR)imdb_server $(BUILDDIR)imdb_db_build
 
 parser_test: $(BUILDDIR) $(BUILDDIR)parser_test
 
+relation: $(BUILDDIR) $(BUILDDIR)relation
 
 $(BUILDDIR): 
 	mkdir -p $(BUILDDIR)
@@ -39,6 +41,9 @@ $(BUILDDIR)imdb_server: $(OBJS) $(SERVEROBJS)
 	$(CC) -o $@ $^ $(LIBS) $(LIB_PATH)
 	
 $(BUILDDIR)parser_test: $(OBJS) $(PARSEROBJS) $(PARSERTESTOBJ)
+	$(CC) -o $@ $^ $(LIB_PATH)
+
+$(BUILDDIR)relation: $(OBJS) $(REALTONOBJ)
 	$(CC) -o $@ $^ $(LIB_PATH)
 
 $(BUILDDIR)imdb_db_build: $(OBJS) $(PARSEROBJS) $(DBBUILDOBJ)

@@ -1,8 +1,10 @@
 #include <Parser.hpp>
 #include <MovieDB.hpp>
+#include <Relation.hpp>
 #include <Log.hpp>
-
+#include <Relation.hpp>
 // load the database to the Parser
+
 using namespace imdb;
 
 void Parser::parseFile(const std::string file_name) {
@@ -39,6 +41,7 @@ void TypeTable::exec(const std::string file_name) {
     parser_map[file_name] -> parseFile(file_name);
     delete parser_map[file_name];
 }
+
 
 
 

@@ -7,7 +7,8 @@
 namespace imdb {
     using namespace std;
 
-    struct Movie {
+    class Movie {
+    public:
         /* ratings.list */
         double rating_;
         size_t votes_;
@@ -44,6 +45,9 @@ namespace imdb {
 
         /* running-times.list */
         vector<string> length_;
+
+        /* relational movies list */
+        vector<size_t> relation_;
 
 
         //Init

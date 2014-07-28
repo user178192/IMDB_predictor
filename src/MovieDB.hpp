@@ -28,10 +28,6 @@ namespace imdb {
         int SaveToFile(const string& filename);
         static string NameReorder(const string& name);
     };
-
-
-
-
 }
 
 
