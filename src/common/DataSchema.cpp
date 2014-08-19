@@ -1,5 +1,5 @@
-#include <DataSchema.hpp>
-#include <Index.hpp> //for NULLID
+#include <common/DataSchema.hpp>
+#include <common/Index.hpp> //for NULLID
 #include <algorithm>
 #include <unordered_set>
 

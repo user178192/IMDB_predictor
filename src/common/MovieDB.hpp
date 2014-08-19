@@ -1,8 +1,8 @@
 #ifndef _MOVIE_DB_
 #define _MOVIE_DB_
 
-#include <DataSchema.hpp>
-#include <Index.hpp>
+#include <common/DataSchema.hpp>
+#include <common/Index.hpp>
 #include <string>
 
 namespace imdb {

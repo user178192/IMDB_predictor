@@ -1,5 +1,5 @@
-#include <MovieSimilarity.hpp>
-#include <MovieDB.hpp>
+#include <server/MovieSimilarity.hpp>
+#include <common/MovieDB.hpp>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>

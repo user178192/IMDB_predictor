@@ -1,6 +1,6 @@
 #ifndef _INDEX_HPP_
 #define _INDEX_HPP_
-#include <Common.hpp>
+#include <common/Common.hpp>
 
 #ifdef USE_SPARSE_HASH
 #include <sparsehash/sparse_hash_map>

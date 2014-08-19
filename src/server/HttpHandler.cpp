@@ -1,8 +1,8 @@
-#include <HttpHandler.hpp>
-#include <DynamicHTML.hpp>
-#include <MovieSimilarity.hpp>
-#include <MovieDB.hpp>
-#include <Log.hpp>
+#include <server/HttpHandler.hpp>
+#include <server/DynamicHTML.hpp>
+#include <server/MovieSimilarity.hpp>
+#include <common/MovieDB.hpp>
+#include <common/Log.hpp>
 
 #include <fstream>
 #include <algorithm>

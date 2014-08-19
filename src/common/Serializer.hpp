@@ -1,9 +1,9 @@
 #ifndef _SERIALIZER_HPP_
 #define _SERIALIZER_HPP_
 
-#include <DataSchema.hpp>
-#include <Index.hpp>
-#include <Log.hpp>
+#include <common/DataSchema.hpp>
+#include <common/Index.hpp>
+#include <common/Log.hpp>
 
 #include <vector>
 #include <string>

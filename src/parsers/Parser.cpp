@@ -1,6 +1,6 @@
-#include <Parser.hpp>
-#include <MovieDB.hpp>
-#include <Log.hpp>
+#include <parsers/Parser.hpp>
+#include <common/MovieDB.hpp>
+#include <common/Log.hpp>
 
 using namespace imdb;
 

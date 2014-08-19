@@ -1,6 +1,6 @@
-#include <MovieDB.hpp>
-#include <Serializer.hpp>
-#include <Log.hpp>
+#include <common/MovieDB.hpp>
+#include <common/Serializer.hpp>
+#include <common/Log.hpp>
 #include <algorithm>
 #include <cctype>
 

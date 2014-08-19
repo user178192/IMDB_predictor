@@ -2,8 +2,8 @@
 #define _MOVIESIMILARITY_HPP_
 #include <vector>
 #include <string>
-#include <Common.hpp>
-#include <DataSchema.hpp>
+#include <common/Common.hpp>
+#include <common/DataSchema.hpp>
 
 
 namespace imdb {
