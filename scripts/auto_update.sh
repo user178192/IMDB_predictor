@@ -37,6 +37,7 @@ then
 
 	echo "killed, begin to build"
 	./build/imdb_db_build imdb_predictor.dat $2
+	./build/imdb_relation_build $2/imdb_predictor.dat
 
 	echo "data built"
 	sudo nohup ./build/imdb_server 80 $2/imdb_predictor.dat ./html/ &
