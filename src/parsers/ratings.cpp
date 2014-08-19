@@ -1,6 +1,6 @@
-#include <Parser.hpp>
-#include <Log.hpp>
-#include <MovieDB.hpp>
+#include <parsers/Parser.hpp>
+#include <common/Log.hpp>
+#include <common/MovieDB.hpp>
 #include <stdio.h>
 
 

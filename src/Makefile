@@ -12,9 +12,9 @@ LIBS=-ltws
 INC_PATH=-I./
 LIB_PATH=-L../libs/
 
-OBJS=DataSchema.o MovieDB.o Log.o Index.o Common.o
-SERVEROBJS=server_main.o HttpHandler.o DynamicHTML.o MovieSimilarity.o
-PARSEROBJS=Parser.o parsers/actors.o \
+COMMONOBJS=common/DataSchema.o common/MovieDB.o common/Log.o common/Index.o common/Common.o
+SERVEROBJS=server_main.o server/HttpHandler.o server/DynamicHTML.o relation/MovieRelation.o
+PARSEROBJS=parsers/Parser.o parsers/actors.o \
 					parsers/directors.o \
 					parsers/movies.o \
 					parsers/languages.o \
@@ -26,34 +26,34 @@ PARSEROBJS=Parser.o parsers/actors.o \
 
 DBBUILDOBJ=db_build.o
 PARSERTESTOBJ=parser_test.o
-REALTONOBJ=Relation.o
+RELATIONOBJ=relation/MovieRelation.o relation_build.o
 
-all: $(BUILDDIR) $(BUILDDIR)imdb_server $(BUILDDIR)imdb_db_build
+all: $(BUILDDIR) $(BUILDDIR)imdb_server $(BUILDDIR)imdb_db_build relation
 
 parser_test: $(BUILDDIR) $(BUILDDIR)parser_test
 
-relation: $(BUILDDIR) $(BUILDDIR)relation
+relation: $(BUILDDIR) $(BUILDDIR)imdb_relation_build
 
 $(BUILDDIR): 
 	mkdir -p $(BUILDDIR)
 
-$(BUILDDIR)imdb_server: $(OBJS) $(SERVEROBJS)
+$(BUILDDIR)imdb_server: $(COMMONOBJS) $(SERVEROBJS)
 	$(CC) -o $@ $^ $(LIBS) $(LIB_PATH)
 	
-$(BUILDDIR)parser_test: $(OBJS) $(PARSEROBJS) $(PARSERTESTOBJ)
+$(BUILDDIR)parser_test: $(COMMONOBJS) $(PARSEROBJS) $(PARSERTESTOBJ)
 	$(CC) -o $@ $^ $(LIB_PATH)
 
-$(BUILDDIR)relation: $(OBJS) $(REALTONOBJ)
+$(BUILDDIR)imdb_relation_build: $(COMMONOBJS) $(RELATIONOBJ)
 	$(CC) -o $@ $^ $(LIB_PATH)
 
-$(BUILDDIR)imdb_db_build: $(OBJS) $(PARSEROBJS) $(DBBUILDOBJ)
+$(BUILDDIR)imdb_db_build: $(COMMONOBJS) $(PARSEROBJS) $(DBBUILDOBJ)
 	$(CC) -o $@ $^ $(LIB_PATH)
 
 %.o: %.cpp
 	$(CC) $(INC_PATH) -c $(CFLAGS) -o $@ $^
 
 clean:
-	rm -f *.o parsers/*.o server $(BUILDDIR)imdb* $(BUILDDIR)parser_test
+	rm -f *.o parsers/*.o server/*.o common/*.o relation/*.o $(BUILDDIR)imdb* $(BUILDDIR)parser_test
 
 rebuild: clean all
 

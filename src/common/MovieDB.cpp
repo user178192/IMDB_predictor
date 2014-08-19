@@ -115,7 +115,7 @@ int MovieDB::SaveToFile(const std::string& filename) {
         p->movies_.erase(unique(p->movies_.begin(), p->movies_.end()), p->movies_.end());
     }
     writer->Write(directors_);
-    LOG_INFO("Load DB done, %llu movies, %llu people",
+    LOG_INFO("Save DB done, %llu movies, %llu people",
             movies_.Size(), actors_.Size() + composers_.Size() + directors_.Size());
     delete writer;
     return 0;

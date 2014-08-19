@@ -210,6 +210,7 @@ namespace imdb {
 
         void Write(const Movie& val) {
             Write(val.rating_);
+            Write(val.rating_pred_);
             Write(val.votes_);
             Write(val.year_);
             Write(val.type_);
@@ -222,10 +223,12 @@ namespace imdb {
             Write(val.languages_);
             Write(val.plots_);
             Write(val.length_);
+            Write(val.relation_);
         }
 
         void Read(Movie& val) {
             Read(val.rating_);
+            Read(val.rating_pred_);
             Read(val.votes_);
             Read(val.year_);
             Read(val.type_);
@@ -238,6 +241,7 @@ namespace imdb {
             Read(val.languages_);
             Read(val.plots_);
             Read(val.length_);
+            Read(val.relation_);
         }
 
         void Write(const ReverseIndex& val) {

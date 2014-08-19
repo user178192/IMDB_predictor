@@ -1,23 +1,24 @@
-#include <relation/MovieSimilarity.hpp>
+#include <relation/MovieRelation.hpp>
 #include <common/MovieDB.hpp>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
 
 
 namespace imdb
 {
     
     
-    size_t SimilarityScore(const Movie& ma, const Movie& mb)
+    size_t MovieRelation::SimilarityScore(const Movie& ma, const Movie& mb)
     {
         size_t score = 0;
         unordered_map<size_t, int> ha, hb;
         unordered_map<string, int> hsa, hsb;
         if (ma.composer_ == mb.composer_)
-            score += composer_power;  // 2 * 2
+            score += composer_power;  
         
         // co-occurance of actors, score ranked by order
         for(size_t i = 0; i < ma.actors_.size(); i++) {
@@ -80,7 +81,7 @@ namespace imdb
     
     
     
-    std::vector<size_t> GetSimilarMovies(const Movie& m, MovieDB *mdb)
+    std::vector<size_t> MovieRelation::GetSimilarMovies(const Movie& m, MovieDB *mdb)
     {
         unordered_set<size_t> cands;
         // get all candidates movie, by getting other works of
@@ -114,27 +115,37 @@ namespace imdb
         });
         
         vector<size_t> ret;
-        for(size_t i = 0; i < simil_size && i < results.size(); i++) {
+        //eliminate itself at position 0
+        for(size_t i = 1; i < simil_size + 1 && i < results.size(); i++) {
             ret.push_back(results[i].first);
         }
         
         return move(ret);
     }
+
+    void MovieRelation::GetAllSimilarity(MovieDB *mdb)
+    {
+        printf("Begin compute similarity for all movies..\n");
+        auto &movies = mdb->movies_;
+        for(size_t i = 0; i < movies.Size(); i++) {
+            if (i % 10 == 1)
+                printf("\rProgress %llu / %llu\t\t\t", i, movies.Size());
+
+            // computation is expensive, ignore some movies
+            if (movies[i].votes_ < 1000)
+                continue;
+
+            movies[i].relation_ = GetSimilarMovies(movies[i], mdb);
+        }
+        printf("\rProgress %llu / %llu\t\t\t\n", movies.Size(), movies.Size());
+    }
+
+    void MovieRelation::GetAllRatingPred(MovieDB *mdb)
+    {
+        (void)mdb;
+        return;
+    }
     
-    int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        return 1;
-    }
-
-    /*MovieDB *db = new MovieDB();
-    chdir(argv[1]);
-    db->LoadFromFile(argv[1]);
-    db->BuildIndex();
-
-    Similarity test;
-    test.BuildSimilarity(db);
-    return 0;*/
-    }
 }
 
 

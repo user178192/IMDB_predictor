@@ -11,6 +11,7 @@ namespace imdb {
     public:
         /* ratings.list */
         double rating_;
+        double rating_pred_;
         size_t votes_;
 
         // movies.list,  like 1992-2013

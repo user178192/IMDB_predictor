@@ -1,6 +1,6 @@
 #include <server/HttpHandler.hpp>
 #include <server/DynamicHTML.hpp>
-#include <server/MovieSimilarity.hpp>
+#include <relation/MovieRelation.hpp>
 #include <common/MovieDB.hpp>
 #include <common/Log.hpp>
 
@@ -146,8 +146,6 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
     if (!get<0>(info))
         return -1;
 
-    auto simis = GetSimilarMovies(*m, db_);
-
     TemplateNode nodes, lists;
     char tmpbuf[30];
     nodes.Insert("movietitle", *get<1>(info));
@@ -160,6 +158,8 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
         nodes.Insert("votes", "< 10");
         nodes.Insert("rating", "Unavailable");
     }
+    snprintf(tmpbuf, 30, "%.1f", m->rating_pred_);
+    nodes.Insert("rating_pred", tmpbuf);
 
     lists.Clear();
     int actor_limit = 10;
@@ -227,7 +227,12 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
     nodes.Insert("countries", new TemplateNode(lists));
 
     lists.Clear();
-    for(const auto &i : simis) {
+    if (m->relation_.empty()) {
+        //not pre-computed (votes not enough)
+        m->relation_ = MovieRelation::GetSimilarMovies(*m, db_);
+    }
+
+    for(const auto &i : m->relation_) {
         TemplateNode tmp;
         tmp.Insert("name", *(get<1>(db_->movies_.GetKey(i))));
         snprintf(tmpbuf, 30, "%llu", i);

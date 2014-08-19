@@ -1,5 +1,7 @@
 #include <parsers/Parser.hpp>
 #include <common/MovieDB.hpp>
+#include <common/Log.hpp>
+#include <relation/MovieRelation.hpp>
 
 #include <unistd.h>
 
@@ -11,10 +13,12 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-
-
     MovieDB *db = new MovieDB();
     db->LoadFromFile(argv[1]);
+
+    MovieRelation::GetAllSimilarity(db);
+    MovieRelation::GetAllRatingPred(db);
+
     db->SaveToFile(argv[1]);
     delete db;
     return 0;

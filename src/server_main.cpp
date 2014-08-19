@@ -1,6 +1,6 @@
-#include <http_server.hpp>
-#include <MovieDB.hpp>
-#include <HttpHandler.hpp>
+#include <common/MovieDB.hpp>
+#include <server/http_server.hpp>
+#include <server/HttpHandler.hpp>
 
 #include <unordered_map>
 #include <string>

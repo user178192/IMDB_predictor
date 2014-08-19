@@ -1,8 +1,8 @@
-#include <Parser.hpp>
-#include <Common.hpp>
-#include <MovieDB.hpp>
-#include <Log.hpp>
-#include <Common.hpp>
+#include <parsers/Parser.hpp>
+#include <common/Common.hpp>
+#include <common/MovieDB.hpp>
+#include <common/Log.hpp>
+#include <common/Common.hpp>
 
 #include <cstring>
 

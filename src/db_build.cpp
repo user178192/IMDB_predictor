@@ -1,5 +1,5 @@
-#include <Parser.hpp>
-#include <MovieDB.hpp>
+#include <parsers/Parser.hpp>
+#include <common/MovieDB.hpp>
 
 #include <unistd.h>
 

@@ -73,6 +73,14 @@ namespace imdb {
             return id2val_.size();
         }
 
+        TVal &operator [](const size_t i) {
+            return id2val_[i].second;
+        }
+
+        const TVal &operator [](const size_t i) const {
+            return id2val_[i].second;
+        }
+
         // retrieve record by internel ID, return triplet of:
         // (have result?,  key, pointer of value)
         // value can be modified by the pointer
