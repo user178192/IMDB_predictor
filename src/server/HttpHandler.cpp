@@ -38,6 +38,7 @@ void HttpHandler::LoadTemplates(const string& dir)
      AH("movie", "movie.html");
      AH("query", "query.html");
      AH("people", "people.html");
+     AH("logo_and_searchbox", "logo_and_searchbox.tpl");
 #undef AH
 
      for(auto &i : html_templates_) {
@@ -90,6 +91,7 @@ int HttpHandler::proc_query(const unordered_map<string, string>& params, string&
 
 
     TemplateNode nodes;
+    nodes.Insert("logo_and_searchbox", html_templates_["logo_and_searchbox"]);
     nodes.Insert("keywords", keywords);
     auto query_words = split_string(keywords, ", ()\t");
     auto query_result = db_->ri_movies_.Lookup(query_words);
@@ -147,8 +149,10 @@ int HttpHandler::proc_movie(const unordered_map<string, string>& params, string&
         return -1;
 
     TemplateNode nodes, lists;
-    char tmpbuf[30];
+    nodes.Insert("logo_and_searchbox", html_templates_["logo_and_searchbox"]);
+
     nodes.Insert("movietitle", *get<1>(info));
+    char tmpbuf[30];
     if (m->votes_ > 10) {
         snprintf(tmpbuf, 30, "%llu", m->votes_);
         nodes.Insert("votes", tmpbuf);
@@ -294,6 +298,7 @@ int HttpHandler::proc_people(const unordered_map<string, string>& params, string
         return -1;
 
     TemplateNode nodes, lists;
+    nodes.Insert("logo_and_searchbox", html_templates_["logo_and_searchbox"]);
     nodes.Insert("people", MovieDB::NameReorder(*(get<1>(info))));
 
     //sort the result
@@ -329,11 +334,26 @@ int HttpHandler::proc_people(const unordered_map<string, string>& params, string
 int HttpHandler::proc_main(const unordered_map<string, string>& params, string& ret, string& ret_type)
 {
     (void)params;
-    auto it = html_templates_.find("main");
-    if (it == html_templates_.end()) 
-        return -1;
+    string template_html;
+    {
+        auto it = html_templates_.find("main");
+        if (it == html_templates_.end())
+            return -1;
+        template_html = it->second;
+    }
 
-    ret = it->second;
+    TemplateNode nodes;
+    nodes.Insert("logo_and_searchbox", html_templates_["logo_and_searchbox"]);
+
+    ret.clear();
+    vector<string> failed_tags;
+    if (generate_html(template_html, nodes, ret, failed_tags) < 0) {
+        LOG_ERROR("Html template applied failed:");
+        for(const auto &i : failed_tags)
+            LOG_ERROR("bad tag(s): %s", i.c_str());
+        ret.clear();
+        return -1;
+    }
     ret_type = "text/html";
     return 0;
 }
