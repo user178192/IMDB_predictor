@@ -1,4 +1,4 @@
-#include <server/MovieSimilarity.hpp>
+#include <relation/MovieSimilarity.hpp>
 #include <common/MovieDB.hpp>
 #include <unordered_map>
 #include <unordered_set>
