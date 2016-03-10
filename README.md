@@ -6,9 +6,6 @@ Currently runs on website [7Movie.me][website]
 IMDB_Predictor
 
 Try to build a simple machine learning program to predict new movie's IMDB rating according to the IMDB database.
-
-[website]:http://7movie.me/
-
 How to compile and run
     1. Execute makefile
     2. Go to build directory and execute following execute files in turns:
@@ -22,3 +19,6 @@ How to compile and run
         If you want to test local, please use url: 127.0.0.1:port
 
 Enjoy!
+
+
+[website]:http://7movie.me/
