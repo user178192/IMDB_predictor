@@ -12,9 +12,6 @@ How to compile and run
         ./imdb_db_build filename.db rawfile.dir
         ./imdb_relation_build filename.db
         ./imdb_server port filename.db html_template_dir
-
-       The second procedure will cost a plenty of time
-
     3. Open the browser and access the html page to do searching
         If you want to test local, please use url: 127.0.0.1:port
 
