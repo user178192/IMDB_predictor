@@ -42,10 +42,10 @@ vector<size_t> ReverseIndex::Lookup(const vector<string>& keys) {
 
             //dedup,  in case of 'Tiger Tiger Tiger'
             unordered_set<size_t> dedup;
-            for (const auto& i : rev_idx_[keyi])
-                dedup.insert(i);
-            for (const auto& i : dedup)
-                cands[i]++;
+            for (const auto& id : rev_idx_[keyi])
+                dedup.insert(id);
+            for (const auto& id : dedup)
+                cands[id]++;
         }
     }
 
@@ -54,11 +54,14 @@ vector<size_t> ReverseIndex::Lookup(const vector<string>& keys) {
         return ret;
 
     // sort result by the number of query words they contained
+    // if the number of query words is equal, sort id in ascending order
+
+    //<id,count of query words>
     vector<pair<size_t, size_t>> rank;
     // move to vector for sort
     for (const auto& it : cands)
         rank.emplace_back(it.first, it.second);
-    sort(rank.begin(), rank.end(),
+        sort(rank.begin(), rank.end(),
             [&](const pair<size_t, size_t>& a, const pair<size_t, size_t>& b) {
                 if (a.second > b.second)
                     return true;

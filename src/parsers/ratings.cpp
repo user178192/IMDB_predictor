@@ -37,14 +37,14 @@ void RatingParser::parseLine(const std::string input_line)
     while(input_line[pos] == ' ')
         pos++;
     
-    size_t votes = (size_t)atol(input_line.c_str() + pos);
+    votes_ = (size_t)atol(input_line.c_str() + pos);
     while(isdigit(input_line[pos]))
         pos++;
 
     while(input_line[pos] == ' ')
         pos++;
 
-    double rating = atof(input_line.c_str() + pos);
+    rating_ = atof(input_line.c_str() + pos);
     while(isdigit(input_line[pos]) || input_line[pos] == '.' || input_line[pos] == '\"')
         pos++;
     while(input_line[pos] == ' ' || input_line[pos] == '\"')
@@ -73,18 +73,33 @@ void RatingParser::parseLine(const std::string input_line)
         }
     }
 
-    key = key.substr(0, ksize);
-    //cout << '[' << votes << "]  [" << rating << "]   [" << key << "]\n";
+    title_ = key.substr(0, ksize);
 
-    auto db_ret = db_->movies_.GetInfo(key);
-    if (get<0>(db_ret)) {
-        get<2>(db_ret)->votes_ = votes;
-        get<2>(db_ret)->rating_ = rating;
+    if (title_.empty()) {
+        //no title
+        return;
     } else {
-        // no such movie, inconsistant, ignore
-        LOG_DEBUG("Movie [%s] not found, inconsistant", key.c_str());
-    }  
-
+        insertDB();
+    }
 }
 
-
+void RatingParser::insertDB() {
+    string key = title_;
+    auto mov_obj = db_->movies_.GetInfo(key);
+    if (get<0>(mov_obj)) {
+        // already exists
+        // skip this movie
+        LOG_DEBUG("Movie [%s] already exits", key.c_str());
+    }
+    else {
+        // the movie doesnt exist in db
+        // if votes larger than 10, then insert new entry
+        if (votes_ > 50 && rating_ > 4.0) {
+            LOG_DEBUG("Movie [%s] doesnt exits and votes larger than 50 and rate lager than 4.0", key.c_str());
+            Movie m;
+            m.rating_ = rating_;
+            m.votes_ = votes_;
+            db_->movies_.Insert(key, m);
+        }
+    }
+}

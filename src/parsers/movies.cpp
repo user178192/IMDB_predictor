@@ -62,7 +62,7 @@ void MoviesParser::splitMoiveName(const std::string input_line) {
     type_ = get_vaild_type(input_line, end);
 
     subtitle_ = get_vaild_subtitle(title, end);
-
+    //cout<<"title ["<<title_<<"]\n";
 
 }
 
@@ -91,19 +91,21 @@ void MoviesParser::parseLine(const std::string input_line) {
 
 void MoviesParser::insertDB() {
     string key = title_;
-    auto mov_obj = db_->movies_.GetInfo(key);
-    if (get<0>(mov_obj)) {
-        // already exists, and have subtitle, (series)
-        // insert subtitle
+    auto db_ret = db_->movies_.GetInfo(key);
+    //in order to filter movies who dont have rating
+    //find movie by key
+    //If there is not movie, means the vote of this move is less than 10, which is filtered.
+    //In this part, modified to update movie that already insert from ratings.list
+    if (get<0>(db_ret)) {
+        //The movie has title, but need to insert subtitle
         if (!subtitle_.empty()) {
-            get<2>(mov_obj)->subtitles_.push_back(subtitle_);
+            get<2>(db_ret)->subtitles_.push_back(subtitle_);
+            get<2>(db_ret)->year_ = year_;
+            get<2>(db_ret)->type_ = type_;
+        } else {
+            //The movie doesnt have subtitle
+            get<2>(db_ret)->year_ = year_;
+            get<2>(db_ret)->type_ = type_;
         }
-    }
-    else {
-        // insert new entry
-        Movie m;
-        m.year_ = year_;
-        m.type_ = type_;
-        db_->movies_.Insert(key, m);
     }
 }

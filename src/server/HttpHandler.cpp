@@ -55,7 +55,7 @@ void HttpHandler::LoadTemplates(const string& dir)
          ifs.close();
      }
 }
-
+//based on different request, call different functions to process request
 int HttpHandler::process(const string& path, const unordered_map<string, string>& params, string& ret, string& ret_type)
 {
     auto handler = handlers_.find(path);
@@ -73,7 +73,7 @@ int HttpHandler::proc_query(const unordered_map<string, string>& params, string&
         auto it = html_templates_.find("query");
         if (it == html_templates_.end())
             return -1;
-        template_html = it->second;
+        template_html = it->second; //it->second is the name of html file
     }
 
     string query_type, keywords;

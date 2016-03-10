@@ -2,7 +2,7 @@
 
 BUILDDIR=../build/
 OPT=-O3
-DEBUG=-g
+DEBUG=-g -D_LOG_NONE
 #SPARSEHASH=-DUSE_SPARSE_HASH
 
 
@@ -28,11 +28,11 @@ DBBUILDOBJ=db_build.o
 PARSERTESTOBJ=parser_test.o
 RELATIONOBJ=relation/MovieRelation.o relation_build.o
 
-all: $(BUILDDIR) $(BUILDDIR)imdb_server $(BUILDDIR)imdb_db_build relation
+all: $(BUILDDIR) $(BUILDDIR)imdb_server $(BUILDDIR)imdb_db_build $(BUILDDIR)imdb_relation_build $(BUILDDIR)parser_test
 
-parser_test: $(BUILDDIR) $(BUILDDIR)parser_test
+#parser_test: $(BUILDDIR) $(BUILDDIR)parser_test
 
-relation: $(BUILDDIR) $(BUILDDIR)imdb_relation_build
+#relation: $(BUILDDIR) $(BUILDDIR)imdb_relation_build
 
 $(BUILDDIR): 
 	mkdir -p $(BUILDDIR)

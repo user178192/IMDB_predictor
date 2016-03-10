@@ -179,7 +179,11 @@ public:
 
     virtual void Finish();
 	virtual void parseLine(const std::string line);
+    void insertDB();
 private:
+   std::string title_;
+   double rating_;
+   size_t votes_; 
 };
 
 

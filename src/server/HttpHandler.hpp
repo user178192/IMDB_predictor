@@ -23,7 +23,7 @@ class HttpHandler
     static int proc_main(const unordered_map<string, string>& params, string& ret, string& ret_type);
 
     static int proc_ico(const unordered_map<string, string>& params, string& ret, string& ret_type);
-
+    //Handler is a function pointer, it is the type of proc_query and so on
     typedef int (*Handler)(const unordered_map<string, string>& params, string& ret, string& ret_type);
     
     static unordered_map<string, Handler> handlers_;

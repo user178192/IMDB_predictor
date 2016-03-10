@@ -28,8 +28,10 @@ namespace imdb {
 #ifdef USE_SPARSE_HASH
         // reverse index, mapping keywords to all the 
         // candidates id that contains the corresponding keyword 
+        //<keyword, ids>
         sparse_hash_map<string, vector<size_t>> rev_idx_;
         // index, mapping id to the keywords under it
+        //<id,count of keywords>
         sparse_hash_map<size_t, size_t> idx_;
 #else
         unordered_map<string, vector<size_t>> rev_idx_;
@@ -46,7 +48,7 @@ namespace imdb {
 
         vector<size_t> Lookup(const vector<string>& keys);
     };
-
+//-------------------------------------------------------------------------------
     template <typename TKey, typename TVal>
     class Index {
         template<bool ReadOnly>
@@ -103,7 +105,8 @@ namespace imdb {
         // retrieve record by Key,  similiar to GetInfo(const size_t id)
         // return triplet.
         // if not exist, first element of triplet is false
-
+        //return <bool, id, pointer of value>
+        
         tuple<bool, size_t, TVal*> GetInfo(const TKey &key) {
             auto it = k2id_.find(key);
             tuple<bool, size_t, TVal*> ret;

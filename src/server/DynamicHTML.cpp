@@ -68,6 +68,7 @@ void TemplateNode::Insert(const std::string& key, TemplateNode *t)
     auto it = val_map_.find(key);
     if (it != val_map_.end()) {
         if (t != it->second)
+            //avoid dangling pointer
             delete it->second;
         it->second = t;
     } else {

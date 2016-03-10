@@ -1,0 +1,12 @@
+1. Index.cpp:Loopup()
+    a.为什么对rank排序的时候是插入一个排序一次，而不是整个插入完了以后再排序呢？
+    b.测试发现搜索tiger tiger会返回Tiger！ 这个和函数里实现的功能不同。好像是第二个判断语句写的有问题
+      我觉得应该把rank[0].second < keys.size()改为rank[0].second >= keys.size()
+      
+2. MovieDB.cpp:NameReorder(name)
+    a.我看了这个函数只有在Httphandler里面调用过。处理的是根据这个演员的id然后GetKey拿出来的结果，key在存的时候我看就是一个actor_name(string)，为什么会有“， ”存在呢？
+    b.为什么要进行reorder呢？
+    
+3. 网页生成部分，讲一下TemplateNode的结构
+
+4. GetAllRatingPred里是什么意思，是没有实现吗？
